@@ -1,0 +1,111 @@
+{
+	"metadata": {
+		"type": "App"
+	},
+	"project": {
+		"shadows": true,
+		"vr": false
+	},
+	"camera": {
+		"metadata": {
+			"version": 4.5,
+			"type": "Object",
+			"generator": "Object3D.toJSON"
+		},
+		"object": {
+			"uuid": "0943604A-8CA7-4A97-A4EE-DCCF530BF2F2",
+			"type": "PerspectiveCamera",
+			"name": "Camera",
+			"layers": 1,
+			"matrix": [-0.013552,0,0.999908,0,0.237686,0.971337,0.003222,0,-0.971248,0.237708,-0.013164,0,-24.144778,9.510902,-0.533016,1],
+			"fov": 50,
+			"zoom": 1,
+			"near": 0.01,
+			"far": 10000,
+			"focus": 10,
+			"aspect": 1.774194,
+			"filmGauge": 35,
+			"filmOffset": 0
+		}
+	},
+	"scene": {
+		"metadata": {
+			"version": 4.5,
+			"type": "Object",
+			"generator": "Object3D.toJSON"
+		},
+		"object": {
+			"uuid": "51901104-FADB-43D1-B2A3-15BDFA72A48D",
+			"type": "Scene",
+			"name": "Scene",
+			"layers": 1,
+			"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1],
+			"children": [
+				{
+					"uuid": "28F41CF3-6D50-4A4E-A71B-DC2EC5D92082",
+					"type": "Group",
+					"name": "Ground Helper",
+					"layers": 1,
+					"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]
+				},
+				{
+					"uuid": "2268FD48-3DB6-41A6-96DD-BE252B137516",
+					"type": "DirectionalLight",
+					"name": "DirectionalLight",
+					"layers": 1,
+					"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,5,10,7.5,1],
+					"color": 16777215,
+					"intensity": 1,
+					"shadow": {
+						"camera": {
+							"uuid": "FF4B33B4-FD95-47C1-8324-D5347D241DCB",
+							"type": "OrthographicCamera",
+							"layers": 1,
+							"zoom": 1,
+							"left": -5,
+							"right": 5,
+							"top": 5,
+							"bottom": -5,
+							"near": 0.5,
+							"far": 500
+						}
+					}
+				},
+				{
+					"uuid": "8FAEF48F-EE5A-474D-8ECB-D565433E610A",
+					"type": "Group",
+					"name": "Demo",
+					"visible": false,
+					"layers": 1,
+					"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]
+				}],
+			"background": 0
+		}
+	},
+	"scripts": {
+		"2268FD48-3DB6-41A6-96DD-BE252B137516": [
+			{
+				"name": "camera-light.js",
+				"source": "var light = this;\n\n/*\n//\tvar shadowHelper = new THREE.CameraHelper(light.shadow.camera);\n//\tshadowHelper.visible = false;\n//\tscene.add( shadowHelper );\n*/\n\nfunction update() {\n\n\tlight.position.copy( camera.position );\n\n}"
+			}],
+		"28F41CF3-6D50-4A4E-A71B-DC2EC5D92082": [
+			{
+				"name": "ground-helper.js",
+				"source": "var ground_helper = new THREE.GridHelper( 5000, 100, 0x444444, 0x444444 );\n\nthis.add( ground_helper );\n"
+			}],
+		"51901104-FADB-43D1-B2A3-15BDFA72A48D": [
+			{
+				"name": "editor-controls.js",
+				"source": "controls = new THREE.EditorControls( camera, renderer.domElement );\ncontrols.focus( this, true );"
+			},
+			{
+				"name": "demo.js",
+				"source": "var mixer;\nvar clock = new THREE.Clock();\nvar loader = new THREE.FBXLoader();\nvar url = \"/charlotte/models/fbx/chh_CatwalkWalkCollection_mxr_v2.5.1.fbx\";\n\nloader.load( url, function( object ){\n\n//\tobject is a THREE.Group.\n\n\tobject.name = \"Charlotte\";\n\tconsole.log( object ); \n\n\tanimations = object.animations;\n\n\tif ( animations.length ) {\n\n\t\tmixer = new THREE.AnimationMixer( object );\n\n\t\tif ( animations.length > 1 ) {\n\t\t\tvar action = mixer.clipAction( animations[1], object );\n\t\t\taction.play();\n\t\t} else {\n\t\t\tvar action = mixer.clipAction( animations[0], object )\n\t\t\taction.play();\n\t\t}\n\n\t}\n\n\tfbx = object;\n\tscene.add( object );\n\tcontrols.focus( object, true );\n\t\n\n});\n\nfunction update( event ) {\n\n\tvar dt = clock.getDelta();\n\tmixer && mixer.update( dt );\n\n\n}"
+			}],
+		"8FAEF48F-EE5A-474D-8ECB-D565433E610A": [
+			{
+				"name": "demo.js",
+				"source": ""
+			}]
+	}
+}
