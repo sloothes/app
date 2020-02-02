@@ -13,11 +13,11 @@
 			"generator": "Object3D.toJSON"
 		},
 		"object": {
-			"uuid": "61F0B70B-DEEA-4BB7-8970-53B99FA519C1",
+			"uuid": "D3A01145-5815-406C-9A7B-0B843661EA73",
 			"type": "PerspectiveCamera",
 			"name": "Camera",
 			"layers": 1,
-			"matrix": [0.506240910435353,-5.5511141937802165e-17,0.8623919096151037,0,0.2893470922915485,0.9420345035649205,-0.16985239982002046,0,-0.8124032647134823,0.335516961382848,0.4768965986157756,0,-28.93015317449882,11.947954306746288,16.982565488849517,1],
+			"matrix": [0.9629006634977384,0,-0.269855475029905,0,-0.09140855739967775,0.9408834007447319,-0.32616481307176326,0,0.25390264027304815,0.3387315522975561,0.9059776191520755,0,9.119541858604283,12.166382227004648,32.54042892949399,1],
 			"fov": 50,
 			"zoom": 1,
 			"near": 0.01,
@@ -122,7 +122,7 @@
 			},
 			{
 				"name": "demo.js",
-				"source": "var mixer;\nvar clock = new THREE.Clock();\nvar loader = new THREE.FBXLoader();\nvar url = \"/charlotte/models/fbx/chh_CatwalkWalkCollection_mxr_v2.5.1.fbx\";\n\nloader.load( url, function( object ){\n\n//\tobject is a THREE.Group.\n\n\tobject.name = \"Charlotte\";\n\tconsole.log( object ); \n\n\tanimations = object.animations;\n\n\tif ( animations.length ) {\n\n\t\tmixer = new THREE.AnimationMixer( object );\n\n\t\tif ( animations.length > 1 ) {\n\t\t\tvar action = mixer.clipAction( animations[1], object );\n\t\t\taction.play();\n\t\t} else {\n\t\t\tvar action = mixer.clipAction( animations[0], object )\n\t\t\taction.play();\n\t\t}\n\n\t}\n\t\n//\n\n\tobject.children.forEach( function( item ){\n\t\tif ( item.type != \"SkinnedMesh\" ) return;\n\t\tif ( Array.isArray( item.material ) ) \n\t\t\titem.material.forEach( function( material ){\n\t\t\t\tmaterial = skinningMaterial();\n\t\t\t});\n\t\telse\n\t\t\titem.material = skinningMaterial();\n\t});\n\n\tbody = object.getObjectByName( \"Body\" );\n\thair = object.getObjectByName( \"Hair\" );\n\tdress = object.getObjectByName( \"Dress\" );\n\tshoes = object.getObjectByName( \"Shoes\" );\n\tunderwears = object.getObjectByName( \"Underwears\" );\n\n//\n\n\tfbx = object;\n\tscene.add( object );\n\tcontrols.focus( object, true );\n\n\tfunction skinningMaterial(){\n\t\treturn new THREE.MeshStandardMaterial({\n\t\t\tside: 2,\n\t\t\tskinning: true,\n\t\t});\n\t}\n\n});\n\nfunction update( event ) {\n\n\tvar dt = clock.getDelta();\n\tmixer && mixer.update( dt );\n\n\n}"
+				"source": "var mixer;\nvar clock = new THREE.Clock();\nvar loader = new THREE.FBXLoader();\nvar url = \"/app/alpha/001/fbx/chh_CatwalkWalkCollection_mxr_v2.5.2.fbx\";\n\nloader.load( url, function( object ){\n\n//\tobject is a THREE.Group.\n\n\tobject.name = \"Charlotte\";\n\tconsole.log( object ); \n\n\tanimations = object.animations;\n\n\tif ( animations.length ) {\n\n\t\tmixer = new THREE.AnimationMixer( object );\n\n\t\tif ( animations.length > 1 ) {\n\t\t\tvar action = mixer.clipAction( animations[1], object );\n\t\t\taction.play();\n\t\t} else {\n\t\t\tvar action = mixer.clipAction( animations[0], object )\n\t\t\taction.play();\n\t\t}\n\n\t}\n\t\n//\n\n\tobject.children.forEach( function( item ){\n\t\tif ( item.type != \"SkinnedMesh\" ) return;\n\t\tif ( Array.isArray( item.material ) ) \n\t\t\titem.material.forEach( function( material ){\n\t\t\t\tmaterial = skinningMaterial();\n\t\t\t});\n\t\telse\n\t\t\titem.material = skinningMaterial();\n\t});\n\n\tbody = object.getObjectByName( \"Body\" );\n\thair = object.getObjectByName( \"Hair\" );\n\tdress = object.getObjectByName( \"Dress\" );\n\tshoes = object.getObjectByName( \"Shoes\" );\n\tunderwears = object.getObjectByName( \"Underwears\" );\n\n//\n\n\tfbx = object;\n\tscene.add( object );\n\tcontrols.focus( object, true );\n\n\tfunction skinningMaterial(){\n\t\treturn new THREE.MeshStandardMaterial({\n\t\t\tside: 2,\n\t\t\tskinning: true,\n\t\t});\n\t}\n\n});\n\nfunction update( event ) {\n\n\tvar dt = clock.getDelta();\n\tmixer && mixer.update( dt );\n\n\n}"
 			}]
 	}
 }
