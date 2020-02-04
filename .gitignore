@@ -1,4 +1,3 @@
-
 *.zip
 alpha/001/materials/chh252_material_app.json
 alpha/001/materials/chh252_model.glb
@@ -16,8 +15,5 @@ alpha/002/model/Caroline.blend
 alpha/003/js/three.min.js
 alpha/004/js/EditorControls.js
 alpha/004/js/FBXLoader.js
-alpha/004/js/inflate.min.js
-alpha/004/js/signals.min.js
-alpha/004/js/system.min.js
 alpha/004/js/TransformControls.js
 alpha/004/js/UVsDebug.js
