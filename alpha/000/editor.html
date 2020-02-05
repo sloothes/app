@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html>
+	<head>
+
+		<title>editor</title>
+
+		<link rel="stylesheet" href="/css/bootstrap.min.css">
+		<link rel="stylesheet" href="/css/bootbox-dialoges.css">
+		<link rel="stylesheet" href="/js/codemirror/codemirror.css">
+
+		<script src="/js/codemirror/codemirror.js"></script>
+		<script src="/js/codemirror/mode/xml.js"></script>
+		<script src="/js/codemirror/mode/javascript.js"></script>
+		<script src="/js/codemirror/mode/css.js"></script>
+		<script src="/js/codemirror/mode/htmlmixed.js"></script>
+		<script src="/js/rawinflate.js"></script>
+		<script src="/js/rawdeflate.js"></script>
+		<script src="/js/esprima.js"></script>
+
+		<script> debugMode=true; </script>
+
+		<script src="/js/Objectid.js"></script>
+		<script src="/js/jszip.min.js"></script>
+		<script src="/js/jquery.min.js"></script>
+		<script src="/js/zangodb.min.js"></script>
+		<script src="/js/bootstrap.min.js"></script>
+
+		<style>
+
+			html, body { height: 100%; }
+			body {margin: 0px;overflow: hidden;font-family: Arial; }
+			a { color: #ffffff; }
+			h1 { font-size: 20px;margin-top: 0px; }
+
+			.button {
+
+				font-size: 10px;
+				text-transform: uppercase;
+				text-decoration: none;
+
+				color: rgb(80,80,80);
+				border: transparent;
+				background-color: rgb(235,235,235);
+
+				margin: 2px;
+				padding: 8px 10px;
+
+				cursor: pointer;
+
+			}
+
+			.button:hover { color: rgb(235,235,235);background-color: rgb(80,80,80); }
+			.button path { stroke: rgb(80,80,80); }
+			.button:hover path { stroke: rgb(235,235,235); }
+
+			#preview {
+				position: absolute;
+				left: 0px;
+				top: 0px;
+				width: 100%;
+				height: 100%;
+				display: none;
+			}
+
+			#editor {
+				position: absolute;
+				width: 100%;
+				height: 100%;
+			}
+
+			#editor .CodeMirror {
+				height: 100%;
+				font-size: 14px;
+				background-color: rgba(255,255,255,0.85);
+			}
+
+			#editor .CodeMirror-scroll {
+				height: 100%;
+			}
+
+			#editor .CodeMirror div.CodeMirror-selected {
+				background: rgba(0,0,0,0.1);
+			}
+
+			#editor .CodeMirror-focused div.CodeMirror-selected {
+				background: rgba(0,0,255,0.1);
+			}
+
+			#editor .CodeMirror .errorLine {
+				background: rgba(255,0,0,0.25);
+			}
+
+			#editor .CodeMirror .esprima-error {
+				color: #f00;
+				text-align: right;
+				padding: 0px 20px;
+			}
+
+			#toolbar {
+				position: absolute;
+				top: 15px;
+				right: 30px;
+				text-align: right;
+				display: none;
+				z-index: 10; /* CodeMirror sets z-index */
+			}
+
+			#popup {
+				position: absolute;
+				color: rgb(235,235,235);
+				padding: 20px 20px 20px 20px;
+				background-color: rgb(80,80,80);
+				display: none;
+				z-index: 20; /* CodeMirror sets z-index */
+			}
+
+		</style>
+
+	</head>
+
+	<body>
+
+		<div id="preview"></div>
+		<div id="editor"></div>
+		<div id="toolbar"></div>
+		<div id="popup"></div>
+
+		<div style="position:absolute;top:0;right:0;font-size:1.2em;color:#000;text-align:center;padding:6px 20px;float:right;background-color:#eee;">
+			<span id="indx"></span>.<span id="name"></span>
+		</div>
+
+	</body>
+
+	<script>
+
+		window.URL = window.URL || window.webkitURL;
+
+		var documents = [{ 
+			filename: "index", 
+			filetype: "text/plain", 
+			autoupdate: false, 
+			code: "",
+		}];
+
+		// Editor.
+
+		var interval;
+
+		var editor = document.getElementById( "editor" );
+
+		var codemirror = CodeMirror( editor, {
+
+			value: documents[ 0 ].code,
+			mode: "text/javascript", // "text/html",
+			lineNumbers: true,
+			matchBrackets: true,
+			indentWithTabs: true,
+			tabSize: 4,
+			indentUnit: 4
+
+		});
+
+		var errorLines = [];
+		var widgets = [];
+
+		function validate( value ) {
+
+			return codemirror.operation( function () {
+
+				while ( errorLines.length > 0 ) {
+
+					codemirror.removeLineClass( errorLines.shift(), "background", "errorLine" );
+
+				}
+
+				for ( var i = 0; i < widgets.length; i ++ ) {
+
+					codemirror.removeLineWidget( widgets[ i ] );
+
+				}
+
+				widgets.length = 0;
+
+			//	Remove html.
+
+				var string = "\n";
+				var lines = value.split( "\n" );
+				var lineCurrent = 0, lineTotal = lines.length;
+
+				while ( lineCurrent < lineTotal && lines[ lineCurrent ].indexOf( "<script>" ) === -1 ) {
+
+					string += "\n";
+					lineCurrent ++;
+
+				}
+
+				var lineStart = lineCurrent ++;
+
+				while ( lineCurrent < lineTotal && lines[ lineCurrent ].indexOf( "<\/script>" ) === -1 ) {
+
+					string += lines[ lineCurrent ] + "\n";
+					lineCurrent ++;
+
+				}
+
+			//
+
+				try {
+
+					var result = esprima.parse( string, { tolerant: true } ).errors;
+
+					for ( var i = 0; i < result.length; i ++ ) {
+
+						var error = result[ i ];
+
+						var message = document.createElement( "div" );
+						message.className = "esprima-error";
+						message.textContent = error.message.replace(/Line [0-9]+: /, "");
+
+						var lineNumber = error.lineNumber - 1;
+						errorLines.push( lineNumber );
+
+						codemirror.addLineClass( lineNumber, "background", "errorLine" );
+
+						var widget = codemirror.addLineWidget( lineNumber, message );
+
+						widgets.push( widget );
+
+					}
+
+				} catch ( error ) {
+
+					var message = document.createElement( "div" );
+					message.className = "esprima-error";
+					message.textContent = error.message.replace(/Line [0-9]+: /, "");
+
+					var lineNumber = error.lineNumber - 1;
+					errorLines.push( lineNumber );
+
+					codemirror.addLineClass( lineNumber, "background", "errorLine" );
+
+					var widget = codemirror.addLineWidget( lineNumber, message );
+
+					widgets.push( widget );
+
+				}
+
+				return errorLines.length === 0;
+
+			});
+
+		}
+
+		function save() {
+
+			documents[0].code = codemirror.getValue();
+		//	localStorage.codeeditor = JSON.stringify( documents );
+
+			var blob = new Blob( [ codemirror.getValue() ], { type: documents[0].filetype } );
+
+			var link = document.createElement( "a" );
+			link.href = URL.createObjectURL( blob );
+
+			var date = Date.now().toString(36).toUpperCase();
+			link.download = documents[0].filename+" ("+date+").js";
+
+			setTimeout(function( url ){
+				link.remove();
+				URL.revokeObjectURL( url ); // breaks Firefox...???
+				debugMode && console.log( "revokeObjectURL:", url );
+			}, 10000, link.href);
+
+			link.click();
+
+		}
+		
+		function clear(){
+			codemirror.setValue("");
+			document.getElementById("name").textContent = "";
+			document.getElementById("indx").textContent = "";
+		}
+
+	// Deflate.
+
+		function decode( string ) {
+
+			return RawDeflate.inflate( window.atob( string ) );
+
+		}
+
+		function encode( string ) {
+
+			return window.btoa( RawDeflate.deflate( string ) );
+
+		}
+
+	</script>
+
+	<script>
+
+		db = new zango.Db( "InAbox", {
+
+			tabs: true,
+			scene: true,
+			camera: true,
+			project: true,
+			scripts: true,
+			history: true,
+			metadata: true,
+			functions: true,
+			javascripts: true,
+			stylesheets: true,
+			Geometries: true,
+			Materials: true,
+			Textures: true,
+
+		});
+
+	//	Open db.
+
+		db.open();
+
+	//
+
+		db.toJSON = function(){
+
+			if ( !this._open ) return;
+
+			var data = {};
+
+			function getdocs( name ){
+				if ( !name ) return;
+				if ( !this.collection(name) ) return;
+				var collection = this.collection(name);
+				collection.find().toArray()
+				.then(function(docs){
+					data[ name ] = docs;
+				});
+			}
+
+			if ( arguments.length ){
+
+				for (var i in arguments) {
+					getdocs.bind( this, arguments[i] ).call();
+				}
+
+			} else {
+
+				for ( var name in this._cols ){
+					getdocs.bind( this, name ).call();
+				}
+
+			}
+
+			return data;
+		};
+
+		db.save = function( text ){
+
+			var link = document.createElement( "a" );
+			var date = Date.now().toString(36).toUpperCase();
+			var blob = new Blob( [ text ], { type: "text/plain" } );
+
+			setTimeout(function(){
+
+				link.href = URL.createObjectURL( blob );
+				link.download = "db-InAbox ("+ date +").json";
+
+				setTimeout(function( url ){
+					link.remove();
+					URL.revokeObjectURL( url ); // breaks Firefox... ???
+					debugMode && console.log( "revokeObjectURL:", url );
+				}, 10000, link.href);
+
+				link.click();
+
+			}); // end timeout.
+
+		};
+
+		db.download = function( text ){
+
+			var zip = new JSZip();
+
+			var link = document.createElement( "a" );
+			var date = Date.now().toString(36).toUpperCase();
+
+			zip.file( "db-InAbox ("+date+").json", text );
+			var blob = zip.generate( { type: "blob" } ); // important!
+
+			setTimeout(function(){
+
+				link.href = URL.createObjectURL( blob );
+				link.download = "db-InAbox ("+date+").zip";
+
+				setTimeout(function( url ){
+					link.remove();
+					URL.revokeObjectURL( url ); // breaks Firefox...???
+					debugMode && console.log( "revokeObjectURL:", url );
+				}, 10000, link.href);
+
+				link.click();
+
+			}); // end timeout.
+
+		};
+
+
+		function beautifyJSON(json){
+
+			var output = JSON.stringify( json, null, "\t" );
+			return output.replace( /[\n\t]+([\d\.e\-\[\]]+)/g, "$1" );
+
+		}
+
+		function openSceneScriptsSource(i){
+			var collection = db.collection("scripts");
+			var spname = document.getElementById("name");
+			var spindx = document.getElementById("indx");
+			collection.findOne({_id:"scene"}).then(function(doc){
+				spindx.textContent = i;
+				spname.textContent = doc.scripts[i].name;
+				codemirror.setValue(doc.scripts[i].source);
+			}).catch(function(err){
+				console.error(err);
+				codemirror.setValue("");
+				spindx.textContent = "";
+				spname.textContent = "";
+			});
+		}
+
+	</script>
+
+	<script>
+
+		function save(){
+
+			var text = codemirror.getValue();
+			var link = document.createElement( "a" );
+			var date = Date.now().toString(36).toUpperCase();
+			var blob = new Blob( [ text ], { type: "text/plain" } );
+
+			setTimeout(function(){
+
+				link.href = URL.createObjectURL( blob );
+				link.download = "db-InAbox ("+ date +").json";
+
+				setTimeout(function( url ){
+					link.remove();
+					URL.revokeObjectURL( url ); // breaks Firefox... ???
+					debugMode && console.log( "revokeObjectURL:", url );
+				}, 10000, link.href);
+
+				link.click();
+
+			}); // end timeout.
+
+		};
+
+	</script>
+
+	<script>
+
+	//	Code insert.
+
+		function pushScript( name, selector ){
+			var collection = db.collection("scripts");
+			script = { name:name, source: codemirror.getValue() };
+			collection.update( selector, {$push: {"scripts":script}} )
+			.then( function(){ codemirror.setValue(""); });
+		}
+
+		function insertFunction( name, id ){
+			var collection = db.collection("functions");
+			script = { name:name, source: codemirror.getValue() };
+			if ( id ) script._id = id;
+			collection.insert( script ).then( function(){
+				codemirror.setValue("");
+			});
+		}
+
+
+	</script>
+
+	<script>
+
+	//	App export.
+
+		function exportApp(){
+
+			var json = {};
+
+			json.scene = {};
+			json.camera = {};
+			json.scripts = {};
+			json.project = {};
+			json.metadata = {};
+			json.functions = [];
+			json.javascripts = [];
+			json.stylesheets = [];
+
+			return Promise.all([
+
+				db.collection("scene").findOne({_id:1}).then(function(doc){
+					json.scene = doc;
+				}).catch( function(err){ console.warn(err); }),
+
+				db.collection("camera").findOne({_id:1}).then(function(doc){
+					json.camera = doc;
+				}).catch( function(err){ console.warn(err); }),
+
+				db.collection("scripts").find().forEach(
+
+					function(doc){ 
+						if ( !doc.scripts.length ) return;
+						json.scripts[ doc.uuid ] = doc.scripts; 
+					},
+
+					function(err){ 
+						if (err) console.warn(err);
+					}
+
+				),
+
+				db.collection("project").findOne({_id:1}).then(function(project){
+					json.project = project;
+				}).catch( function(err){ console.warn(err); }),
+
+				db.collection("functions").find().toArray().then(function(docs){
+					json.functions = docs;
+				}).catch( function(err){ console.warn(err); }),
+
+				db.collection("javascripts").find().toArray().then(function(docs){
+					json.javascripts = docs;
+				}).catch( function(err){ console.warn(err); }),
+
+				db.collection("stylesheets").find().toArray().then(function(docs){
+					json.stylesheets = docs;
+				}).catch( function(err){ console.warn(err); }),
+
+			]).then( function(){
+
+				json.metadata.type = "App";   // important!
+				console.log("json:", json);
+
+			//	beautified.
+				var output = JSON.stringify( json, null, "\t" );
+				return output.replace( /[\n\t]+([\d\.e\-\[\]]+)/g, "$1" );
+
+			}).catch( function(err) {
+
+			//	stringified.
+				console.log( "output:", err );
+				return JSON.stringify( json );
+
+			});
+
+		}
+
+	</script>
+
+	<script>
+
+		function array_move( array, from_index, to_index ) {
+
+			if (to_index >= array.length) {
+				var k = to_index - array.length + 1;
+				while (k--) {
+					array.push(undefined);
+				}
+			}
+
+			array.splice(to_index, 0, array.splice(from_index, 1)[0]);
+
+			debugMode && console.log( array );
+		}
+
+
+		function generateUUID() {
+
+			var rnd = 0, r;
+			var uuid = new Array( 36 );
+			var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".split( "" );
+
+			for ( var i = 0; i < 36; i ++ ) {
+
+				if ( i === 8 || i === 13 || i === 18 || i === 23 ) {
+
+					uuid[ i ] = "-";
+
+				} else if ( i === 14 ) {
+
+					uuid[ i ] = "4";
+
+				} else {
+
+					if ( rnd <= 0x02 ) rnd = 0x2000000 + ( Math.random() * 0x1000000 ) | 0;
+					r = rnd & 0xf;
+					rnd = rnd >> 4;
+					uuid[ i ] = chars[ ( i === 19 ) ? ( r & 0x3 ) | 0x8 : r ];
+
+				}
+
+			}
+
+			return uuid.join( "" );
+
+		}
+
+	</script>
+
+</html>
