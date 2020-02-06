@@ -64,27 +64,31 @@
 
 				console.log( input.files );
 				if ( !input.files.length ) return;
-				
+
 				input.removeEventListener( "change", onChange );
 
-				results = [];
 				uploads = [];
+				results = [];
 				
-				for (var i=0; i < input.files.length; i++ ){
-					uploads.push( function(){
-						return uploadTexture( input.files[i] )
-						.then(function( data ){
-							results.push( data );
-						}).catch(function(err){
-							console.error(err);
-						})
-					});
+				for (var i = 0; i < input.files.length; i++ ){
+					(function(file){
+						uploads.push( function(){
+							return uploadTexture( file )
+							.then(function( data ){
+								results.push( data );
+							}).catch(function(err){
+								console.error(err);
+							});
+						});
+					})( input.files[i] );
 				}
 				
 				debugMode && console.log( "uploads:", uploads );
-
 				return input.addEventListener( "change", onChange ); // breakpoint.
 
+			});
+
+			/*
 				Promise.all(uploads).then(function(){
 
 				//	debugMode && console.log( "results:", results );
@@ -101,8 +105,7 @@
 				}).then( function(){
 					input.addEventListener( "change", onChange );
 				});
-
-			});
+			*/
 
 			button = document.createElement("a");
 			button.text = "Choose matcaps";
