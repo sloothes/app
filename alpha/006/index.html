@@ -30,9 +30,11 @@
 				overflow: hidden;
 			}
 
-			#loading-bar.middle {
+			#loading-bar {
 				width:100%;
 				height:100%;
+				top:0; left:0;
+				position:fixed;
 				display:flex;
 				align-items:center;
 				justify-content:center;
@@ -113,7 +115,7 @@
 					bar.classList.add("progress-bar", "progress-bar-striped", "active");
 					progress.appendChild( bar );
 
-					player.dom.appendChild( container );
+					document.body.appendChild( container );
 
 				})();
 
