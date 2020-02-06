@@ -43,27 +43,27 @@
 
 	<body class="middle" ontouchstart="">
 
-		<div class="btn btn-primary">Choose matcaps<div>
-		<input type="file" multiple style="display:none;">
-
 		<script>
 
+			var input = document.createElement("input");
+			input.type = "file";
+			input.style.display = "none";
+			input.setAttribute( "multiple", "" ); // true.
+			input.addEventListener( "change", function(){
 
+				console.log( input.files );
 
+			});
 
+			var button = document.createElement("a");
+			button.text = "Choose matcaps";
+			button.classList.add("btn", "btn-primary");
+			button.addEventListener("click", function(){
+				input.value = "";
+				input.click();
+			});
 
-
-
-
-
-
-
-
-
-
-
-
-
+			document.body.appendChild( button );
 
 		</script>
 
