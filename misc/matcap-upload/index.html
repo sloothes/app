@@ -45,13 +45,18 @@
 
 		<script>
 
-			var results;
+			var matcaps;
+			var input, button;
+			var uploads, results;
 			var debugMode = true;
 
+		//	MATCAPS
+		//	2K: "MZV8PzS,L509oY2,Bw7q38p,2FA0yx1,vVDGl7g,3nmnKd4,E36SPOB,MXqauTz,YHsPLdq,soRJv4a".
+			
 		//	const clientID = "06217f601180652";
 		//	const endpoint = "https://api.imgur.com/3/image/"
 
-			var input = document.createElement("input");
+			input = document.createElement("input");
 			input.type = "file";
 			input.style.display = "none";
 			input.setAttribute( "multiple", "" ); // true.
@@ -63,45 +68,43 @@
 				input.removeEventListener( "change", onChange );
 
 				results = [];
-				var uploads = [];
+				uploads = [];
 				
 				for (var i=0; i < input.files.length; i++ ){
-					uploads.push( 
-						uploadTexture( input.files[i] )
+					uploads.push( function(){
+						return uploadTexture( input.files[i] )
 						.then(function( data ){
 							results.push( data );
 						}).catch(function(err){
 							console.error(err);
 						})
-					);
+					});
 				}
 				
-				debugMode && console.log( uploads );
+				debugMode && console.log( "uploads:", uploads );
 
-				input.addEventListener( "change", onChange ); return; // breakpoint.
+				return input.addEventListener( "change", onChange ); // breakpoint.
 
-			/*
 				Promise.all(uploads).then(function(){
 
-				//	console.log( results );
+				//	debugMode && console.log( "results:", results );
 
-					var imgurIds = results.map( function( item ){
-						return item.id;
+					matcaps = results.map( function( item ){ 
+						return item.id; 
 					});
-					
-					console.log( imgurIds );
-					console.log( imgurIds.join(",");
+
+					debugMode && console.log( matcaps );
+					console.log( "matcaps:", matcaps.join(",") );
 
 				}).catch(function(err){
 					console.error(err);
 				}).then( function(){
 					input.addEventListener( "change", onChange );
 				});
-			*/
 
 			});
 
-			var button = document.createElement("a");
+			button = document.createElement("a");
 			button.text = "Choose matcaps";
 			button.classList.add("btn", "btn-primary");
 			button.addEventListener("click", function(){
@@ -111,7 +114,6 @@
 			});
 
 			document.body.appendChild( button );
-
 
 			function uploadTexture(file){
 			//  Returns a resolved promise with record data from imgur.com.
