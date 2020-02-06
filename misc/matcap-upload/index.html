@@ -55,7 +55,7 @@
 			input.addEventListener( "change", function onChange(){
 
 				console.log( input.files );
-				if ( input.files.length ) return;
+				if ( !input.files.length ) return;
 				
 				input.removeEventListener( "change", onChange );
 
