@@ -21,6 +21,7 @@
 		<script src="/js/bootstrap.min.js"></script>
 
 		<style>
+
 			body {
 				font-family: sans-serif;
 				font-size: 13px;
@@ -28,6 +29,24 @@
 				margin: 0px;
 				overflow: hidden;
 			}
+
+			#loading-bar.middle {
+				width:100%;
+				height:100%;
+				display:flex;
+				align-items:center;
+				justify-content:center;
+			}
+
+			.middle > * {
+				top:0; 
+				left:0;
+				right:0;
+				bottom:0;
+				margin:auto;"
+				position:absolute;
+			}
+
 		</style>
 
 	</head>
@@ -52,34 +71,87 @@
 			var localPlayer;
 			var cameraControls;
 			var keyInputControls;
+			var hair, body, panties,
+				bra, torso, skirt, shoes;
+
 			var debugMode = true;
 
-			var loader = new THREE.FBXLoader();
-			var url = "/app/alpha/004/model/Carol.fbx";
-			loader.load( url, function( object ){
+			var loader = new THREE.FileLoader();
+			loader.load( "app.json", function ( text ) {
 
-				console.log( object ); // object is THREE.Group.
-				object.name = "Carol";
+				player = new APP.Player();
+				player.load( JSON.parse( text ) );
+				player.setSize( window.innerWidth, window.innerHeight );
+				player.play();
 
-				mixer = new THREE.AnimationMixer( object );
+				document.body.appendChild( player.dom );
 
-				var loader = new THREE.FileLoader();
-				loader.load( "app.json", function ( text ) {
-
-					player = new APP.Player();
-					player.load( JSON.parse( text ) );
+				window.addEventListener( "resize", function () {
 					player.setSize( window.innerWidth, window.innerHeight );
-					player.play();
+				});
 
-					document.body.appendChild( player.dom );
+			//
 
-					window.addEventListener( "resize", function () {
-						player.setSize( window.innerWidth, window.innerHeight );
-					});
+				(function(){
+
+					var container = document.createElement("div");
+					container.id = "loading-bar";
+					container.classList.add("middle");
+
+					var progress = document.createElement("div");
+					progress.style.width = "250px";
+					progress.style.height = "fit-content";
+					progress.classList.add("progress" "middle");
+					container.appendChild( progress );
+
+					var bar = document.createElement("div");
+					bar.style.width = "100%";
+					bar.textContent = "Loading...";
+					bar.setAttribute("role", "progressbar");
+					bar.setAttribute("aria-valuemin", "0");
+					bar.setAttribute("aria-valuemax", "100");
+					bar.classList.add("progress-bar", "progress-bar-striped", "active");
+					progress.appendChild( bar );
+
+					player.dom.appendChild( container );
+
+				})();
+
+			//
+
+				var loader = new THREE.FBXLoader();
+				var url = "/app/alpha/004/model/Carol.fbx";
+				loader.load( url, function( object ){
+
+					document.getElemementById("loading-bar").remove();
+
+					object.name = "Carol";
+					console.log( object ); // object is THREE.Group.
+
+					mixer = new THREE.AnimationMixer( object );
+
+					( new Function( "object", object.animations.map( function(animation, i){
+							var name = animation.name.replace("Carol|", "").replace(/\s/g, ""); 
+							debugMode && console.log( "\t"+name );
+							return "\t"+name+" = mixer.clipAction( object.animations["+i+"], object );";
+						}).join("\n")
+					) )( object );
+
+				//	skinned meshes.
+
+					bra = object.getObjectByName( "Bra" );
+					hair = object.getObjectByName( "Hair" );
+					body = object.getObjectByName( "Body" );
+					torso = object.getObjectByName( "Torso" );
+					skirt = object.getObjectByName( "Skirt" );
+					shoes = object.getObjectByName( "Shoes" );
+					panties = object.getObjectByName( "Panties" );
 
 				});
 
 			});
+
+
 
 		</script>
 
