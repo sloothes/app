@@ -132,6 +132,8 @@
 
 					mixer = new THREE.AnimationMixer( object );
 
+				//	animations.
+
 					( new Function( "object", object.animations.map( function(animation, i){
 							var name = animation.name.replace("Carol|", "").replace(/\s/g, ""); 
 							debugMode && console.log( "\t"+name );
