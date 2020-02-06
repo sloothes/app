@@ -65,53 +65,5 @@
 
 		</script>
 
-		<script>
-
-			(function(){
-
-				var sidePanel = document.createElement("div");
-				sidePanel.id = "side-panel";
-				sidePanel.classList.add("side-panel");
-				sidePanel.style.cssText = "position:absolute;top:0;right:0;bottom:0;width:370px;color:#eee;background:rgba(0,0,0,0.4); "
-						+ "-webkit-transform:translateX( 340px ); -webkit-transition:-webkit-transform 500ms ease-out; z-index:9999;";
-
-				var container = document.createElement("div");
-				container.id = "side-panel-content";
-				container.style.cssText = "position:absolute;top:40px;left:40px;bottom:20px;right:20px;overflow-x:hidden;";
-
-				var sidePillBar = document.createElement("div");
-				sidePillBar.id = "side-pill-bar";
-				sidePillBar.classList.add("side-holder");
-				sidePillBar.style.cssText = "margin-bottom:20px;";
-				container.appendChild( sidePillBar );
-
-				sideTabPills = document.createElement("ul");
-				sideTabPills.id = "side-tab-pills";
-				sideTabPills.classList.add("nav","nav-tabs","nav-pills");
-				sideTabPills.style.cssText = "display:inline-flex!important;overflow-y:hidden;width:300px;scroll-behavior:smooth;";
-				sidePillBar.appendChild( sideTabPills );
-
-				sideTabPanel = document.createElement("div");
-				sideTabPanel.id = "side-tab-panel";
-				sideTabPanel.classList.add("tab-content");
-				container.appendChild( sideTabPanel );
-
-				sidePanel.addEventListener( "mouseenter", function(){
-					this.classList.toggle( "pinned", true );
-					this.style["-webkit-transform"] = "translateX( 0 )";
-				});
-
-				sidePanel.addEventListener( "mouseleave", function(){
-					this.classList.toggle( "pinned", false );
-					this.style["-webkit-transform"] = "translateX( 340px )";
-				});
-
-				sidePanel.appendChild( container );
-				player.dom.appendChild( sidePanel );
-
-			})();
-
-		</script>
-
 	</body>
 </html>
