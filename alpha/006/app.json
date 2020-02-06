@@ -17,7 +17,7 @@
 			"type": "PerspectiveCamera",
 			"name": "Camera",
 			"layers": 1,
-			"matrix": [-0.7027130767735545,-2.7755575615628914e-17,-0.711473352790844,0,-0.28923186644883636,0.9136395567086627,0.28567059324984906,0,0.6500301986538527,0.40652522728263524,-0.6420264639567708,0,7.6228622017759555,5.080178184584147,-7.3452272601786905,1],
+			"matrix": [0.002611016631833829,0,0.9999965912902642,0,0.6599801449658539,0.7512810650791208,-0.0017232250091596124,0,-0.7512785041800398,0.6599823946542678,0.001961607356103512,0,-23.239680904274508,19.083765141968378,-1.2637494932165143,1],
 			"fov": 50,
 			"zoom": 1,
 			"near": 1,
@@ -42,34 +42,34 @@
 			"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1],
 			"children": [
 				{
-					"uuid": "555495BC-8EC7-4CBB-982B-F8AB597C8A3C",
-					"type": "Group",
-					"name": "Materials",
-					"visible": false,
-					"layers": 1,
-					"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]
-				},
-				{
 					"uuid": "075D8614-98F0-4F64-AAD3-92E574E7913B",
 					"type": "Group",
 					"name": "Side Panel",
 					"visible": false,
 					"layers": 1,
 					"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]
+				},
+				{
+					"uuid": "555495BC-8EC7-4CBB-982B-F8AB597C8A3C",
+					"type": "Group",
+					"name": "Materials",
+					"visible": false,
+					"layers": 1,
+					"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]
 				}],
-			"background": 12632256
+			"background": 0
 		}
 	},
 	"scripts": {
 		"555495BC-8EC7-4CBB-982B-F8AB597C8A3C": [
 			{
-				"name": "",
-				"source": "var matcaps = \"bixnsMm,MS1GDja,pUytALG,4KwC8wH,Wiqsp9s,gXRFY3U,2tkhy7C,D64zaTR,Id8k2u4,Fx9154f,\"\n\t\t\t+ \"dqKYFPo,l0Lf1LN,7bH7Ajw,IeAwKEi,VysdwUU,dWAhf12,9ufYr2S,iAWd8i1,mkGDAn5,gf3PsvD,\"\n\t\t\t+ \"BeHwxKA,GYBQ8Xr,9gxylAS,0p2RT39,aHeUCko,epbmrGs,NKMFDGB,pvXMCj9,QbZ8H2v,aCAVXQb,\"\n\t\t\t+ \"qU0AEUM,yvwt1wj,D5UeFcC,6GZMeko,rSlm3oM,Xqg7n0A,PzHZLHy,MEzwCJq,wgf7Vl0,GcLQiey,\"\n\t\t\t+ \"3xH34nj,vhdhgMe,jRTIv3l,xELCxlQ,wtJaViy,Qb0qKtc,7kq8wQ3,F6kcile,0LRxFql,rxUXS8C,\"\n\t\t\t+ \"qXg0NKn,LSB7hqR,EolEkFt,gOtyiMy,YTE0R32,thsIYPF,ee6stBn,gyYhQao,QOEE3jO,0V4rQPV,\"\n\t\t\t+ \"l9Tugo0,R86xHzg,IDlk0H9,tUparH7,GISkhjO,JQzRceW,WxVSuFW,4tyRlwP,aFIJ3Iu,BCqRnS4,\"\n\t\t\t+ \"1OcGlAa,PqIxyYE,S7J95Cf,QPUvzXD,Stdy1eT,k0nOt5N,rWuDYYe,SGRUmyD,1Ia4Qbk,FFYLtQa,\"\n\t\t\t+ \"szmc38X,NJSPJlS,8HsVNJA,n3wbE5E,88autaS,7jwTUiI,H1F3Yrv,kgV7aSY,PDFIrWw,Uun8Lpr,\"\n\t\t\t+ \"Oz16d2L,02gRNwL,bV94g46,eUEtBHC,e1N7JYN,bWpofvm,uzlo3mR,YaXveL2,mw2f1lF,HkWGQb1\";\n\n"
+				"name": "matcaps",
+				"source": "var matcaps = \"MZV8PzS,L509oY2,Bw7q38p,2FA0yx1,vVDGl7g,3nmnKd4,E36SPOB,MXqauTz,YHsPLdq,soRJv4a\"; // 2k (large)\nmatcaps += \"bixnsMm,MS1GDja,pUytALG,4KwC8wH,Wiqsp9s,gXRFY3U,2tkhy7C,D64zaTR,Id8k2u4,Fx9154f,\";\nmatcaps += \"dqKYFPo,l0Lf1LN,7bH7Ajw,IeAwKEi,VysdwUU,dWAhf12,9ufYr2S,iAWd8i1,mkGDAn5,gf3PsvD,\";\nmatcaps += \"BeHwxKA,GYBQ8Xr,9gxylAS,0p2RT39,aHeUCko,epbmrGs,NKMFDGB,pvXMCj9,QbZ8H2v,aCAVXQb,\";\nmatcaps += \"qU0AEUM,yvwt1wj,D5UeFcC,6GZMeko,rSlm3oM,Xqg7n0A,PzHZLHy,MEzwCJq,wgf7Vl0,GcLQiey,\";\nmatcaps += \"3xH34nj,vhdhgMe,jRTIv3l,xELCxlQ,wtJaViy,Qb0qKtc,7kq8wQ3,F6kcile,0LRxFql,rxUXS8C,\";\nmatcaps += \"qXg0NKn,LSB7hqR,EolEkFt,gOtyiMy,YTE0R32,thsIYPF,ee6stBn,gyYhQao,QOEE3jO,0V4rQPV,\";\nmatcaps += \"l9Tugo0,R86xHzg,IDlk0H9,tUparH7,GISkhjO,JQzRceW,WxVSuFW,4tyRlwP,aFIJ3Iu,BCqRnS4,\";\nmatcaps += \"1OcGlAa,PqIxyYE,S7J95Cf,QPUvzXD,Stdy1eT,k0nOt5N,rWuDYYe,SGRUmyD,1Ia4Qbk,FFYLtQa,\";\nmatcaps += \"szmc38X,NJSPJlS,8HsVNJA,n3wbE5E,88autaS,7jwTUiI,H1F3Yrv,kgV7aSY,PDFIrWw,Uun8Lpr,\";\nmatcaps += \"Oz16d2L,02gRNwL,bV94g46,eUEtBHC,e1N7JYN,bWpofvm,uzlo3mR,YaXveL2,mw2f1lF,HkWGQb1,\";\nmatcaps += \"N9xoehs,53rWmmo,sBPySdS,1YZKblR,ywKHb7r,3UcbBN7,pWPtSJS,n1a2nB8,lecZa2Q,e3bxY9I,\";\nmatcaps += \"Jl6XqD0\";\n"
 			}],
 		"075D8614-98F0-4F64-AAD3-92E574E7913B": [
 			{
-				"name": "",
-				"source": "var sidePanel = document.createElement(\"div\");\nsidePanel.id = \"side-panel\";\nsidePanel.classList.add(\"side-panel\");\nsidePanel.style.cssText = \"position:absolute;top:0;right:0;bottom:0;width:370px;color:#eee;background:rgba(0,0,0,0.4);\"\n\t+ \" -webkit-transform:translateX( 340px ); -webkit-transition:-webkit-transform 500ms ease-out; z-index:9999;\";\n\nvar container = document.createElement(\"div\");\ncontainer.id = \"side-panel-content\";\ncontainer.style.cssText = \"position:absolute;top:40px;left:40px;bottom:20px;right:20px;overflow-x:hidden;\";\n\nvar sidePillBar = document.createElement(\"div\");\nsidePillBar.id = \"side-pill-bar\";\nsidePillBar.classList.add(\"side-holder\");\nsidePillBar.style.cssText = \"margin-bottom:20px;\";\ncontainer.appendChild( sidePillBar );\n\nsideTabPills = document.createElement(\"ul\");\nsideTabPills.id = \"side-tab-pills\";\nsideTabPills.classList.add(\"nav\",\"nav-tabs\",\"nav-pills\");\nsideTabPills.style.cssText = \"display:inline-flex!important;overflow-y:hidden;width:300px;scroll-behavior:smooth;\";\nsidePillBar.appendChild( sideTabPills );\n\nsideTabPanel = document.createElement(\"div\");\nsideTabPanel.id = \"side-tab-panel\";\nsideTabPanel.classList.add(\"tab-content\");\ncontainer.appendChild( sideTabPanel );\n\nsidePanel.addEventListener( \"mouseenter\", function(){\n\tthis.classList.toggle( \"pinned\", true );\n\tthis.style[\"-webkit-transform\"] = \"translateX( 0 )\";\n});\n\nsidePanel.addEventListener( \"mouseleave\", function(){\n\tthis.classList.toggle( \"pinned\", false );\n\tthis.style[\"-webkit-transform\"] = \"translateX( 340px )\";\n});\n\nsidePanel.appendChild( container );\nplayer.dom.appendChild( sidePanel );\n"
+				"name": "side-panel.js",
+				"source": "var sidePanel = document.createElement(\"div\");\nsidePanel.id = \"side-panel\";\nsidePanel.classList.add(\"side-panel\");\nsidePanel.style.cssText = \"position:absolute;top:0;right:0;bottom:0;width:370px;color:#eee;background:rgba(0,0,0,0.4);\"\n\t+ \" -webkit-transform:translateX( 340px ); -webkit-transition:-webkit-transform 500ms ease-out; z-index:9999;\";\n\nvar container = document.createElement(\"div\");\ncontainer.id = \"side-panel-content\";\ncontainer.style.cssText = \"position:absolute;top:40px;left:40px;bottom:20px;right:20px;overflow-x:hidden;\";\n\nvar sidePillBar = document.createElement(\"div\");\nsidePillBar.id = \"side-pill-bar\";\nsidePillBar.classList.add(\"side-holder\");\nsidePillBar.style.cssText = \"margin-bottom:20px;\";\ncontainer.appendChild( sidePillBar );\n\nsideTabPills = document.createElement(\"ul\");\nsideTabPills.id = \"side-tab-pills\";\nsideTabPills.classList.add(\"nav\",\"nav-tabs\",\"nav-pills\");\nsideTabPills.style.cssText = \"display:inline-flex!important;overflow-y:hidden;width:300px;scroll-behavior:smooth;\";\nsidePillBar.appendChild( sideTabPills );\n\nsideTabPanel = document.createElement(\"div\");\nsideTabPanel.id = \"side-tab-panel\";\nsideTabPanel.classList.add(\"tab-content\");\ncontainer.appendChild( sideTabPanel );\n\nsidePanel.addEventListener( \"mouseenter\", function(){\n\tthis.classList.toggle( \"pinned\", true );\n\tthis.style[\"-webkit-transform\"] = \"translateX( 0 )\";\n});\n\nsidePanel.addEventListener( \"mouseleave\", function(){\n\tthis.classList.toggle( \"pinned\", false );\n\tthis.style[\"-webkit-transform\"] = \"translateX( 340px )\";\n});\n\nsidePanel.appendChild( container );\nplayer.dom.appendChild( sidePanel );\n\nfunction stop(){\n\tsidePanel.remove();\n}\n\nscene.remove( this );"
 			}]
 	}
 }

@@ -16,6 +16,7 @@
 		<script src="/js/jquery.min.js"></script> 
 		<script src="/js/system.min.js"></script>
 		<script src="/js/signals.min.js"></script>
+		<script src="/js/inflate.min.js"></script>
 		<script src="/js/zangodb.min.js"></script>
 		<script src="/js/bootstrap.min.js"></script>
 
@@ -34,19 +35,24 @@
 	<body ontouchstart="">
 
 		<script src="js/three.js"></script>
-		<script src="js/app.js"></script>
-		<script src="js/inflate.min.js"></script>
-		<script src="js/FBXLoader.js"></script>
 		<script src="js/UVsDebug.js"></script>
+		<script src="js/FBXLoader.js"></script>
 		<script src="js/EditorControls.js"></script>
 
 		<script src="/js/MW.js"></script>
 		<script src="/js/MWtps.js"></script>
 		<script src="/js/VirtualInput.js"></script>
 
+
 		<script>
 
-			var player;
+			window.URL = window.URL || window.webkitURL;
+			window.BlobBuilder = window.BlobBuilder || window.WebKitBlobBuilder || window.MozBlobBuilder;
+
+			Number.prototype.format = function (){
+				return this.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+			};
+
 			var loader = new THREE.FileLoader();
 			loader.load( "app.json", function ( text ) {
 
