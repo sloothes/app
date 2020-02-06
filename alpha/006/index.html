@@ -47,18 +47,35 @@
 
 		<script>
 
-			var loader = new THREE.FileLoader();
-			loader.load( "app.json", function ( text ) {
+			var player;
+			var fbx, mixer;
+			var localPlayer;
+			var cameraControls;
+			var keyInputControls;
 
-				player = new APP.Player();
-				player.load( JSON.parse( text ) );
-				player.setSize( window.innerWidth, window.innerHeight );
-				player.play();
+			var loader = new THREE.FBXLoader();
+			var url = "/app/alpha/004/model/Carol.fbx";
+			loader.load( url, function( object ){
 
-				document.body.appendChild( player.dom );
+				console.log( object ); // object is THREE.Group.
+				object.name = "Carol";
 
-				window.addEventListener( "resize", function () {
+				mixer = new THREE.AnimationMixer( object );
+
+				var loader = new THREE.FileLoader();
+				loader.load( "app.json", function ( text ) {
+
+					player = new APP.Player();
+					player.load( JSON.parse( text ) );
 					player.setSize( window.innerWidth, window.innerHeight );
+					player.play();
+
+					document.body.appendChild( player.dom );
+
+					window.addEventListener( "resize", function () {
+						player.setSize( window.innerWidth, window.innerHeight );
+					});
+
 				});
 
 			});
