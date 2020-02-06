@@ -23,7 +23,7 @@
 			"near": 1,
 			"far": 10000,
 			"focus": 10,
-			"aspect": 1.8764705882352941,
+			"aspect": 1.7741935483870968,
 			"filmGauge": 35,
 			"filmOffset": 0
 		}
@@ -49,7 +49,7 @@
 					"layers": 1,
 					"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]
 				}],
-			"background": 11184810
+			"background": 0
 		}
 	},
 	"scripts": {
