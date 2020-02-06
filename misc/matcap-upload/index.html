@@ -45,6 +45,9 @@
 
 		<script>
 
+		//	const clientID = "06217f601180652";
+		//	const endpoint = "https://api.imgur.com/3/image/"
+
 			var input = document.createElement("input");
 			input.type = "file";
 			input.style.display = "none";
@@ -118,7 +121,7 @@
 					formdata.append("name",  file.name);
 
 					var xhttp = new XMLHttpRequest();
-					var clientid = "60db267c697bb33";  // textures app.
+					var clientid = "06217f601180652";  // slothes app.
 					var endpoint = "https://api.imgur.com/3/image";
 					xhttp.open("POST", endpoint, true);
 					xhttp.setRequestHeader("Authorization", "Client-ID " + clientid);
