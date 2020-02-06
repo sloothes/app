@@ -141,6 +141,19 @@
 
 				//	skinned meshes.
 
+					( new Function( "object", object.children.filter( function( child ){
+							return child.type == "SkinnedMesh";
+						}).map( function( skinned ){
+							var name = skinned.name;
+							debugMode && console.log( "\t"+name.toLowerCase() );
+							return "\t"+name.toLowerCase()+" = object.getObjectByName(\""+name+"\");"
+						}).join("\n")
+					) )( object );
+
+				});
+
+
+				/*
 					bra = object.getObjectByName( "Bra" );
 					hair = object.getObjectByName( "Hair" );
 					body = object.getObjectByName( "Body" );
@@ -148,8 +161,7 @@
 					skirt = object.getObjectByName( "Skirt" );
 					shoes = object.getObjectByName( "Shoes" );
 					panties = object.getObjectByName( "Panties" );
-
-				});
+				*/
 
 			});
 
