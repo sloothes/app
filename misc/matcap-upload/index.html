@@ -49,10 +49,29 @@
 			var input, button;
 			var uploads, results;
 			var debugMode = true;
+/*
+		//	UPLOADED MATCAPS:
 
-		//	MATCAPS
-		//	2K: "MZV8PzS,L509oY2,Bw7q38p,2FA0yx1,vVDGl7g,3nmnKd4,E36SPOB,MXqauTz,YHsPLdq,soRJv4a".
-			
+		//	2048px:	   "MZV8PzS,L509oY2,Bw7q38p,2FA0yx1,vVDGl7g,3nmnKd4,E36SPOB,MXqauTz,YHsPLdq,soRJv4a"
+
+		//	512px:	   "bixnsMm,MS1GDja,pUytALG,4KwC8wH,Wiqsp9s,gXRFY3U,2tkhy7C,D64zaTR,Id8k2u4,Fx9154f,
+						dqKYFPo,l0Lf1LN,7bH7Ajw,IeAwKEi,VysdwUU,dWAhf12,9ufYr2S,iAWd8i1,mkGDAn5,gf3PsvD,
+						BeHwxKA,GYBQ8Xr,9gxylAS,0p2RT39,aHeUCko,epbmrGs,NKMFDGB,pvXMCj9,QbZ8H2v,aCAVXQb,
+						qU0AEUM,yvwt1wj,D5UeFcC,6GZMeko,rSlm3oM,Xqg7n0A,PzHZLHy,MEzwCJq,wgf7Vl0,GcLQiey,
+						3xH34nj,vhdhgMe,jRTIv3l,xELCxlQ,wtJaViy,Qb0qKtc,7kq8wQ3,F6kcile,0LRxFql,rxUXS8C"
+
+		//	missing:   "matcap_003.jpg,matcap_007.jpg,matcap_008.jpg,matcap_010.jpg,matcap_011.jpg,matcap_012.jpg,
+						matcap_013.jpg,matcap_014.jpg,matcap_027.jpg,matcap_028.jpg,matcap_029.jpg,matcap_030.jpg,
+						matcap_031.jpg,matcap_032.jpg,matcap_033.jpg,matcap_034.jpg,matcap_035.jpg,matcap_036.jpg,
+						matcap_037.jpg,matcap_038.jpg,matcap_047.jpg,matcap_050.jpg,matcap_051.jpg,matcap_052.jpg,
+						matcap_053.jpg,matcap_054.jpg,matcap_055.jpg,matcap_056.jpg,matcap_057.jpg,matcap_058.jpg,
+						matcap_060.jpg,matcap_063.jpg,matcap_064.jpg,matcap_065.jpg,matcap_066.jpg,matcap_067.jpg,
+						matcap_068.jpg,matcap_069.jpg,matcap_070.jpg,matcap_071.jpg,matcap_072.jpg,matcap_073.jpg,
+						matcap_074.jpg,matcap_075.jpg,matcap_077.jpg,matcap_079.jpg,matcap_080.jpg,matcap_081.jpg,
+						matcap_082.jpg,matcap_083.jpg,matcap_084.jpg,matcap_085.jpg,matcap_086.jpg,matcap_087.jpg,
+						matcap_091.jpg,matcap_093.jpg,matcap_094.jpg,matcap_096.jpg,matcap_097.jpg,matcap_098.jpg"
+
+*/
 		//	const clientID = "06217f601180652";
 		//	const endpoint = "https://api.imgur.com/3/image/"
 
@@ -84,28 +103,44 @@
 				}
 				
 				debugMode && console.log( "uploads:", uploads );
-				return input.addEventListener( "change", onChange ); // breakpoint.
 
-			});
+				var promises = [];
 
-			/*
-				Promise.all(uploads).then(function(){
+				while ( uploads.length ){
+					promises.push( uploads.shift().call() );
+				}
+
+				Promise.all(promises).then(function(){
 
 				//	debugMode && console.log( "results:", results );
 
 					matcaps = results.map( function( item ){ 
 						return item.id; 
-					});
+					}).filter(Boolean);
 
 					debugMode && console.log( matcaps );
-					console.log( "matcaps:", matcaps.join(",") );
+					console.log( "matcaps:",  matcaps.join(",") );
+
+				}).then(function(){
+
+					var failed = results.filter(function(item){ 
+						return item.error && item.file;
+					}).map(function(item){
+						return item.file;
+					}).filter(Boolean).sort();
+					
+					if ( failed.length )
+						console.log( {failed:failed.length, files:failed.join(",")} );
+					else
+						console.log("All files uploaded successfully.");
 
 				}).catch(function(err){
 					console.error(err);
 				}).then( function(){
 					input.addEventListener( "change", onChange );
 				});
-			*/
+
+			});
 
 			button = document.createElement("a");
 			button.text = "Choose matcaps";
