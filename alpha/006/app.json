@@ -196,7 +196,7 @@
 			},
 			{
 				"name": "localPlayerLoader.js",
-				"source": "console.log( object );"
+				"source": ""
 			},
 			{
 				"name": "joystickControls.js",
