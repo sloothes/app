@@ -45,6 +45,7 @@
 
 		<script>
 
+			var results;
 			var debugMode = true;
 
 		//	const clientID = "06217f601180652";
@@ -61,8 +62,8 @@
 				
 				input.removeEventListener( "change", onChange );
 
+				results = [];
 				var uploads = [];
-				var results = [];
 				
 				for (var i=0; i < input.files.length; i++ ){
 					uploads.push( 
@@ -75,9 +76,9 @@
 					);
 				}
 				
-				console.log( uploads );
-				
-				return; // breakpoint.
+				debugMode && console.log( uploads );
+
+				input.addEventListener( "change", onChange ); return; // breakpoint.
 
 			/*
 				Promise.all(uploads).then(function(){
