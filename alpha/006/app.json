@@ -17,13 +17,13 @@
 			"type": "PerspectiveCamera",
 			"name": "Camera",
 			"layers": 1,
-			"matrix": [0.002611016631833829,0,0.9999965912902642,0,0.6599801449658539,0.7512810650791208,-0.0017232250091596124,0,-0.7512785041800398,0.6599823946542678,0.001961607356103512,0,-23.239680904274508,19.083765141968378,-1.2637494932165143,1],
+			"matrix": [0.999322415730789,0,-0.036806377409089194,0,-0.02244415289044573,0.7925631966244343,-0.6093765989578928,0,0.029171380135513097,0.6097897829223267,0.792026168270046,0,1.7021814859810438,16.384923862125834,23.120522676820066,1],
 			"fov": 50,
 			"zoom": 1,
 			"near": 1,
 			"far": 10000,
 			"focus": 10,
-			"aspect": 1.8764705882352941,
+			"aspect": 1.7741935483870968,
 			"filmGauge": 35,
 			"filmOffset": 0
 		}
@@ -44,8 +44,15 @@
 				{
 					"uuid": "075D8614-98F0-4F64-AAD3-92E574E7913B",
 					"type": "Group",
-					"name": "Side Panel",
+					"name": "Panel",
 					"visible": false,
+					"layers": 1,
+					"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]
+				},
+				{
+					"uuid": "91CC5BF6-87DB-45A6-8620-63138E9EA4F2",
+					"type": "Group",
+					"name": "Ground",
 					"layers": 1,
 					"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]
 				},
@@ -64,12 +71,29 @@
 		"555495BC-8EC7-4CBB-982B-F8AB597C8A3C": [
 			{
 				"name": "matcaps",
-				"source": "var matcaps = \"MZV8PzS,L509oY2,Bw7q38p,2FA0yx1,vVDGl7g,3nmnKd4,E36SPOB,MXqauTz,YHsPLdq,soRJv4a\"; // 2k (large)\nmatcaps += \"bixnsMm,MS1GDja,pUytALG,4KwC8wH,Wiqsp9s,gXRFY3U,2tkhy7C,D64zaTR,Id8k2u4,Fx9154f,\";\nmatcaps += \"dqKYFPo,l0Lf1LN,7bH7Ajw,IeAwKEi,VysdwUU,dWAhf12,9ufYr2S,iAWd8i1,mkGDAn5,gf3PsvD,\";\nmatcaps += \"BeHwxKA,GYBQ8Xr,9gxylAS,0p2RT39,aHeUCko,epbmrGs,NKMFDGB,pvXMCj9,QbZ8H2v,aCAVXQb,\";\nmatcaps += \"qU0AEUM,yvwt1wj,D5UeFcC,6GZMeko,rSlm3oM,Xqg7n0A,PzHZLHy,MEzwCJq,wgf7Vl0,GcLQiey,\";\nmatcaps += \"3xH34nj,vhdhgMe,jRTIv3l,xELCxlQ,wtJaViy,Qb0qKtc,7kq8wQ3,F6kcile,0LRxFql,rxUXS8C,\";\nmatcaps += \"qXg0NKn,LSB7hqR,EolEkFt,gOtyiMy,YTE0R32,thsIYPF,ee6stBn,gyYhQao,QOEE3jO,0V4rQPV,\";\nmatcaps += \"l9Tugo0,R86xHzg,IDlk0H9,tUparH7,GISkhjO,JQzRceW,WxVSuFW,4tyRlwP,aFIJ3Iu,BCqRnS4,\";\nmatcaps += \"1OcGlAa,PqIxyYE,S7J95Cf,QPUvzXD,Stdy1eT,k0nOt5N,rWuDYYe,SGRUmyD,1Ia4Qbk,FFYLtQa,\";\nmatcaps += \"szmc38X,NJSPJlS,8HsVNJA,n3wbE5E,88autaS,7jwTUiI,H1F3Yrv,kgV7aSY,PDFIrWw,Uun8Lpr,\";\nmatcaps += \"Oz16d2L,02gRNwL,bV94g46,eUEtBHC,e1N7JYN,bWpofvm,uzlo3mR,YaXveL2,mw2f1lF,HkWGQb1,\";\nmatcaps += \"N9xoehs,53rWmmo,sBPySdS,1YZKblR,ywKHb7r,3UcbBN7,pWPtSJS,n1a2nB8,lecZa2Q,e3bxY9I,\";\nmatcaps += \"Jl6XqD0\";\n"
+				"source": "var material;\nvar textures = {};\nvar matcaps = \"MZV8PzS,L509oY2,Bw7q38p,2FA0yx1,vVDGl7g,3nmnKd4,E36SPOB,MXqauTz,YHsPLdq,soRJv4a,\" // 2k (large)\n\t\t\t+ \"bixnsMm,MS1GDja,pUytALG,4KwC8wH,Wiqsp9s,gXRFY3U,2tkhy7C,D64zaTR,Id8k2u4,Fx9154f,\"\n\t\t\t+ \"dqKYFPo,l0Lf1LN,7bH7Ajw,IeAwKEi,VysdwUU,dWAhf12,9ufYr2S,iAWd8i1,mkGDAn5,gf3PsvD,\"\n\t\t\t+ \"BeHwxKA,GYBQ8Xr,9gxylAS,0p2RT39,aHeUCko,epbmrGs,NKMFDGB,pvXMCj9,QbZ8H2v,aCAVXQb,\"\n\t\t\t+ \"qU0AEUM,yvwt1wj,D5UeFcC,6GZMeko,rSlm3oM,Xqg7n0A,PzHZLHy,MEzwCJq,wgf7Vl0,GcLQiey,\"\n\t\t\t+ \"3xH34nj,vhdhgMe,jRTIv3l,xELCxlQ,wtJaViy,Qb0qKtc,7kq8wQ3,F6kcile,0LRxFql,rxUXS8C,\"\n\t\t\t+ \"qXg0NKn,LSB7hqR,EolEkFt,gOtyiMy,YTE0R32,thsIYPF,ee6stBn,gyYhQao,QOEE3jO,0V4rQPV,\"\n\t\t\t+ \"l9Tugo0,R86xHzg,IDlk0H9,tUparH7,GISkhjO,JQzRceW,Jl6XqD0,4tyRlwP,aFIJ3Iu,BCqRnS4,\"\n\t\t\t+ \"1OcGlAa,PqIxyYE,S7J95Cf,QPUvzXD,Stdy1eT,k0nOt5N,rWuDYYe,SGRUmyD,1Ia4Qbk,FFYLtQa,\"\n\t\t\t+ \"szmc38X,NJSPJlS,8HsVNJA,n3wbE5E,88autaS,7jwTUiI,H1F3Yrv,kgV7aSY,PDFIrWw,Uun8Lpr,\"\n\t\t\t+ \"Oz16d2L,02gRNwL,bV94g46,eUEtBHC,e1N7JYN,bWpofvm,uzlo3mR,YaXveL2,mw2f1lF,HkWGQb1,\"\n\t\t\t+ \"N9xoehs,53rWmmo,sBPySdS,1YZKblR,ywKHb7r,3UcbBN7,pWPtSJS,n1a2nB8,lecZa2Q,e3bxY9I\";\n\nmatcaps = matcaps.split(\",\"); // WxVSuFW\n\ntextures.dispose = function(){\n\tfor (var uuid in this ) {\n\t\tthis[ uuid ].dispose();\n\t}\n}\n\nvar container = document.createElement(\"div\");\ncontainer.id = \"matcap-list\";\ncontainer.style.width = \"300px\";\nvar title = document.createElement(\"h3\");\ntitle.textContent = \"Materials\";\ncontainer.appendChild( title );\n\nwhile ( matcaps.length ) {\n\t(function( id ){\n\n\t\tvar button = document.createElement(\"div\");\n\t\tbutton.id = id;\n\t\tbutton.classList.add(\"btn\", \"btn-white-outline\", \"btn-matcap\");\n\t\tbutton.style.cssText = \"width:33px;height:33px;padding:0;display:inline-block;\"\n\t\t+ \"float:left;margin-right:4px;margin-bottom:4px;border:1px solid;border-radius:4px;\"\n\t\t+ \"background-size:contain;background-image:url(https://i.imgur.com/\"+id+\"s.jpg);\";\n\t//\n\t\tvar url = \"https://i.imgur.com/\"+id+\".jpg\";\n\t\tvar loader = new THREE.TextureLoader();\n\t\tloader.crossOrigin = \"anonymous\";\n\t\tloader.load( url, function( texture ){\n\t\t\ttextures[ texture.uuid ] = texture;\n\t\t\tbutton.setAttribute(\"uuid\", texture.uuid);\n\t\t});\n\t//\n\t\tbutton.addEventListener( \"click\", function(){\n\t\t\tvar uuid = button.getAttribute(\"uuid\");\n\t\t\tconsole.log( textures[ uuid ] );\n\t\t\tif ( !material ) return;\n\t\t\tmaterial.envMap = textures[ uuid ];\n\t\t\tmaterial.envMap.needsUpdate = true;\n\t\t\tmaterial.needsUpdate = true;\n\t\t\ttextures.dispose();\n\t\t});\n\t//\n\t\tcontainer.appendChild( button );\n\n\t})( matcaps.shift() );\n}\n\nconsole.log( textures );\n\nsetTimeout( function(){\n\tdocument.getElementById(\"side-panel-content\").appendChild( container );\n});\n\n"
 			}],
 		"075D8614-98F0-4F64-AAD3-92E574E7913B": [
 			{
 				"name": "side-panel.js",
 				"source": "var sidePanel = document.createElement(\"div\");\nsidePanel.id = \"side-panel\";\nsidePanel.classList.add(\"side-panel\");\nsidePanel.style.cssText = \"position:absolute;top:0;right:0;bottom:0;width:370px;color:#eee;background:rgba(0,0,0,0.4);\"\n\t+ \" -webkit-transform:translateX( 340px ); -webkit-transition:-webkit-transform 500ms ease-out; z-index:9999;\";\n\nvar container = document.createElement(\"div\");\ncontainer.id = \"side-panel-content\";\ncontainer.style.cssText = \"position:absolute;top:40px;left:40px;bottom:20px;right:20px;overflow-x:hidden;\";\n\nvar sidePillBar = document.createElement(\"div\");\nsidePillBar.id = \"side-pill-bar\";\nsidePillBar.classList.add(\"side-holder\");\nsidePillBar.style.cssText = \"margin-bottom:20px;\";\ncontainer.appendChild( sidePillBar );\n\nsideTabPills = document.createElement(\"ul\");\nsideTabPills.id = \"side-tab-pills\";\nsideTabPills.classList.add(\"nav\",\"nav-tabs\",\"nav-pills\");\nsideTabPills.style.cssText = \"display:inline-flex!important;overflow-y:hidden;width:300px;scroll-behavior:smooth;\";\nsidePillBar.appendChild( sideTabPills );\n\nsideTabPanel = document.createElement(\"div\");\nsideTabPanel.id = \"side-tab-panel\";\nsideTabPanel.classList.add(\"tab-content\");\ncontainer.appendChild( sideTabPanel );\n\nsidePanel.addEventListener( \"mouseenter\", function(){\n\tthis.classList.toggle( \"pinned\", true );\n\tthis.style[\"-webkit-transform\"] = \"translateX( 0 )\";\n});\n\nsidePanel.addEventListener( \"mouseleave\", function(){\n\tthis.classList.toggle( \"pinned\", false );\n\tthis.style[\"-webkit-transform\"] = \"translateX( 340px )\";\n});\n\nsidePanel.appendChild( container );\nplayer.dom.appendChild( sidePanel );\n\nfunction stop(){\n\tsidePanel.remove();\n}\n\nscene.remove( this );"
+			}],
+		"91CC5BF6-87DB-45A6-8620-63138E9EA4F2": [
+			{
+				"name": "octree.js",
+				"source": "//\toctree.js\n\nvar partition = 1;\n\nvar min = new THREE.Vector3( -1000, -1000, -1000 );\nvar max = new THREE.Vector3(  1000,  1000,  1000 );\n\noctree = new MW.Octree( min, max, partition );\n\n//\tHELPERS.\n\nvar octMeshHelpers = [];\nvar octEdgeHelpers = [];\n\nfunction octreeHelpers( octree ){\n\tvar nodeIndex = octree.nodes.length - 1;\n\tvar node = octree.nodes[ nodeIndex ][0];\n\tvar x = node.max.x - node.min.x;\n\tvar y = node.max.y - node.min.y;\n\tvar z = node.max.z - node.min.z;\n\tvar geometry = new THREE.BoxGeometry(x, y, z);\n\tvar material = new THREE.MeshBasicMaterial({visible:false});\n\n\toctree.nodes[ nodeIndex ].forEach(function(node){\n\n\t\tvar x = node.max.x - node.min.x;\n\t\tvar y = node.max.y - node.min.y;\n\t\tvar z = node.max.z - node.min.z;\n\n\t\tvar mesh = new THREE.Mesh(geometry, material);\n\t\tvar helper = new THREE.EdgesHelper( mesh, 0xffff00 );\n\n\t\tmesh.position.set(\n\t\t\tnode.min.x + (x/2),\n\t\t\tnode.min.y + (y/2),\n\t\t\tnode.min.z + (z/2)\n\t\t);\n\n\t\t//  scene.add( mesh );\n\t\tscene.add( mesh, helper );\n\n\t\toctMeshHelpers.push(mesh);\n\t\toctEdgesHelpers.push(helper);\n\t});\n}\n\nfunction octreeNodeHelper( node ){\n\tvar x = node.max.x - node.min.x;\n\tvar y = node.max.y - node.min.y;\n\tvar z = node.max.z - node.min.z;\n\tvar geometry = new THREE.BoxGeometry(x, y, z);\n\tvar material = new THREE.MeshBasicMaterial({visible:false});\n\tvar mesh = new THREE.Mesh(geometry, material);\n\tmesh.position.set(\n\t\tnode.min.x + (x/2),\n\t\tnode.min.y + (y/2),\n\t\tnode.min.z + (z/2)\n\t);\n\tscene.add( mesh );\n\toctMeshHelpers.push(mesh);\n\tvar helper = new THREE.EdgesHelper( mesh, 0xffff00 );\n\thelper.name = \"octree helper\";\n\tscene.add( helper );\n\toctEdgesHelpers.push(helper);\n}\n\n//  Remove octree mesh helpers.\n\nfunction removeOctreeHelpers(){\n\toctMeshHelpers.forEach( function( item, i ){\n\t\tscene.remove( octMeshHelpers[i] );\n\t\tvar geometry = octMeshHelpers[i].geometry;\n\t\tvar material = octMeshHelpers[i].material;\n\t\tgeometry.dispose();\n\t\tmaterial.dispose();\n\t});\n\tconsole.log( \"octree mesh helpers has been removed.\" );\n}\n"
+			},
+			{
+				"name": "world.js",
+				"source": "//\tWORLD.\n\nworld = new MW.World();\nworld.add( octree );\n\n\n//\tUPDATE.\n\nvar clock = new THREE.Clock(); // important!\n\nfunction update(){\n\n\tvar delta = clock.getDelta();\n\n\tworld.step( delta );\n\n}\n"
+			},
+			{
+				"name": "ground.js",
+				"source": "//\tground.js\n\nvar ground = new THREE.Mesh(\n\tnew THREE.PlaneGeometry( 10000, 10000, 1, 1 ),\n\tnew THREE.MeshLambertMaterial({ \n\t\topacity:1, \n\t\tcolor:0x829ec4,\n\t})\n);\n\n//\tWe need only the geometry of the ground\n//\tso there is not need to add to the scene.\n\nground.rotation.x = -Math.PI / 2; // THREE.Math.degToRad( -90 );\noctree.importThreeMesh( ground ); // important!\n"
+			},
+			{
+				"name": "ground-helper.js",
+				"source": "this.add( new THREE.GridHelper( 1000, 100, 0x444444, 0x444444 ) );\n"
 			}]
 	}
 }
