@@ -17,13 +17,13 @@
 			"type": "PerspectiveCamera",
 			"name": "Camera",
 			"layers": 1,
-			"matrix": [1,0,0,0,0,0.8944271909999159,-0.4472135954999579,0,0,0.4472135954999579,0.8944271909999159,0,0,5,10,1],
+			"matrix": [0.9820042351172703,-6.938893903907228e-18,-0.18885889497650066,0,-0.09361849739646055,0.8684903620951351,-0.48678544338660135,0,0.16402213008302813,0.49570605296673664,0.8528612137359542,0,1.8338231633998205,5.542162156458672,9.535278246432856,1],
 			"fov": 50,
 			"zoom": 1,
 			"near": 1,
 			"far": 10000,
 			"focus": 10,
-			"aspect": 1.7741935483870968,
+			"aspect": 1.8764705882352941,
 			"filmGauge": 35,
 			"filmOffset": 0
 		}
@@ -40,8 +40,23 @@
 			"name": "Scene",
 			"layers": 1,
 			"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1],
+			"children": [
+				{
+					"uuid": "555495BC-8EC7-4CBB-982B-F8AB597C8A3C",
+					"type": "Group",
+					"name": "Materials",
+					"visible": false,
+					"layers": 1,
+					"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]
+				}],
 			"background": 11184810
 		}
 	},
-	"scripts": {}
+	"scripts": {
+		"555495BC-8EC7-4CBB-982B-F8AB597C8A3C": [
+			{
+				"name": "",
+				"source": "var matcaps = \"bixnsMm,MS1GDja,pUytALG,4KwC8wH,Wiqsp9s,gXRFY3U,2tkhy7C,D64zaTR,Id8k2u4,Fx9154f,\"\n\t\t\t+ \"dqKYFPo,l0Lf1LN,7bH7Ajw,IeAwKEi,VysdwUU,dWAhf12,9ufYr2S,iAWd8i1,mkGDAn5,gf3PsvD,\"\n\t\t\t+ \"BeHwxKA,GYBQ8Xr,9gxylAS,0p2RT39,aHeUCko,epbmrGs,NKMFDGB,pvXMCj9,QbZ8H2v,aCAVXQb,\"\n\t\t\t+ \"qU0AEUM,yvwt1wj,D5UeFcC,6GZMeko,rSlm3oM,Xqg7n0A,PzHZLHy,MEzwCJq,wgf7Vl0,GcLQiey,\"\n\t\t\t+ \"3xH34nj,vhdhgMe,jRTIv3l,xELCxlQ,wtJaViy,Qb0qKtc,7kq8wQ3,F6kcile,0LRxFql,rxUXS8C,\"\n\t\t\t+ \"qXg0NKn,LSB7hqR,EolEkFt,gOtyiMy,YTE0R32,thsIYPF,ee6stBn,gyYhQao,QOEE3jO,0V4rQPV,\"\n\t\t\t+ \"l9Tugo0,R86xHzg,IDlk0H9,tUparH7,GISkhjO,JQzRceW,WxVSuFW,4tyRlwP,aFIJ3Iu,BCqRnS4,\"\n\t\t\t+ \"1OcGlAa,PqIxyYE,S7J95Cf,QPUvzXD,Stdy1eT,k0nOt5N,rWuDYYe,SGRUmyD,1Ia4Qbk,FFYLtQa,\"\n\t\t\t+ \"szmc38X,NJSPJlS,8HsVNJA,n3wbE5E,88autaS,7jwTUiI,H1F3Yrv,kgV7aSY,PDFIrWw,Uun8Lpr,\"\n\t\t\t+ \"Oz16d2L,02gRNwL,bV94g46,eUEtBHC,e1N7JYN,bWpofvm,uzlo3mR,YaXveL2,mw2f1lF,HkWGQb1\";\n\n"
+			}]
+	}
 }
