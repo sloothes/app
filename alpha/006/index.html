@@ -893,28 +893,57 @@
 				//	Materials.
 
 					(function(){
-						
-						var materials = {};
-						var select = document.createElement("select");
-						document.getElementById("material-title").appendChild(select);
 
 					//	Reset materials.
-						bra.material = new THREE.MeshStandardMaterial({skinning:true});
-						hair.material = new THREE.MeshStandardMaterial({skinning:true});
-						body.material = new THREE.MeshStandardMaterial({skinning:true});
-						skirt.material = new THREE.MeshStandardMaterial({skinning:true});
-						torso.material = new THREE.MeshStandardMaterial({skinning:true});
-						shoes.material = new THREE.MeshStandardMaterial({skinning:true});
-						panties.material = new THREE.MeshStandardMaterial({skinning:true});
 
+						bra.material = new THREE.MeshStandardMaterial({skinning:true, name:"Bra"});
+						hair.material = new THREE.MeshStandardMaterial({skinning:true, name:"Hair"});
+						body.material = new THREE.MeshStandardMaterial({skinning:true, name:"Body"});
+						skirt.material = new THREE.MeshStandardMaterial({skinning:true, name:"Skirt"});
+						torso.material = new THREE.MeshStandardMaterial({skinning:true, name:"Torso"});
+						shoes.material = new THREE.MeshStandardMaterial({skinning:true, name:"Shoes"});
+						panties.material = new THREE.MeshStandardMaterial({skinning:true, name:"Panties"});
 
+						var materials = {};
 
+						materials[bra.material.uuid] = bra.material;
+						materials[body.material.uuid] = body.material;
+						materials[hair.material.uuid] = hair.material;
+						materials[torso.material.uuid] = torso.material;
+						materials[skirt.material.uuid] = skirt.material;
+						materials[shoes.material.uuid] = shoes.material;
+						materials[panties.material.uuid] = panties.material;
 
+					//	Material droplist.
 
+						var select = document.createElement("select");
+						select.style.cssText = "width:180px;margin-right:10px;float:right;border-radius:4px;";
 
+						select.appendChild( createOption(body) );
+						select.appendChild( createOption(hair) );
+						select.appendChild( createOption(bra) );
+						select.appendChild( createOption(panties) );
+						select.appendChild( createOption(torso) );
+						select.appendChild( createOption(skirt) );
+						select.appendChild( createOption(shoes) );
 
+						select.addEventListener( "change", function(){
+							var value = select.value;
+							var option = select.selectedOptions.item(0);
+							var uuid = option.getAttribute("uuid");
+							var mesh = scene.getObjectByProperty("uuid", uuid);
+							material = mesh.material; // selected material.
+							debugMode && console.log({option:option, value:value, uuid:uuid, mesh:mesh, material:material});
+						});
 
+						function createOption( mesh ){
+							var option = document.createElement("option");
+							option.value = mesh.name;
+							option.setAttribute("uuid", mesh.uuid);
+							return option;
+						}
 
+						document.getElementById("material-title").appendChild(select);
 
 					//	Define selected material.
 						material = body.material;
