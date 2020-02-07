@@ -69,6 +69,7 @@
 		<script>
 
 			var player;
+			var material;
 			var fbx, mixer;
 			var localPlayer;
 			var cameraControls;
@@ -917,7 +918,7 @@
 					//	Material droplist.
 
 						var select = document.createElement("select");
-						select.style.cssText = "width:180px;margin-right:10px;float:right;border-radius:4px;";
+						select.style.cssText = "width:180px;margin-right:8px;float:right;border-radius:4px;";
 
 						select.appendChild( createOption(body) );
 						select.appendChild( createOption(hair) );
@@ -928,18 +929,15 @@
 						select.appendChild( createOption(shoes) );
 
 						select.addEventListener( "change", function(){
-							var value = select.value;
-							var option = select.selectedOptions.item(0);
-							var uuid = option.getAttribute("uuid");
+							var uuid = select.value;
 							var mesh = scene.getObjectByProperty("uuid", uuid);
 							material = mesh.material; // selected material.
-							debugMode && console.log({option:option, value:value, uuid:uuid, mesh:mesh, material:material});
 						});
 
 						function createOption( mesh ){
 							var option = document.createElement("option");
-							option.value = mesh.name;
-							option.setAttribute("uuid", mesh.uuid);
+							option.text = mesh.name;
+							option.value = mesh.uuid;
 							return option;
 						}
 
