@@ -925,23 +925,33 @@
 
 					//	Reset materials.
 
-						function loadMatcap( id ){
+						var skin = loadMatcap("aCAVXQb", function(){
+							body.material = new THREE.MeshStandardMaterial({skinning:true, name:"Body", envMap:skin});
+						});
+
+						var chrome = loadMatcap("bixnsMm", function(){
+							bra.material = new THREE.MeshStandardMaterial({skinning:true, name:"Bra", envMap:chrome});
+							hair.material = new THREE.MeshStandardMaterial({skinning:true, name:"Hair", envMap:chrome, side:2});
+							skirt.material = new THREE.MeshStandardMaterial({skinning:true, name:"Skirt", envMap:chrome, side:2});
+							torso.material = new THREE.MeshStandardMaterial({skinning:true, name:"Torso", envMap:chrome});
+							shoes.material = new THREE.MeshStandardMaterial({skinning:true, name:"Shoes", envMap:chrome});
+							panties.material = new THREE.MeshStandardMaterial({skinning:true, name:"Panties", envMap:chrome});
+						});
+
+						function loadMatcap( id, callback ){
 							var image, texture, mapping;
 							var url = "https://i.imgur.com/"+id+".jpg";
 							var loader = new THREE.ImageLoader();
 							loader.setCrossOrigin("anonymous");				// important!
-							image = loader.load( url, function(){
-								texture.needsUpdate = true;
-							});
+							image = loader.load( url );
+							image.addEventListener("load", callback);
 							mapping = THREE.SphericalReflectionMapping;		// important!
 							texture = new THREE.Texture( image, mapping );	// important!
 							texture.sourceFile = url;						// important!
 							return texture;
 						}
 
-						var skin = loadMatcap("aCAVXQb");
-						var chrome = loadMatcap("bixnsMm");
-
+					/*
 						bra.material = new THREE.MeshStandardMaterial({skinning:true, name:"Bra", envMap:chrome});
 						hair.material = new THREE.MeshStandardMaterial({skinning:true, name:"Hair", envMap:chrome, side:2});
 						body.material = new THREE.MeshStandardMaterial({skinning:true, name:"Body", envMap:skin});
@@ -949,6 +959,7 @@
 						torso.material = new THREE.MeshStandardMaterial({skinning:true, name:"Torso", envMap:chrome});
 						shoes.material = new THREE.MeshStandardMaterial({skinning:true, name:"Shoes", envMap:chrome});
 						panties.material = new THREE.MeshStandardMaterial({skinning:true, name:"Panties", envMap:chrome});
+					*/
 
 					/*
 					//	Dynamic reset materials function.
