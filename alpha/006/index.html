@@ -779,26 +779,25 @@
 						//
 							var url = "https://i.imgur.com/"+id+".jpg";
 							var loader = new THREE.ImageLoader();
-							loader.setCrossOrigin("anonymous");
+							loader.setCrossOrigin("anonymous"); // important!
 							loader.load( url, function( image ){
-								var mapping = THREE.SphericalReflectionMapping; // important!
-								var texture = new THREE.Texture( image, mapping );
+								var mapping = THREE.SphericalReflectionMapping;    // important!
+								var texture = new THREE.Texture( image, mapping ); // important!
 								textures[ texture.uuid ] = texture;
 								button.setAttribute("uuid", texture.uuid);
 								container.appendChild( button );
 							});
 						//
 							button.addEventListener( "click", function(){
-								if ( !selected ) return;
-								if ( !selected.material ) return;
+								if ( !(material && material.type == "MeshStandardMaterial") ) return;
 								var uuid = button.getAttribute("uuid");
 								debugMode && console.log( textures[ uuid ] );
 							//	Execute command.
-								selected.material.roughness = 0;
-								selected.material.metalness = 1;
-								selected.material.envMap = textures[ uuid ];
-								selected.material.envMap.needsUpdate = true;
-								selected.material.needsUpdate = true;
+								material.roughness = 0;
+								material.metalness = 1;
+								material.envMap = textures[ uuid ];
+								material.envMap.needsUpdate = true;
+								material.needsUpdate = true;
 								textures.dispose();
 							});
 						//
