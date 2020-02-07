@@ -789,7 +789,8 @@
 							});
 						//
 							button.addEventListener( "click", function(){
-								if ( !(material && material.type == "MeshStandardMaterial") ) return;
+								if ( !material ) return;
+								if ( material.type != "MeshStandardMaterial" ) return;
 								var uuid = button.getAttribute("uuid");
 								debugMode && console.log( textures[ uuid ] );
 							//	Execute command.
@@ -882,7 +883,8 @@
 						}).map( function( skinned ){
 							var name = skinned.name;
 							debugMode && console.log( "\t"+name.toLowerCase() );
-							return "\t"+name.toLowerCase()+" = object.getObjectByName(\""+name+"\");"
+							return "\t"+name.toLowerCase()+" = object.getObjectByName(\""+name+"\");\n"
+							+ "\t"+name.toLowerCase()+".material = new THREE.MeshStandardMaterial({skinning:true});";
 						}).join("\n")
 					) )( object );
 
