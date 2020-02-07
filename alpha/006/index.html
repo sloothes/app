@@ -765,6 +765,7 @@
 					container.id = "matcap-list";
 					container.style.width = "300px";
 					var title = document.createElement("h3");
+					title.id = "material-title";
 					title.textContent = "Materials";
 					container.appendChild( title );
 
@@ -889,17 +890,36 @@
 						}).join("\n")
 					) )( object );
 
-				//	Reset materials.
-					bra.material = new THREE.MeshStandardMaterial({skinning:true});
-					hair.material = new THREE.MeshStandardMaterial({skinning:true});
-					body.material = new THREE.MeshStandardMaterial({skinning:true});
-					skirt.material = new THREE.MeshStandardMaterial({skinning:true});
-					torso.material = new THREE.MeshStandardMaterial({skinning:true});
-					shoes.material = new THREE.MeshStandardMaterial({skinning:true});
-					panties.material = new THREE.MeshStandardMaterial({skinning:true});
+				//	Materials.
 
-				//	Define selected material.
-					material = body.material;
+					(function(){
+						
+						var materials = {};
+						var select = document.createElement("select");
+						document.getElementById("material-title").appendChild(select);
+
+					//	Reset materials.
+						bra.material = new THREE.MeshStandardMaterial({skinning:true});
+						hair.material = new THREE.MeshStandardMaterial({skinning:true});
+						body.material = new THREE.MeshStandardMaterial({skinning:true});
+						skirt.material = new THREE.MeshStandardMaterial({skinning:true});
+						torso.material = new THREE.MeshStandardMaterial({skinning:true});
+						shoes.material = new THREE.MeshStandardMaterial({skinning:true});
+						panties.material = new THREE.MeshStandardMaterial({skinning:true});
+
+
+
+
+
+
+
+
+
+
+					//	Define selected material.
+						material = body.material;
+
+					})();
 
 				//	Remove loading bar.
 					document.getElementById("loading-bar").remove();
