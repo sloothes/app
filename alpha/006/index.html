@@ -735,10 +735,10 @@
 
 				(function(){
 
-					var material;
+					var materials;
 
-					materialSelected.add( function( selected ){
-						material = selected;
+					materialSelected.add( function( array ){
+						materials = array;
 					});
 
 					var textures = {};
@@ -751,11 +751,13 @@
 
 					var textureClicked = new Signal();
 					textureClicked.add( function( uuid ){
-						material.roughness = 0;
-						material.metalness = 1;
-						material.envMap = textures[ uuid ];
-						material.envMap.needsUpdate = true;
-						material.needsUpdate = true;
+						materials.forEach( function(material){
+							material.roughness = 0;
+							material.metalness = 1;
+							material.envMap = textures[ uuid ];
+							material.envMap.needsUpdate = true;
+							material.needsUpdate = true;
+						});
 					});
 
 					var matcaps = (
@@ -919,9 +921,9 @@
 					//	Reset materials.
 
 						bra.material = new THREE.MeshStandardMaterial({skinning:true, name:"Bra"});
-						hair.material = new THREE.MeshStandardMaterial({skinning:true, name:"Hair"});
+						hair.material = new THREE.MeshStandardMaterial({skinning:true, name:"Hair", side:2});
 						body.material = new THREE.MeshStandardMaterial({skinning:true, name:"Body"});
-						skirt.material = new THREE.MeshStandardMaterial({skinning:true, name:"Skirt"});
+						skirt.material = new THREE.MeshStandardMaterial({skinning:true, name:"Skirt", side:2});
 						torso.material = new THREE.MeshStandardMaterial({skinning:true, name:"Torso"});
 						shoes.material = new THREE.MeshStandardMaterial({skinning:true, name:"Shoes"});
 						panties.material = new THREE.MeshStandardMaterial({skinning:true, name:"Panties"});
@@ -937,6 +939,7 @@
 						) )( object );
 					*/
 
+					/*
 						var materials = {};
 
 						materials[bra.material.uuid] = bra.material;
@@ -947,7 +950,6 @@
 						materials[shoes.material.uuid] = shoes.material;
 						materials[panties.material.uuid] = panties.material;
 
-					/*
 					//	Dynamic add to materials function.
 						( new Function( "object", object.children.filter( function( child ){
 								return child.type == "SkinnedMesh";
@@ -965,6 +967,13 @@
 						+ "border:1px solid;border-radius:4px;"
 						+ "color:#000;font-size:20px;margin-right:8px;";
 
+						function createOption( mesh ){
+							var option = document.createElement("option");
+							option.text = mesh.name;
+							option.value = mesh.uuid;
+							return option;
+						}
+
 						select.appendChild( createOption(hair) );
 						select.appendChild( createOption(body) );
 						select.appendChild( createOption(bra) );
@@ -972,6 +981,20 @@
 						select.appendChild( createOption(torso) );
 						select.appendChild( createOption(skirt) );
 						select.appendChild( createOption(shoes) );
+
+						(function(){
+							var option = document.createElement("option");
+							option.text = "bra & panties";
+							option.value = [bra.uuid, panties.uuid].join();
+							select.appendChild( option );
+						})();
+
+						(function(){
+							var option = document.createElement("option");
+							option.text = "torso & skirt";
+							option.value = [torso.uuid, skirt.uuid].join();
+							select.appendChild( option );
+						})();
 
 					/*
 					//	Dynamic create options function.
@@ -984,24 +1007,35 @@
 						) )( object );
 					*/
 
+					//	Multiply materials.
+						select.addEventListener( "change", function(){
+							var uuids = select.value.split(",");
+							debugMode && console.log( uuids );
+							var meshes = uuids.map(function(uuid){
+								return scene.getObjectByProperty("uuid", uuid);
+							});
+							debugMode && console.log( meshes );
+							var materials = meshes.map(function(mesh){
+								return mesh.material;
+							});
+							debugMode && console.log( materials );
+							materialSelected.dispatch( materials );
+						});
+
+					/*
+					//	Single material.
 						select.addEventListener( "change", function(){
 							var uuid = select.value;
 							var mesh = scene.getObjectByProperty("uuid", uuid);
 							materialSelected.dispatch( mesh.material );
 						});
-
-						function createOption( mesh ){
-							var option = document.createElement("option");
-							option.text = mesh.name;
-							option.value = mesh.uuid;
-							return option;
-						}
+					*/
 
 						document.getElementById("material-title").appendChild(select);
 
 					//	Init selected material.
 						select.value = body.uuid;
-						materialSelected.dispatch( body.material );
+						materialSelected.dispatch( [body.material] );
 
 					})();
 
