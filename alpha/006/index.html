@@ -796,17 +796,17 @@
 							var button = document.createElement("div");
 							button.id = id;
 							button.classList.add("btn", "btn-white-outline", "btn-matcap");
-						//	TODO: to cache matcap icons.
 							button.style.cssText = "width:33px;height:33px;padding:0;display:inline-block;"
 							+ "float:left;margin-right:4px;margin-bottom:4px;border:1px solid;border-radius:4px;"
-							+ "background-size:contain;background-image:url(https://i.imgur.com/"+id+"s.jpg);"; 
+							+ "background-size:contain;background-image:url(https://i.imgur.com/"+id+"s.jpg);"; // TODO: to cache icons.
 						//
-							var url = "https://i.imgur.com/"+id+".jpg";
+							var url = "https://i.imgur.com/"+id+".jpg"; // TODO: to cache matcaps.
 							var loader = new THREE.ImageLoader();
-							loader.setCrossOrigin("anonymous"); // important!
+							loader.setCrossOrigin("anonymous");						// important!
 							loader.load( url, function( image ){
-								var mapping = THREE.SphericalReflectionMapping;    // important!
-								var texture = new THREE.Texture( image, mapping ); // important!
+								var mapping = THREE.SphericalReflectionMapping;		// important!
+								var texture = new THREE.Texture( image, mapping );	// important!
+								texture.sourceFile = url;							// important!
 								textures[ texture.uuid ] = texture;
 								button.setAttribute("uuid", texture.uuid);
 								container.appendChild( button );
@@ -827,7 +827,7 @@
 
 				//	Signal.
 
-					console.log( textures );
+					debugMode && console.log( textures );
 
 					document.getElementById("side-panel-content").appendChild( container );
 
@@ -837,8 +837,8 @@
 
 			//	Avatar loader.
 
+				var url = "/app/alpha/004/model/Carol.fbx"; // TODO: to cache model.
 				var loader = new THREE.FBXLoader();
-				var url = "/app/alpha/004/model/Carol.fbx";
 				loader.load( url, function( object ){
 
 					object.name = "Carol";
@@ -925,13 +925,27 @@
 
 					//	Reset materials.
 
-						bra.material = new THREE.MeshStandardMaterial({skinning:true, name:"Bra"});
-						hair.material = new THREE.MeshStandardMaterial({skinning:true, name:"Hair", side:2});
-						body.material = new THREE.MeshStandardMaterial({skinning:true, name:"Body"});
-						skirt.material = new THREE.MeshStandardMaterial({skinning:true, name:"Skirt", side:2});
-						torso.material = new THREE.MeshStandardMaterial({skinning:true, name:"Torso"});
-						shoes.material = new THREE.MeshStandardMaterial({skinning:true, name:"Shoes"});
-						panties.material = new THREE.MeshStandardMaterial({skinning:true, name:"Panties"});
+						function loadMatcap( id ){
+							var url = "https://i.imgur.com/"+id+".jpg";
+							var loader = new THREE.ImageLoader();
+							loader.setCrossOrigin("anonymous");					// important!
+							var image = loader.load( url );
+							var mapping = THREE.SphericalReflectionMapping;		// important!
+							var texture = new THREE.Texture( image, mapping );	// important!
+							texture.sourceFile = url;							// important!
+							return texture;
+						}
+
+						var skin = loadMatcap("aCAVXQb");
+						var chrome = loadMatcap("bixnsMm");
+
+						bra.material = new THREE.MeshStandardMaterial({skinning:true, name:"Bra", envMap:chrome});
+						hair.material = new THREE.MeshStandardMaterial({skinning:true, name:"Hair", envMap:chrome, side:2});
+						body.material = new THREE.MeshStandardMaterial({skinning:true, name:"Body", envMap:skin});
+						skirt.material = new THREE.MeshStandardMaterial({skinning:true, name:"Skirt", envMap:chrome, side:2});
+						torso.material = new THREE.MeshStandardMaterial({skinning:true, name:"Torso", envMap:chrome});
+						shoes.material = new THREE.MeshStandardMaterial({skinning:true, name:"Shoes", envMap:chrome});
+						panties.material = new THREE.MeshStandardMaterial({skinning:true, name:"Panties", envMap:chrome});
 
 					/*
 					//	Dynamic reset materials function.
@@ -982,6 +996,7 @@
 						select.appendChild( createOption(torso, skirt) );
 						select.appendChild( createOption(shoes) );
 
+					//	All.
 						(function(){
 							var meshes = [hair,body,bra,panties,torso,skirt,shoes];
 							var option = createOption.apply(this, meshes);
