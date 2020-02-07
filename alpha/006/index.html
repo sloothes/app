@@ -740,7 +740,7 @@
 						}
 					}
 
-				//	var material; // select material and parse it somehow... 
+				//	var selected; // select mesh and parse it somehow... 
 
 					var matcaps = "MZV8PzS,L509oY2,Bw7q38p,2FA0yx1,vVDGl7g,3nmnKd4,E36SPOB,MXqauTz,YHsPLdq,soRJv4a," // 2k (large)
 								+ "bixnsMm,MS1GDja,pUytALG,4KwC8wH,Wiqsp9s,gXRFY3U,2tkhy7C,D64zaTR,Id8k2u4,Fx9154f,"
@@ -787,15 +787,16 @@
 							});
 						//
 							button.addEventListener( "click", function(){
-								debugMode && console.log( material );
+								if ( !selected ) return;
+								var material = selected.material;
+								if ( !material ) return;
 								var uuid = button.getAttribute("uuid");
 								debugMode && console.log( textures[ uuid ] );
-								if ( !material ) return;
 							//	Execute command.
 								material.envMap = textures[ uuid ];
 								material.envMap.needsUpdate = true;
 								material.needsUpdate = true;
-								// textures.dispose();
+								textures.dispose();
 							});
 						//
 
