@@ -885,13 +885,24 @@
 						}).map( function( skinned ){
 							var name = skinned.name;
 							debugMode && console.log( "\t"+name.toLowerCase() );
-							return "\t"+name.toLowerCase()+" = object.getObjectByName(\""+name+"\");\n"
-							+ "\t"+name.toLowerCase()+".material = new THREE.MeshStandardMaterial({skinning:true});";
+							return "\t"+name.toLowerCase()+" = object.getObjectByName(\""+name+"\");";
 						}).join("\n")
 					) )( object );
 
+				//	Reset materials.
+
+					bra.material = new THREE.MeshStandardMaterial({skinning:true});
+					hair.material = new THREE.MeshStandardMaterial({skinning:true});
+					body.material = new THREE.MeshStandardMaterial({skinning:true});
+					skirt.material = new THREE.MeshStandardMaterial({skinning:true});
+					torso.material = new THREE.MeshStandardMaterial({skinning:true});
+					shoes.material = new THREE.MeshStandardMaterial({skinning:true});
+					panties.material = new THREE.MeshStandardMaterial({skinning:true});
+
+				//	Define selected material.
 					material = body.material;
 
+				//	Remove loading bar.
 					document.getElementById("loading-bar").remove();
 
 				});
