@@ -822,24 +822,24 @@
 					localPlayer.outfit.update = function() {
 
 					//  "this" is "localPlayer.outfit".
-						if ( !localPlayer.outfit.direction ) return;
+						if ( !this.direction ) return;
 
 					//  Update avatar rotation y.
-						var direction = scope.controller.direction - Math.PI;
+						var controller = localPlayer.controller;
+						var direction = controller.direction - Math.PI;
 
 					//  Update avatar position.
-						var x = scope.controller.center.x;
-						var y = scope.controller.center.y - scope.controller.radius;
-						var z = scope.controller.center.z;
+						var x = controller.center.x;
+						var y = controller.center.y - controller.radius;
+						var z = controller.center.z;
 
 					//  "this" is the "localPlayer.outfit".
-						localPlayer.direction.rotation.y = direction;
-						localPlayer.direction.position.set( x, y, z );
+						this.direction.rotation.y = direction;
+						this.direction.position.set( x, y, z );
 
 					};
 
 				//  Add outfit direction holder to scene.
-
 					localPlayer.outfit.direction = object;
 					scene.add( localPlayer.outfit.direction );
 
