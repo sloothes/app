@@ -965,8 +965,8 @@
 						+ "border:1px solid;border-radius:4px;"
 						+ "color:#000;font-size:20px;margin-right:8px;";
 
-						select.appendChild( createOption(body) );
 						select.appendChild( createOption(hair) );
+						select.appendChild( createOption(body) );
 						select.appendChild( createOption(bra) );
 						select.appendChild( createOption(panties) );
 						select.appendChild( createOption(torso) );
@@ -999,8 +999,9 @@
 
 						document.getElementById("material-title").appendChild(select);
 
-					//	Define selected material.
-						material = body.material;
+					//	Init selected material.
+						select.value = body.uuid;
+						materialSelected.dispatch( body.material );
 
 					})();
 
