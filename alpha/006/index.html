@@ -499,6 +499,11 @@
 					var radius = 15;
 					localPlayer = new LocalPlayer( radius );
 
+					(function update(){
+						requestAnimationFrame( update );
+						localPlayer.outfit.update();
+					})();
+
 				})();
 
 			//	Camera controls.js
@@ -507,7 +512,7 @@
 
 					cameraControls = new MW.TPSCameraControl(camera, localPlayer.holder, {
 						el: renderer.domElement, // html renderer element.
-						offset: new THREE.Vector3( 0, 12, 0 ), // camera eye height.
+						offset: new THREE.Vector3( 0, 0, 0 ), // camera eye height.
 						radius: 40, // default: 37 // (distance of the character to the camera).
 						minRadius: 6, // default: 10 // (can take and negative values, yes!!!).
 						maxRadius: 100, // default: 64, runtime: 40.
