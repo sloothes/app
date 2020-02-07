@@ -787,6 +787,7 @@
 							});
 						//
 							button.addEventListener( "click", function(){
+								debugMode && console.log( material );
 								var uuid = button.getAttribute("uuid");
 								debugMode && console.log( textures[ uuid ] );
 								if ( !material ) return;
