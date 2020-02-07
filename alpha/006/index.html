@@ -943,8 +943,7 @@
 							var url = "https://i.imgur.com/"+id+".jpg";
 							var loader = new THREE.ImageLoader();
 							loader.setCrossOrigin("anonymous");				// important!
-							image = loader.load( url );
-							image.addEventListener("load", callback);
+							image = loader.load( url, callback );
 							mapping = THREE.SphericalReflectionMapping;		// important!
 							texture = new THREE.Texture( image, mapping );	// important!
 							texture.sourceFile = url;						// important!
