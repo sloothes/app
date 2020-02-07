@@ -926,13 +926,16 @@
 					//	Reset materials.
 
 						function loadMatcap( id ){
+							var image, texture, mapping;
 							var url = "https://i.imgur.com/"+id+".jpg";
 							var loader = new THREE.ImageLoader();
-							loader.setCrossOrigin("anonymous");					// important!
-							var image = loader.load( url );
-							var mapping = THREE.SphericalReflectionMapping;		// important!
-							var texture = new THREE.Texture( image, mapping );	// important!
-							texture.sourceFile = url;							// important!
+							loader.setCrossOrigin("anonymous");				// important!
+							image = loader.load( url, function(){
+								texture.needsUpdate = true;
+							});
+							mapping = THREE.SphericalReflectionMapping;		// important!
+							texture = new THREE.Texture( image, mapping );	// important!
+							texture.sourceFile = url;						// important!
 							return texture;
 						}
 
