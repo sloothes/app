@@ -125,31 +125,30 @@
 					"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]
 				},
 				{
+					"uuid": "DC362FB5-6BEB-4502-8180-18D699A1DB18",
+					"type": "Mesh",
+					"name": "PlayerSphere",
+					"layers": 1,
+					"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1],
+					"geometry": "E66B54AB-27A5-4DBB-B47E-B72AC43B6F73",
+					"material": "C9AADAE6-DA7B-43F5-A3FD-38A10D6A2452"
+				},
+				{
+					"uuid": "098E3671-3453-4C87-A884-A9A2F353E3DF",
+					"type": "Mesh",
+					"name": "DirectionPointer",
+					"visible": false,
+					"layers": 1,
+					"matrix": [1,0,0,0,0,2.220446049250313e-16,1,0,0,-1,2.220446049250313e-16,0,0,15,0,1],
+					"geometry": "318F7F89-4136-40AB-8BC6-9F2443059C2E",
+					"material": "8964C9E6-83FC-4B1D-874F-9918D30E8B6C"
+				},
+				{
 					"uuid": "44B6BFAC-8C9E-48F6-8BA9-78DC576BDA86",
 					"type": "Group",
 					"name": "LocalPlayer",
 					"layers": 1,
-					"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1],
-					"children": [
-						{
-							"uuid": "DC362FB5-6BEB-4502-8180-18D699A1DB18",
-							"type": "Mesh",
-							"name": "PlayerSphere",
-							"layers": 1,
-							"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1],
-							"geometry": "E66B54AB-27A5-4DBB-B47E-B72AC43B6F73",
-							"material": "C9AADAE6-DA7B-43F5-A3FD-38A10D6A2452"
-						},
-						{
-							"uuid": "098E3671-3453-4C87-A884-A9A2F353E3DF",
-							"type": "Mesh",
-							"name": "DirectionPointer",
-							"visible": false,
-							"layers": 1,
-							"matrix": [1,0,0,0,0,2.220446049250313e-16,1,0,0,-1,2.220446049250313e-16,0,0,15,0,1],
-							"geometry": "318F7F89-4136-40AB-8BC6-9F2443059C2E",
-							"material": "8964C9E6-83FC-4B1D-874F-9918D30E8B6C"
-						}]
+					"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]
 				}],
 			"background": 4194368
 		}
