@@ -781,7 +781,8 @@
 							var loader = new THREE.ImageLoader();
 							loader.setCrossOrigin("anonymous");
 							loader.load( url, function( image ){
-								var texture = new THREE.Texture( image, THREE.SphericalReflectionMapping );
+								var mapping = THREE.SphericalReflectionMapping; // important!
+								var texture = new THREE.Texture( image, mapping );
 								textures[ texture.uuid ] = texture;
 								button.setAttribute("uuid", texture.uuid);
 								container.appendChild( button );
@@ -793,6 +794,8 @@
 								var uuid = button.getAttribute("uuid");
 								debugMode && console.log( textures[ uuid ] );
 							//	Execute command.
+								selected.material.roughness = 0;
+								selected.material.metalness = 1;
 								selected.material.envMap = textures[ uuid ];
 								selected.material.envMap.needsUpdate = true;
 								selected.material.needsUpdate = true;
