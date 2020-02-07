@@ -982,11 +982,24 @@
 						select.appendChild( createOption(torso, skirt) );
 						select.appendChild( createOption(shoes) );
 
+						(function(){
+							var meshes = [hair,body,bra,panties,torso,skirt,shoes];
+							var option = createOption.apply(this, meshes);
+							option.text = "All";
+							option.selected = true;
+							select.appendChild( option );
+						//	init selected materials.
+							var materials = meshes.map(function(mesh){
+								return mesh.material;
+							});
+							materialSelected.dispatch( materials );
+						})();
+
 						function createOption(){
 							var names = [];
 							var uuids = [];
 							for ( var arg in arguments ){
-								var mesh = argument[arg];
+								var mesh = arguments[arg];
 								names.push( mesh.name );
 								uuids.push( mesh.uuid );
 							}
@@ -1048,8 +1061,8 @@
 						document.getElementById("material-title").appendChild(select);
 
 					//	Init selected material.
-						select.value = body.uuid;
-						materialSelected.dispatch( [body.material] );
+					//	select.value = body.uuid;
+					//	materialSelected.dispatch( [body.material] );
 
 					})();
 
