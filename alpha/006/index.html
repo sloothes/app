@@ -738,10 +738,13 @@
 					var materials;
 
 					materialSelected.add( function( array ){
-						materials = array;
+						materials = array.filter(function(material){
+							return material.type == "MeshStandardMaterial";
+						});
 					});
 
 					var textures = {};
+
 					textures.dispose = function(){
 						for (var uuid in this ) {
 							var texture = this[ uuid ];
@@ -750,6 +753,7 @@
 					}
 
 					var textureClicked = new Signal();
+
 					textureClicked.add( function( uuid ){
 						materials.forEach( function(material){
 							material.roughness = 0;
@@ -809,8 +813,9 @@
 							});
 						//
 							button.addEventListener( "click", function(){
-								if ( !material ) return;
-								if ( material.type != "MeshStandardMaterial" ) return;
+								if ( !materials ) return;
+								if ( !Array.isArray( materials ) ) return;
+								if ( !materials.length ) return;
 								var uuid = button.getAttribute("uuid");
 								textureClicked.dispatch( uuid );
 								textures.dispose();
