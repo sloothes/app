@@ -925,18 +925,13 @@
 
 					//	Reset materials.
 
-						var skin = loadMatcap("aCAVXQb", function(){
-							body.material = new THREE.MeshStandardMaterial({skinning:true, name:"Body", envMap:skin});
-						});
-
-						var chrome = loadMatcap("bixnsMm", function(){
-							bra.material = new THREE.MeshStandardMaterial({skinning:true, name:"Bra", envMap:chrome});
-							hair.material = new THREE.MeshStandardMaterial({skinning:true, name:"Hair", envMap:chrome, side:2});
-							skirt.material = new THREE.MeshStandardMaterial({skinning:true, name:"Skirt", envMap:chrome, side:2});
-							torso.material = new THREE.MeshStandardMaterial({skinning:true, name:"Torso", envMap:chrome});
-							shoes.material = new THREE.MeshStandardMaterial({skinning:true, name:"Shoes", envMap:chrome});
-							panties.material = new THREE.MeshStandardMaterial({skinning:true, name:"Panties", envMap:chrome});
-						});
+						bra.material = new THREE.MeshStandardMaterial({skinning:true, name:"Bra"});
+						hair.material = new THREE.MeshStandardMaterial({skinning:true, name:"Hair", side:2});
+						body.material = new THREE.MeshStandardMaterial({skinning:true, name:"Body"});
+						skirt.material = new THREE.MeshStandardMaterial({skinning:true, name:"Skirt", side:2});
+						torso.material = new THREE.MeshStandardMaterial({skinning:true, name:"Torso"});
+						shoes.material = new THREE.MeshStandardMaterial({skinning:true, name:"Shoes"});
+						panties.material = new THREE.MeshStandardMaterial({skinning:true, name:"Panties"});
 
 						function loadMatcap( id, callback ){
 							var image, texture, mapping;
@@ -950,15 +945,24 @@
 							return texture;
 						}
 
-					/*
-						bra.material = new THREE.MeshStandardMaterial({skinning:true, name:"Bra", envMap:chrome});
-						hair.material = new THREE.MeshStandardMaterial({skinning:true, name:"Hair", envMap:chrome, side:2});
-						body.material = new THREE.MeshStandardMaterial({skinning:true, name:"Body", envMap:skin});
-						skirt.material = new THREE.MeshStandardMaterial({skinning:true, name:"Skirt", envMap:chrome, side:2});
-						torso.material = new THREE.MeshStandardMaterial({skinning:true, name:"Torso", envMap:chrome});
-						shoes.material = new THREE.MeshStandardMaterial({skinning:true, name:"Shoes", envMap:chrome});
-						panties.material = new THREE.MeshStandardMaterial({skinning:true, name:"Panties", envMap:chrome});
-					*/
+						loadMatcap("aCAVXQb", function(){
+							body.material.roughness = 0;
+							body.material.metalness = 1;
+							body.material.envMap = texture;
+							body.material.needsUpdate = true;
+							body.material.envMap.needsUpdate = true;
+						});
+
+						var chrome = loadMatcap("bixnsMm", function(){
+							var meshes = [hair,bra,panties,torso,skirt,shoes];
+							meshes.forEach(function( mesh ){
+								mesh.material.roughness = 0;
+								mesh.material.metalness = 1;
+								mesh.material.envMap = texture;
+								mesh.material.needsUpdate = true;
+								mesh.material.envMap.needsUpdate = true;
+							});
+						});
 
 					/*
 					//	Dynamic reset materials function.
