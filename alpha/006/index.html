@@ -788,14 +788,13 @@
 						//
 							button.addEventListener( "click", function(){
 								if ( !selected ) return;
-								var material = selected.material;
-								if ( !material ) return;
+								if ( !selected.material ) return;
 								var uuid = button.getAttribute("uuid");
 								debugMode && console.log( textures[ uuid ] );
 							//	Execute command.
-								material.envMap = textures[ uuid ];
-								material.envMap.needsUpdate = true;
-								material.needsUpdate = true;
+								selected.material.envMap = textures[ uuid ];
+								selected.material.envMap.needsUpdate = true;
+								selected.material.needsUpdate = true;
 								textures.dispose();
 							});
 						//
