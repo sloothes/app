@@ -972,21 +972,31 @@
 						+ "border:1px solid;border-radius:4px;"
 						+ "color:#000;font-size:20px;margin-right:8px;";
 
-						function createOption( mesh ){
-							var option = document.createElement("option");
-							option.text = mesh.name;
-							option.value = mesh.uuid;
-							return option;
-						}
-
 						select.appendChild( createOption(hair) );
 						select.appendChild( createOption(body) );
 						select.appendChild( createOption(bra) );
 						select.appendChild( createOption(panties) );
+						select.appendChild( createOption(bra, panties) );
 						select.appendChild( createOption(torso) );
 						select.appendChild( createOption(skirt) );
+						select.appendChild( createOption(torso, skirt) );
 						select.appendChild( createOption(shoes) );
 
+						function createOption(){
+							var names = [];
+							var uuids = [];
+							for ( var arg in arguments ){
+								var mesh = argument[arg];
+								names.push( mesh.name );
+								uuids.push( mesh.uuid );
+							}
+							var option = document.createElement("option");
+							option.text = names.join(" & ");
+							option.value = uuids.join();
+							return option;
+						}
+
+					/*
 						(function(){
 							var option = document.createElement("option");
 							option.text = "bra & panties";
@@ -1000,8 +1010,7 @@
 							option.value = [torso.uuid, skirt.uuid].join();
 							select.appendChild( option );
 						})();
-
-					/*
+				
 					//	Dynamic create options function.
 						( new Function( "object", object.children.filter( function( child ){
 								return child.type == "SkinnedMesh";
@@ -1012,7 +1021,7 @@
 						) )( object );
 					*/
 
-					//	Multiply materials.
+					//	Multiple materials.
 						select.addEventListener( "change", function(){
 							var uuids = select.value.split(",");
 							debugMode && console.log( uuids );
