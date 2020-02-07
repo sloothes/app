@@ -752,7 +752,7 @@
 
 				//	TODO: to cache matcaps and icons.
 
-					textures.dispose(){
+					textures.dispose = function(){
 						for (var uuid in this ) {
 							var texture = this[ uuid ];
 							this.dispose && this.dispose();
