@@ -833,9 +833,7 @@
 
 					console.log( textures );
 
-					setTimeout( function(){
-						document.getElementById("side-panel-content").appendChild( container );
-					});
+					document.getElementById("side-panel-content").appendChild( container );
 
 				})();
 
@@ -860,6 +858,7 @@
 
 					object.name = "Carol";
 					console.log( object ); // object is THREE.Group.
+					fbx = object;
 
 					mixer = new THREE.AnimationMixer( object );
 
