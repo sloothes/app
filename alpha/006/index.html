@@ -733,6 +733,13 @@
 
 					var textures = {};
 
+					textures.dispose = function(){
+						for (var uuid in this ) {
+							var texture = this[ uuid ];
+							texture.dispose && texture.dispose();
+						}
+					}
+
 				//	var material; // select material and parse it somehow... 
 
 					var matcaps = "MZV8PzS,L509oY2,Bw7q38p,2FA0yx1,vVDGl7g,3nmnKd4,E36SPOB,MXqauTz,YHsPLdq,soRJv4a," // 2k (large)
@@ -751,13 +758,6 @@
 					matcaps = matcaps.split(","); 
 
 				//	TODO: to cache matcaps and icons.
-
-					textures.dispose = function(){
-						for (var uuid in this ) {
-							var texture = this[ uuid ];
-							this.dispose && this.dispose();
-						}
-					}
 
 					var container = document.createElement("div");
 					container.id = "matcap-list";
