@@ -299,8 +299,8 @@
 						this.eventTimeout = undefined;
 
 					//	fbx must load before localPlayer.outfit.
-					//	this.direction = fbx; // important!
-						this.direction = new THREE.Object3D();
+					//	this.direction = object; // important!
+					//	this.direction = new THREE.Object3D();
 
 						this.gender = {
 							male    : false,
@@ -367,7 +367,10 @@
 
 				(function(){
 
-					LocalPlayer = function( radius ){
+					var radius = 15;
+					localPlayer = new LocalPlayer( radius );
+
+					 function LocalPlayer( radius ){
 
 						var scope = this;
 
@@ -382,29 +385,6 @@
 						this.sphere = AW3D.PlayerSphere();
 						this.sphere.position.y = 0;
 						this.holder.add( this.sphere );
-
-					//  Outfit Manager.
-
-						this.outfit = new OutfitManager(); // important!
-
-						this.outfit.update = function() {
-
-						//  Update avatar rotation y.
-							var direction = scope.controller.direction - Math.PI;
-
-						//  "this" is the "localPlayer.outfit".
-							this.direction.rotation.y = direction;
-
-						//  Update avatar position.
-							var x = scope.controller.center.x;
-							var y = scope.controller.center.y - scope.controller.radius;
-							var z = scope.controller.center.z;
-
-						//  "this" is the "localPlayer.outfit".
-							this.direction.position.set( x, y, z );
-
-						};
-
 
 					//  Player Controller.
 
@@ -478,10 +458,6 @@
 							"index:", world.characterPool.indexOf( this.controller )
 						);
 
-					//  Add outfit direction holder to scene.
-
-						scene.add( this.outfit.direction ); // important!
-
 					}
 
 					LocalPlayer.prototype = {
@@ -490,19 +466,11 @@
 
 					};
 
-				})();
+					//  Outfit Manager.
+					/*
+						this.outfit = new OutfitManager();
 
-			//	localPlayer.
-
-				(function(){
-
-					var radius = 15;
-					localPlayer = new LocalPlayer( radius );
-
-					(function update(){
-						requestAnimationFrame( update );
-						localPlayer.outfit.update();
-					})();
+					*/
 
 				})();
 
@@ -787,7 +755,7 @@
 						}
 					}
 
-					//	TODO: to cache matcaps and icons.
+				//	TODO: to cache matcaps and icons.
 
 					var container = document.createElement("div");
 					container.id = "matcap-list";
@@ -839,30 +807,50 @@
 
 			//
 
-
-
-
-
-
-
-
-
-
-			//
+			//	Avatar loader.
 
 				var loader = new THREE.FBXLoader();
 				var url = "/app/alpha/004/model/Carol.fbx";
 				loader.load( url, function( object ){
 
-					document.getElementById("loading-bar").remove();
-
 					object.name = "Carol";
 					console.log( object ); // object is THREE.Group.
-					fbx = object;
 
-					mixer = new THREE.AnimationMixer( object );
+				//	Outfit Manager.
+
+					localPlayer.outfit = new OutfitManager();
+					localPlayer.outfit.update = function() {
+
+					//  "this" is "localPlayer.outfit".
+						if ( !localPlayer.outfit.direction ) return;
+
+					//  Update avatar rotation y.
+						var direction = scope.controller.direction - Math.PI;
+
+					//  Update avatar position.
+						var x = scope.controller.center.x;
+						var y = scope.controller.center.y - scope.controller.radius;
+						var z = scope.controller.center.z;
+
+					//  "this" is the "localPlayer.outfit".
+						localPlayer.direction.rotation.y = direction;
+						localPlayer.direction.position.set( x, y, z );
+
+					};
+
+				//  Add outfit direction holder to scene.
+
+					localPlayer.outfit.direction = object;
+					scene.add( localPlayer.outfit.direction );
+
+					(function update(){
+						requestAnimationFrame( update );
+						localPlayer.outfit.update();
+					})();
 
 				//	get animations.
+
+					mixer = new THREE.AnimationMixer( object );
 
 					( new Function( "object", object.animations.map( function(animation, i){
 							var name = animation.name.replace("Carol|", "").replace(/\s/g, ""); 
@@ -870,6 +858,14 @@
 							return "\t"+name+" = mixer.clipAction( object.animations["+i+"], object );";
 						}).join("\n")
 					) )( object );
+
+					var clock = new THREE.Clock();
+					
+					(function update(){
+						requestAnimationFrame( update );
+						var delta = clock.getDelta();
+						mixer.update( delta );
+					})();
 
 				//	get skinned meshes.
 
@@ -882,28 +878,10 @@
 						}).join("\n")
 					) )( object );
 
-				//	mixer updating.
 
-					var clock = new THREE.Clock();
-					
-					(function update(){
-						requestAnimationFrame( update );
-						var delta = clock.getDelta();
-						mixer.update( delta );
-					})();
+					document.getElementById("loading-bar").remove();
 
 				});
-
-
-
-
-
-
-
-
-
-
-
 
 			});
 
