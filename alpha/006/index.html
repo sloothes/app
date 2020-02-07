@@ -132,7 +132,7 @@
 
 					mixer = new THREE.AnimationMixer( object );
 
-				//	animations.
+				//	get animations.
 
 					( new Function( "object", object.animations.map( function(animation, i){
 							var name = animation.name.replace("Carol|", "").replace(/\s/g, ""); 
@@ -141,7 +141,7 @@
 						}).join("\n")
 					) )( object );
 
-				//	skinned meshes.
+				//	get skinned meshes.
 
 					( new Function( "object", object.children.filter( function( child ){
 							return child.type == "SkinnedMesh";
@@ -152,7 +152,30 @@
 						}).join("\n")
 					) )( object );
 
+				//	mixer updating.
+
+					var clock = new THREE.Clock();
+					
+					(function update(){
+						requestAnimationFrame( update );
+						var dt = clock.getDelta();
+						mixer && mixer.update( dt );
+					})();
+
 				});
+
+
+
+
+
+
+
+
+
+
+
+
+			});
 
 
 				/*
@@ -164,8 +187,6 @@
 					shoes = object.getObjectByName( "Shoes" );
 					panties = object.getObjectByName( "Panties" );
 				*/
-
-			});
 
 
 
