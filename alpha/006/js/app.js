@@ -7,7 +7,7 @@ var APP = {
 	Player: function () {
 
 		var loader = new THREE.ObjectLoader();
-		var camera, scene, renderer;
+	//	var camera, scene, renderer;
 
 		var events = {};
 
