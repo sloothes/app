@@ -422,7 +422,7 @@
 							Jogging.weight = 0; 
 							StandardRun.weight = 0;
 							StandingIdle.weight = 0; 
-							StandingJump.play();
+							Jump2.play();
 						};
 
 						function onEndJumping(){
@@ -434,7 +434,7 @@
 
 							if ( scope.controller.isRunning && scope.controller.isWalking ) {
 
-								StandingJump.stop();
+								Jump2.stop();
 
 								scope.controller.movementSpeed = 28;
 								scope.controller.dispatchEvent({type:"startRunning"});
@@ -443,7 +443,7 @@
 
 							} else if ( scope.controller.isRunning && !scope.controller.isWalking ) {
 
-								StandingJump.stop();
+								Jump2.stop();
 
 								scope.controller.movementSpeed = 45;
 								scope.controller.dispatchEvent({type:"startRunning"});
@@ -452,7 +452,7 @@
 
 							} else {
 
-								StandingJump.stop();
+								Jump2.stop();
 
 								scope.controller.movementSpeed = 0;
 								scope.controller.dispatchEvent({type:"startIdling"});
@@ -552,8 +552,8 @@
 						}
 					};
 
+					keyInputControls.inRun = true;
 					keyInputControls.Off(); // important!
-					keyInputControls.inRun = false;
 
 					setTimeout(function(){
 						keyInputControls.On(); // important!
