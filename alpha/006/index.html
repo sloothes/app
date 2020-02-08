@@ -933,6 +933,21 @@
 						shoes.material = new THREE.MeshStandardMaterial({skinning:true, name:"Shoes"});
 						panties.material = new THREE.MeshStandardMaterial({skinning:true, name:"Panties"});
 
+						loadMatcap("aCAVXQb", function( image ){
+							var mapping = THREE.SphericalReflectionMapping;		// important!
+							var texture = new THREE.Texture( image, mapping );	// important!
+							texture.sourceFile = image.src;						// important!
+							applyMatcap.bind(texture).call(texture, body);
+						});
+
+						loadMatcap("bixnsMm", function( image ){
+							var meshes = [hair,bra,panties,torso,skirt,shoes];
+							var mapping = THREE.SphericalReflectionMapping;		// important!
+							var texture = new THREE.Texture( image, mapping );	// important!
+							texture.sourceFile = image.src;						// important!
+							meshes.forEach( applyMatcap.bind(texture) );
+						});
+
 						function loadMatcap( id, callback ){
 							var url = "https://i.imgur.com/"+id+".jpg";
 							var loader = new THREE.ImageLoader();
@@ -943,25 +958,10 @@
 						function applyMatcap( mesh ){
 							mesh.material.roughness = 0;
 							mesh.material.metalness = 1;
-							mesh.material.envMap = texture;
+							mesh.material.envMap = this;
 							mesh.material.needsUpdate = true;
 							mesh.material.envMap.needsUpdate = true;
 						}
-
-						loadMatcap("aCAVXQb", function( image ){
-							var mapping = THREE.SphericalReflectionMapping;		// important!
-							var texture = new THREE.Texture( image, mapping );	// important!
-							texture.sourceFile = image.src;						// important!
-							applyMatcap( body );
-						});
-
-						loadMatcap("bixnsMm", function( image ){
-							var meshes = [hair,bra,panties,torso,skirt,shoes];
-							var mapping = THREE.SphericalReflectionMapping;		// important!
-							var texture = new THREE.Texture( image, mapping );	// important!
-							texture.sourceFile = image.src;						// important!
-							meshes.forEach( applyMatcap );
-						});
 
 
 					/*
