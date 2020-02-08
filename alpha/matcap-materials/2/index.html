@@ -780,10 +780,9 @@
 						+ "WxVSuFW," // normal matcap.
 					).split(",");
 
-				//	TODO: to cache matcaps and matcap icons.
+				//	cache matcaps and matcap icons (only once).
 
 				/*
-				//	Only onces.
 					caches.open("matcaps").then(function( cache ){
 						cache.addAll(
 							matcaps.map( function( id ){
@@ -794,7 +793,6 @@
 						});
 					});
 
-				//	Only onces.
 					caches.open("thumbnails").then(function( cache ){
 						cache.addAll(
 							matcaps.map( function( id ){
