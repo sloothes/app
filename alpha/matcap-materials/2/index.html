@@ -925,16 +925,6 @@
 
 				//	get skinned meshes.
 
-				/*
-					bra = object.getObjectByName( "Bra" );
-					hair = object.getObjectByName( "Hair" );
-					body = object.getObjectByName( "Body" );
-					torso = object.getObjectByName( "Torso" );
-					skirt = object.getObjectByName( "Skirt" );
-					shoes = object.getObjectByName( "Shoes" );
-					panties = object.getObjectByName( "Panties" );
-				*/
-
 				//	Dynamic get skinned meshes function.
 					( new Function( "object", object.children.filter( function( child ){
 							return child.type == "SkinnedMesh";
@@ -945,6 +935,16 @@
 						}).join("\n")
 					) )( object );
 
+				/*
+					bra = object.getObjectByName( "Bra" );
+					hair = object.getObjectByName( "Hair" );
+					body = object.getObjectByName( "Body" );
+					torso = object.getObjectByName( "Torso" );
+					skirt = object.getObjectByName( "Skirt" );
+					shoes = object.getObjectByName( "Shoes" );
+					panties = object.getObjectByName( "Panties" );
+				*/
+
 				//	Materials.
 
 					(function(){
@@ -953,26 +953,25 @@
 
 						bra.material = new THREE.MeshStandardMaterial({skinning:true, name:"Bra"});
 						hair.material = new THREE.MeshStandardMaterial({skinning:true, name:"Hair", side:2});
-					//	body.material = new THREE.MeshStandardMaterial({skinning:true, name:"Body"}); // has [body, eyes, nails] materials.
 						skirt.material = new THREE.MeshStandardMaterial({skinning:true, name:"Skirt", side:2});
 						torso.material = new THREE.MeshStandardMaterial({skinning:true, name:"Torso"});
 						shoes.material = new THREE.MeshStandardMaterial({skinning:true, name:"Shoes"});
 						panties.material = new THREE.MeshStandardMaterial({skinning:true, name:"Panties"});
+					//	body has [body, eyes, nails] materials.
+						body.material[0] = new THREE.MeshStandardMaterial({skinning:true, name:"Body"});
+						body.material[1] = new THREE.MeshStandardMaterial({skinning:true, name:"Eye"});
+						body.material[2] = new THREE.MeshStandardMaterial({skinning:true, name:"Nail"});
 
-					/*
 						loadMatcap("aCAVXQb", function( image ){
-						//	body has (3) [body, eyes, nails] materials.
+						//	body has (3) [body, eye, nail] materials.
 							var mapping = THREE.SphericalReflectionMapping;		// important!
 							var texture = new THREE.Texture( image, mapping );	// important!
 							texture.sourceFile = image.src;						// important!
-							body.material.forEach(function( material ){
-								applyMatcap.bind(texture).call(texture, material);
-							});
+							applyMatcap.bind(texture).call(texture, body.material[0]);
 						});
-					*/
 
 						loadMatcap("bixnsMm", function( image ){
-							var meshes = [hair,bra,panties,torso,skirt,shoes];
+							var meshes = [ hair,bra,panties,torso,skirt,shoes ];
 							var mapping = THREE.SphericalReflectionMapping;		// important!
 							var texture = new THREE.Texture( image, mapping );	// important!
 							texture.sourceFile = image.src;						// important!
@@ -997,37 +996,17 @@
 						}
 
 
-					/*
-					//	Dynamic reset materials function.
-						( new Function( "object", object.children.filter( function( child ){
-								return child.type == "SkinnedMesh";
-							}).map( function( skinned ){
-								var name = skinned.name;
-								return "\t"+name.toLowerCase()+".material = new THREE.MeshStandardMaterial({skinning:true, name:\""+name+"\"});";
-							}).join("\n")
-						) )( object );
-					*/
-
-					/*
 						var materials = {};
 
 						materials[bra.material.uuid] = bra.material;
-						materials[body.material.uuid] = body.material;
 						materials[hair.material.uuid] = hair.material;
 						materials[torso.material.uuid] = torso.material;
 						materials[skirt.material.uuid] = skirt.material;
 						materials[shoes.material.uuid] = shoes.material;
 						materials[panties.material.uuid] = panties.material;
-
-					//	Dynamic add to materials function.
-						( new Function( "object", object.children.filter( function( child ){
-								return child.type == "SkinnedMesh";
-							}).map( function( skinned ){
-								var name = skinned.name.toLowerCase();
-								return "\tmaterials["+name+".material.uuid] = "+name+".material;";
-							}).join("\n")
-						) )( object );
-					*/
+						materials[body.material[0].uuid] = body.material[0];
+						materials[body.material[1].uuid] = body.material[1];
+						materials[body.material[2].uuid] = body.material[2];
 
 					//	Material droplist.
 
@@ -1036,37 +1015,39 @@
 						+ "border:1px solid;border-radius:4px;"
 						+ "color:#000;font-size:20px;margin-right:8px;";
 
-						select.appendChild( createOption(hair) );
-						select.appendChild( createOption(body) );
-						select.appendChild( createOption(bra) );
-						select.appendChild( createOption(panties) );
-						select.appendChild( createOption(bra, panties) );
-						select.appendChild( createOption(torso) );
-						select.appendChild( createOption(skirt) );
-						select.appendChild( createOption(torso, skirt) );
-						select.appendChild( createOption(shoes) );
+						select.appendChild( createOption(hair.material) );
+						select.appendChild( createOption(body.material[0]) );
+						select.appendChild( createOption(body.material[1]) );
+						select.appendChild( createOption(body.material[2]) );
+						select.appendChild( createOption(bra.material) );
+						select.appendChild( createOption(panties.material) );
+						select.appendChild( createOption(bra.material, panties.material) );
+						select.appendChild( createOption(torso.material) );
+						select.appendChild( createOption(skirt.material) );
+						select.appendChild( createOption(torso.material, skirt.material) );
+						select.appendChild( createOption(shoes.material) );
 
 					//	All.
 						(function(){
-							var meshes = [hair,body,bra,panties,torso,skirt,shoes];
-							var option = createOption.apply(this, meshes);
+							var option = createOption.apply(this, materials);
 							option.text = "All";
 							option.selected = true;
 							select.appendChild( option );
-						//	init selected materials.
-							var materials = meshes.map(function(mesh){
-								return mesh.material;
-							});
-							materialSelected.dispatch( materials );
+						//	init all as selected materials.
+							var array = [];
+							for ( var uuid in materials ){
+								array.push( materials[uuid] );
+							}
+							materialSelected.dispatch( array );
 						})();
 
 						function createOption(){
 							var names = [];
 							var uuids = [];
 							for ( var arg in arguments ){
-								var mesh = arguments[arg];
-								names.push( mesh.name );
-								uuids.push( mesh.uuid );
+								var material = arguments[arg];
+								names.push( material.name );
+								uuids.push( material.uuid );
 							}
 							var option = document.createElement("option");
 							option.text = names.join(" & ");
@@ -1074,57 +1055,26 @@
 							return option;
 						}
 
-					/*
-						(function(){
-							var option = document.createElement("option");
-							option.text = "bra & panties";
-							option.value = [bra.uuid, panties.uuid].join();
-							select.appendChild( option );
-						})();
-
-						(function(){
-							var option = document.createElement("option");
-							option.text = "torso & skirt";
-							option.value = [torso.uuid, skirt.uuid].join();
-							select.appendChild( option );
-						})();
-				
-					//	Dynamic create options function.
-						( new Function( "object", object.children.filter( function( child ){
-								return child.type == "SkinnedMesh";
-							}).map( function( skinned ){
-								var name = skinned.name.toLowerCase();
-								return "\tselect.appendChild( createOption("+name+") );";
-							}).join("\n")
-						) )( object );
-					*/
-
 					//	Multiple materials.
 						select.addEventListener( "change", function(){
 							var uuids = select.value.split(",");
-							var meshes = uuids.map(function(uuid){
-								return scene.getObjectByProperty("uuid", uuid);
+							var array = uuids.map(function(uuid){
+								return materials[uuid];
+							}).filter(function(material){
+								return material.type == "MeshStandardMaterial";
 							});
-							var materials = meshes.map(function(mesh){
-								return mesh.material;
-							});
-							materialSelected.dispatch( materials );
+							materialSelected.dispatch( array );
 						});
 
 					/*
 					//	Single material.
 						select.addEventListener( "change", function(){
 							var uuid = select.value;
-							var mesh = scene.getObjectByProperty("uuid", uuid);
-							materialSelected.dispatch( mesh.material );
+							materialSelected.dispatch( [materials[uuid]] );
 						});
 					*/
 
 						document.getElementById("material-title").appendChild(select);
-
-					//	Init selected material.
-					//	select.value = body.uuid;
-					//	materialSelected.dispatch( [body.material] );
 
 					})();
 
@@ -1134,6 +1084,61 @@
 				});
 
 			});
+
+		</script>
+
+		<script>
+
+		/*
+			//	Dynamic reset materials function.
+				( new Function( "object", object.children.filter( function( child ){
+						return child.type == "SkinnedMesh";
+					}).map( function( skinned ){
+						var name = skinned.name;
+						return "\t"+name.toLowerCase()+".material = new THREE.MeshStandardMaterial({skinning:true, name:\""+name+"\"});";
+					}).join("\n")
+				) )( object );
+		*/
+
+		/*
+			//	Dynamic add to materials function.
+				( new Function( "object", object.children.filter( function( child ){
+						return child.type == "SkinnedMesh";
+					}).map( function( skinned ){
+						var name = skinned.name.toLowerCase();
+						return "\tmaterials["+name+".material.uuid] = "+name+".material;";
+					}).join("\n")
+				) )( object );
+		*/
+
+		/*
+			//	Dynamic create options function.
+				( new Function( "object", object.children.filter( function( child ){
+						return child.type == "SkinnedMesh";
+					}).map( function( skinned ){
+						var name = skinned.name.toLowerCase();
+						return "\tselect.appendChild( createOption("+name+") );";
+					}).join("\n")
+				) )( object );
+
+		*/
+
+		/*
+				(function(){
+					var option = document.createElement("option");
+					option.text = "bra & panties";
+					option.value = [bra.uuid, panties.uuid].join();
+					select.appendChild( option );
+				})();
+
+				(function(){
+					var option = document.createElement("option");
+					option.text = "torso & skirt";
+					option.value = [torso.uuid, skirt.uuid].join();
+					select.appendChild( option );
+				})();
+		*/
+
 
 		</script>
 
