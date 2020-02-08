@@ -418,16 +418,17 @@
 						};
 
 						function onStartJumping(){
-						//	scope.outfit.AnimationsHandler.weightOff("idle", "walk", "run"); (deprecated).
-							{ StandingJump.weight = 0; StandingIdle.weight = 0; Walking.weight = 0; Jogging.weight = 0; StandardRun.weight = 0; }
-						//	mixer.stopAllAction();
-							StandingJump.weight = 1; // StandingJump.paused = false; // StandingJump.play();
+							Walking.weight = 0; 
+							Jogging.weight = 0; 
+							StandardRun.weight = 0;
+							StandingIdle.weight = 0; 
+							StandingJump.play();
 						};
 
 						function onEndJumping(){
 						//	scope.outfit.AnimationsHandler.weightOn("idle", "walk", "run"); (deprecated).
 
-							{ StandingJump.weight = 0; StandingIdle.weight = 0; Walking.weight = 0; Jogging.weight = 0; StandardRun.weight = 0; }
+							StandingIdle.weight = 0; Walking.weight = 0; Jogging.weight = 0; StandardRun.weight = 0;
 
 							if ( scope.controller.isRunning && scope.controller.isWalking ) {
 
@@ -437,6 +438,8 @@
 								Walking.weight = 1; // Walking.play(); // scope.outfit.AnimationsHandler.play("walk");
 								scope.controller.dispatchEvent({type:"startRunning"});
 
+								StandingJump.stop();
+
 							} else if ( scope.controller.isRunning && !scope.controller.isWalking ) {
 
 							//	mixer.stopAllAction(); // scope.outfit.AnimationsHandler.stop();
@@ -445,12 +448,16 @@
 								Jogging.weight = 1; // Jogging.play(); // scope.outfit.AnimationsHandler.play("run");
 								scope.controller.dispatchEvent({type:"startRunning"});
 
+								StandingJump.stop();
+
 							} else {
 
 							//	mixer.stopAllAction(); // scope.outfit.AnimationsHandler.stop();
 								scope.controller.movementSpeed = 0;
 								StandingIdle.weight = 1; // StandingIdle.play(); // scope.outfit.AnimationsHandler.play("idle");
 								scope.controller.dispatchEvent({type:"startIdling"});
+
+								StandingJump.stop();
 
 							}
 						}
@@ -566,7 +573,7 @@
 						localPlayer.controller.direction = (2 * Math.PI) - cameraControls.getFrontAngle() + this.frontAngle;
 
 					//	mixer.stopAllAction(); // localPlayer.outfit.AnimationsHandler.stop();
-						{ StandingJump.weight = 0; StandingIdle.weight = 0; Walking.weight = 0; Jogging.weight = 0; StandardRun.weight = 0; }
+						StandingIdle.weight = 0; Walking.weight = 0; Jogging.weight = 0; StandardRun.weight = 0;
 						localPlayer.controller.isRunning = true; 
 						localPlayer.controller.isWalking = true;
 						localPlayer.controller.movementSpeed = 28;
@@ -590,7 +597,7 @@
 						localPlayer.controller.direction = finalDirection;
 
 					//	mixer.stopAllAction(); // localPlayer.outfit.AnimationsHandler.stop();
-						{ StandingJump.weight = 0; StandingIdle.weight = 0; Walking.weight = 0; Jogging.weight = 0; StandardRun.weight = 0; }
+						StandingIdle.weight = 0; Walking.weight = 0; Jogging.weight = 0; StandardRun.weight = 0;
 						localPlayer.controller.isRunning = false;
 						localPlayer.controller.isWalking = false;
 						localPlayer.controller.isIdling  = true;
@@ -607,8 +614,7 @@
 							return;
 						}
 
-						localPlayer.controller.jump();
-					//	Jump2.play(); // localPlayer.outfit.AnimationsHandler.jump();
+						localPlayer.controller.jump(); // Jump2.play(); // localPlayer.outfit.AnimationsHandler.jump();
 					}
 
 					(function update(){
@@ -659,14 +665,14 @@
 						if ( localPlayer.controller.isRunning && !localPlayer.controller.isWalking ) {
 
 						//	mixer.stopAllAction(); // localPlayer.outfit.AnimationsHandler.stop();
-							{ StandingJump.weight = 0; StandingIdle.weight = 0; Walking.weight = 0; Jogging.weight = 0; StandardRun.weight = 0; }
+							StandingIdle.weight = 0; Walking.weight = 0; Jogging.weight = 0; StandardRun.weight = 0;
 							localPlayer.controller.movementSpeed = 45;
 							Jogging.weight = 1; // Jogging.play(); // localPlayer.outfit.AnimationsHandler.play("run");
 
 						} else {
 
 						//	mixer.stopAllAction(); // localPlayer.outfit.AnimationsHandler.stop();
-							{ StandingJump.weight = 0; StandingIdle.weight = 0; Walking.weight = 0; Jogging.weight = 0; StandardRun.weight = 0; }
+							StandingIdle.weight = 0; Walking.weight = 0; Jogging.weight = 0; StandardRun.weight = 0;
 							localPlayer.controller.isRunning = true; 
 							localPlayer.controller.isWalking = false;  // !!!danger: "false" cause bug in production server ??? //
 							localPlayer.controller.movementSpeed = 28;
@@ -684,7 +690,7 @@
 						}
 
 					//	mixer.stopAllAction(); // localPlayer.outfit.AnimationsHandler.stop();
-						{ StandingJump.weight = 0; StandingIdle.weight = 0; Walking.weight = 0; Jogging.weight = 0; StandardRun.weight = 0; }
+						StandingIdle.weight = 0; Walking.weight = 0; Jogging.weight = 0; StandardRun.weight = 0;
 						localPlayer.controller.isRunning = false;
 						localPlayer.controller.isWalking = false;
 						localPlayer.controller.movementSpeed = 0;
@@ -724,8 +730,7 @@
 							return;
 						}
 
-						localPlayer.controller.jump();
-					//	Jump2.play(); // localPlayer.outfit.AnimationsHandler.jump();
+						localPlayer.controller.jump(); // Jump2.play(); // localPlayer.outfit.AnimationsHandler.jump();
 					});
 
 					(function update(){
@@ -954,8 +959,8 @@
 							Walking.weight = 0;      Walking.play();
 							Jogging.weight = 0;      Jogging.play();
 							StandardRun.weight = 0;  StandardRun.play();
+						//	StandingJump.weight = 0; StandingJump.play();
 							StandingIdle.weight = 1; StandingIdle.play();
-							StandingJump.weight = 0; StandingJump.play();
 						})();
 
 					//	Mixer update.
