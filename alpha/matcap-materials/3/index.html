@@ -418,33 +418,38 @@
 						};
 
 						function onStartJumping(){
-							mixer.stopAllAction(); // scope.outfit.AnimationsHandler.weightOff("idle", "walk", "run");
-							StandingJump.play();
+						//	scope.outfit.AnimationsHandler.weightOff("idle", "walk", "run"); (deprecated).
+							{ StandingJump.weight = 0; StandingIdle.weight = 0; Walking.weight = 0; Jogging.weight = 0; StandardRun.weight = 0; }
+						//	mixer.stopAllAction();
+							StandingJump.weight = 1; // StandingJump.paused = false; // StandingJump.play();
 						};
 
 						function onEndJumping(){
-						//	scope.outfit.AnimationsHandler.weightOn("idle", "walk", "run");
+						//	scope.outfit.AnimationsHandler.weightOn("idle", "walk", "run"); (deprecated).
+
+							{ StandingJump.weight = 0; StandingIdle.weight = 0; Walking.weight = 0; Jogging.weight = 0; StandardRun.weight = 0; }
 
 							if ( scope.controller.isRunning && scope.controller.isWalking ) {
 
-								mixer.stopAllAction(); // scope.outfit.AnimationsHandler.stop();
+							//	mixer.stopAllAction(); // scope.outfit.AnimationsHandler.stop();
 								scope.controller.movementSpeed = 28;
 
-								Walk.play(); // scope.outfit.AnimationsHandler.play("walk");
+								Walking.weight = 1; // Walking.play(); // scope.outfit.AnimationsHandler.play("walk");
 								scope.controller.dispatchEvent({type:"startRunning"});
 
 							} else if ( scope.controller.isRunning && !scope.controller.isWalking ) {
 
-								mixer.stopAllAction(); // scope.outfit.AnimationsHandler.stop();
+							//	mixer.stopAllAction(); // scope.outfit.AnimationsHandler.stop();
 								scope.controller.movementSpeed = 45;
-								Jogging.play(); // scope.outfit.AnimationsHandler.play("run");
+
+								Jogging.weight = 1; // Jogging.play(); // scope.outfit.AnimationsHandler.play("run");
 								scope.controller.dispatchEvent({type:"startRunning"});
 
 							} else {
 
-								mixer.stopAllAction(); // scope.outfit.AnimationsHandler.stop();
+							//	mixer.stopAllAction(); // scope.outfit.AnimationsHandler.stop();
 								scope.controller.movementSpeed = 0;
-								StandingIdle.play(); // scope.outfit.AnimationsHandler.play("idle");
+								StandingIdle.weight = 1; // StandingIdle.play(); // scope.outfit.AnimationsHandler.play("idle");
 								scope.controller.dispatchEvent({type:"startIdling"});
 
 							}
@@ -469,12 +474,6 @@
 						constructor: LocalPlayer,
 
 					};
-
-					//  Outfit Manager.
-					/*
-						this.outfit = new OutfitManager();
-
-					*/
 
 				})();
 
@@ -566,11 +565,12 @@
 
 						localPlayer.controller.direction = (2 * Math.PI) - cameraControls.getFrontAngle() + this.frontAngle;
 
-						mixer.stopAllAction(); // localPlayer.outfit.AnimationsHandler.stop();
+					//	mixer.stopAllAction(); // localPlayer.outfit.AnimationsHandler.stop();
+						{ StandingJump.weight = 0; StandingIdle.weight = 0; Walking.weight = 0; Jogging.weight = 0; StandardRun.weight = 0; }
 						localPlayer.controller.isRunning = true; 
 						localPlayer.controller.isWalking = true;
 						localPlayer.controller.movementSpeed = 28;
-						Walking.play(); // localPlayer.outfit.AnimationsHandler.play("walk");
+						Walking.weight = 1; //	Walking.play(); // localPlayer.outfit.AnimationsHandler.play("walk");
 					}
 
 					function onMoveKeyChange() {
@@ -588,12 +588,14 @@
 						var finalDirection = (2 * Math.PI) - cameraControls.getFrontAngle() + this.frontAngle;
 
 						localPlayer.controller.direction = finalDirection;
-						mixer.stopAllAction(); // localPlayer.outfit.AnimationsHandler.stop();
+
+					//	mixer.stopAllAction(); // localPlayer.outfit.AnimationsHandler.stop();
+						{ StandingJump.weight = 0; StandingIdle.weight = 0; Walking.weight = 0; Jogging.weight = 0; StandardRun.weight = 0; }
 						localPlayer.controller.isRunning = false;
 						localPlayer.controller.isWalking = false;
 						localPlayer.controller.isIdling  = true;
 						localPlayer.controller.movementSpeed = 0;
-						StandingIdle.play(); // localPlayer.outfit.AnimationsHandler.play("idle");
+						StandingIdle.weight = 1; //	StandingIdle.play(); // localPlayer.outfit.AnimationsHandler.play("idle");
 						localPlayer.controller.dispatchEvent({type:"startIdling"});
 					}
 
@@ -606,7 +608,7 @@
 						}
 
 						localPlayer.controller.jump();
-						Jump2.play(); // localPlayer.outfit.AnimationsHandler.jump();
+					//	Jump2.play(); // localPlayer.outfit.AnimationsHandler.jump();
 					}
 
 					(function update(){
@@ -656,17 +658,19 @@
 
 						if ( localPlayer.controller.isRunning && !localPlayer.controller.isWalking ) {
 
-							mixer.stopAllAction(); // localPlayer.outfit.AnimationsHandler.stop();
+						//	mixer.stopAllAction(); // localPlayer.outfit.AnimationsHandler.stop();
+							{ StandingJump.weight = 0; StandingIdle.weight = 0; Walking.weight = 0; Jogging.weight = 0; StandardRun.weight = 0; }
 							localPlayer.controller.movementSpeed = 45;
-							Jogging.play(); //	localPlayer.outfit.AnimationsHandler.play("run");
+							Jogging.weight = 1; // Jogging.play(); // localPlayer.outfit.AnimationsHandler.play("run");
 
 						} else {
 
-							mixer.stopAllAction(); // localPlayer.outfit.AnimationsHandler.stop();
+						//	mixer.stopAllAction(); // localPlayer.outfit.AnimationsHandler.stop();
+							{ StandingJump.weight = 0; StandingIdle.weight = 0; Walking.weight = 0; Jogging.weight = 0; StandardRun.weight = 0; }
 							localPlayer.controller.isRunning = true; 
 							localPlayer.controller.isWalking = false;  // !!!danger: "false" cause bug in production server ??? //
 							localPlayer.controller.movementSpeed = 28;
-							Walking.play(); // localPlayer.outfit.AnimationsHandler.play("walk");
+							Walking.weight = 1; // Walking.play(); // localPlayer.outfit.AnimationsHandler.play("walk");
 						}
 
 					});
@@ -679,11 +683,12 @@
 							return;
 						}
 
-						mixer.stopAllAction(); // localPlayer.outfit.AnimationsHandler.stop();
+					//	mixer.stopAllAction(); // localPlayer.outfit.AnimationsHandler.stop();
+						{ StandingJump.weight = 0; StandingIdle.weight = 0; Walking.weight = 0; Jogging.weight = 0; StandardRun.weight = 0; }
 						localPlayer.controller.isRunning = false;
 						localPlayer.controller.isWalking = false;
 						localPlayer.controller.movementSpeed = 0;
-						StandingIdle.play(); // localPlayer.outfit.AnimationsHandler.play("idle");
+						StandingIdle.weight = 1; // StandingIdle.play(); // localPlayer.outfit.AnimationsHandler.play("idle");
 						localPlayer.controller.dispatchEvent({type:"startIdling"});
 					});
 
@@ -720,7 +725,7 @@
 						}
 
 						localPlayer.controller.jump();
-						Jump2.play(); // localPlayer.outfit.AnimationsHandler.jump();
+					//	Jump2.play(); // localPlayer.outfit.AnimationsHandler.jump();
 					});
 
 					(function update(){
@@ -863,6 +868,7 @@
 
 			//	Avatar loader.
 
+
 				var url = "/app/alpha/005/Carol-3material-body.fbx"; // TODO: to cache model.
 				var loader = new THREE.FBXLoader();
 				loader.load( url, function( object ){
@@ -872,78 +878,97 @@
 
 				//	Outfit Manager.
 
-					localPlayer.outfit = new OutfitManager();
-					localPlayer.outfit.update = function() {
+					(function(){
 
-					//  "this" is "localPlayer.outfit".
-						if ( !this.direction ) return;
+						localPlayer.outfit = new OutfitManager();
+						localPlayer.outfit.update = function() {
 
-					//  Update avatar rotation y.
-						var controller = localPlayer.controller;
-						var direction = controller.direction - Math.PI;
+						//  "this" is "localPlayer.outfit".
+							if ( !this.direction ) return;
 
-					//  Update avatar position.
-						var x = controller.center.x;
-						var y = controller.center.y - controller.radius;
-						var z = controller.center.z;
+						//  Update avatar rotation y.
+							var controller = localPlayer.controller;
+							var direction = controller.direction - Math.PI;
 
-					//  "this" is the "localPlayer.outfit".
-						this.direction.rotation.y = direction;
-						this.direction.position.set( x, y, z );
+						//  Update avatar position.
+							var x = controller.center.x;
+							var y = controller.center.y - controller.radius;
+							var z = controller.center.z;
 
-					};
+						//  "this" is the "localPlayer.outfit".
+							this.direction.rotation.y = direction;
+							this.direction.position.set( x, y, z );
 
-				//  Add outfit direction holder to scene.
-					localPlayer.outfit.direction = object;
-					scene.add( localPlayer.outfit.direction );
+						};
 
-					(function update(){
-						requestAnimationFrame( update );
-						localPlayer.outfit.update();
+					//  Add outfit direction holder to scene.
+						localPlayer.outfit.direction = object;
+						scene.add( localPlayer.outfit.direction );
+
+					//	get outfit meshes.
+
+						bra = object.getObjectByName( "Bra" );
+						hair = object.getObjectByName( "Hair" );
+						body = object.getObjectByName( "Body" );
+						torso = object.getObjectByName( "Torso" );
+						skirt = object.getObjectByName( "Skirt" );
+						shoes = object.getObjectByName( "Shoes" );
+						panties = object.getObjectByName( "Panties" );
+
+					/*
+					//	Dynamic get skinned meshes function.
+						( new Function( "object", object.children.filter( function( child ){
+								return child.type == "SkinnedMesh";
+							}).map( function( skinned ){
+								var name = skinned.name;
+								debugMode && console.log( "\t"+name.toLowerCase() );
+								return "\t"+name.toLowerCase()+" = object.getObjectByName(\""+name+"\");";
+							}).join("\n")
+						) )( object );
+					*/
+
+						(function update(){
+							requestAnimationFrame( update );
+							localPlayer.outfit.update();
+						})();
+
 					})();
 
-				//	get animations.
+				//	Animations.
 
-					mixer = new THREE.AnimationMixer( object );
+					(function(){
 
-					( new Function( "object", object.animations.map( function(animation, i){
-							var name = animation.name.replace("Carol|", "").replace(/\s/g, ""); 
-							debugMode && console.log( "\t"+name );
-							return "\t"+name+" = mixer.clipAction( object.animations["+i+"], object );";
-						}).join("\n")
-					) )( object );
+						mixer = new THREE.AnimationMixer( object );
 
-					var clock = new THREE.Clock();
-					
-					(function update(){
-						requestAnimationFrame( update );
-						var delta = clock.getDelta();
-						mixer.update( delta );
+					//	Dynamic create mixer clip action animations function.
+						( new Function( "object", object.animations.map( function(animation, i){
+								var name = animation.name.replace("Carol|", "").replace(/\s/g, ""); 
+								debugMode && console.log( "\t"+name );
+								return "\t"+name+" = mixer.clipAction( object.animations["+i+"], object );";
+							}).join("\n")
+						) )( object );
+
+					//	Start clip actions.
+
+						(function(){
+							Walking.weight = 0;      Walking.play();
+							Jogging.weight = 0;      Jogging.play();
+							StandardRun.weight = 0;  StandardRun.play();
+							StandingIdle.weight = 0; StandingIdle.play();
+							StandingJump.weight = 0; StandingJump.play();
+						})();
+
+					//	Mixer update.
+
+						var clock = new THREE.Clock();
+
+						(function update(){
+							requestAnimationFrame( update );
+							var delta = clock.getDelta();
+							mixer.update( delta );
+						})();
+
 					})();
-					
-					StandingIdle.play();
-
-				//	get skinned meshes.
-
-				//	Dynamic get skinned meshes function.
-					( new Function( "object", object.children.filter( function( child ){
-							return child.type == "SkinnedMesh";
-						}).map( function( skinned ){
-							var name = skinned.name;
-							debugMode && console.log( "\t"+name.toLowerCase() );
-							return "\t"+name.toLowerCase()+" = object.getObjectByName(\""+name+"\");";
-						}).join("\n")
-					) )( object );
-
-				/*
-					bra = object.getObjectByName( "Bra" );
-					hair = object.getObjectByName( "Hair" );
-					body = object.getObjectByName( "Body" );
-					torso = object.getObjectByName( "Torso" );
-					skirt = object.getObjectByName( "Skirt" );
-					shoes = object.getObjectByName( "Shoes" );
-					panties = object.getObjectByName( "Panties" );
-				*/
 
 				//	Materials.
 
@@ -957,13 +982,13 @@
 						torso.material = new THREE.MeshStandardMaterial({skinning:true, name:"Torso"});
 						shoes.material = new THREE.MeshStandardMaterial({skinning:true, name:"Shoes"});
 						panties.material = new THREE.MeshStandardMaterial({skinning:true, name:"Panties"});
-					//	body has [body, eyes, nails] materials.
+					//	body has [body, eyes, nails] multimaterial.
 						body.material[0] = new THREE.MeshStandardMaterial({skinning:true, name:"Body"});
-						body.material[1] = new THREE.MeshStandardMaterial({skinning:true, name:"Eye"});
+						body.material[1] = new THREE.MeshStandardMaterial({skinning:true, name:"Eyes"});
 						body.material[2] = new THREE.MeshStandardMaterial({skinning:true, name:"Nail"});
 
 						loadMatcap("aCAVXQb", function( image ){
-						//	body has (3) [body, eye, nail] materials.
+						//	body has [body, eyes, nail] multimaterial.
 							var mapping = THREE.SphericalReflectionMapping;		// important!
 							var texture = new THREE.Texture( image, mapping );	// important!
 							texture.sourceFile = image.src;						// important!
@@ -971,7 +996,7 @@
 						});
 
 						loadMatcap("eJKcnE2", function( image ){
-						//	body has (3) [body, eye, nail] materials.
+						//	body has [body, eyes, nail] multimaterial.
 							var mapping = THREE.SphericalReflectionMapping;		// important!
 							var texture = new THREE.Texture( image, mapping );	// important!
 							texture.sourceFile = image.src;						// important!
