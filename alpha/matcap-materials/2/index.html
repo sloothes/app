@@ -953,7 +953,7 @@
 
 						bra.material = new THREE.MeshStandardMaterial({skinning:true, name:"Bra"});
 						hair.material = new THREE.MeshStandardMaterial({skinning:true, name:"Hair", side:2});
-						body.material = new THREE.MeshStandardMaterial({skinning:true, name:"Body"});
+					//	body.material = new THREE.MeshStandardMaterial({skinning:true, name:"Body"});
 						skirt.material = new THREE.MeshStandardMaterial({skinning:true, name:"Skirt", side:2});
 						torso.material = new THREE.MeshStandardMaterial({skinning:true, name:"Torso"});
 						shoes.material = new THREE.MeshStandardMaterial({skinning:true, name:"Shoes"});
@@ -1095,15 +1095,12 @@
 					//	Multiple materials.
 						select.addEventListener( "change", function(){
 							var uuids = select.value.split(",");
-							debugMode && console.log( uuids );
 							var meshes = uuids.map(function(uuid){
 								return scene.getObjectByProperty("uuid", uuid);
 							});
-							debugMode && console.log( meshes );
 							var materials = meshes.map(function(mesh){
 								return mesh.material;
 							});
-							debugMode && console.log( materials );
 							materialSelected.dispatch( materials );
 						});
 
