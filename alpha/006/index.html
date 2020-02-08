@@ -934,35 +934,35 @@
 						panties.material = new THREE.MeshStandardMaterial({skinning:true, name:"Panties"});
 
 						function loadMatcap( id, callback ){
-							var image, texture, mapping;
 							var url = "https://i.imgur.com/"+id+".jpg";
 							var loader = new THREE.ImageLoader();
-							loader.setCrossOrigin("anonymous");				// important!
-							image = loader.load( url, callback );
-							mapping = THREE.SphericalReflectionMapping;		// important!
-							texture = new THREE.Texture( image, mapping );	// important!
-							texture.sourceFile = url;						// important!
-							return texture;
+							loader.setCrossOrigin("anonymous"); // important!
+							loader.load( url, callback );
 						}
 
-						loadMatcap("aCAVXQb", function(){
-							body.material.roughness = 0;
-							body.material.metalness = 1;
-							body.material.envMap = texture;
-							body.material.needsUpdate = true;
-							body.material.envMap.needsUpdate = true;
+						function applyMatcap( mesh ){
+							mesh.material.roughness = 0;
+							mesh.material.metalness = 1;
+							mesh.material.envMap = texture;
+							mesh.material.needsUpdate = true;
+							mesh.material.envMap.needsUpdate = true;
 						});
 
-						var chrome = loadMatcap("bixnsMm", function(){
-							var meshes = [hair,bra,panties,torso,skirt,shoes];
-							meshes.forEach(function( mesh ){
-								mesh.material.roughness = 0;
-								mesh.material.metalness = 1;
-								mesh.material.envMap = texture;
-								mesh.material.needsUpdate = true;
-								mesh.material.envMap.needsUpdate = true;
-							});
+						loadMatcap("aCAVXQb", function( image ){
+							var mapping = THREE.SphericalReflectionMapping;		// important!
+							var texture = new THREE.Texture( image, mapping );	// important!
+							texture.sourceFile = image.src;						// important!
+							applyMatcap( body );
 						});
+
+						loadMatcap("bixnsMm", function( image ){
+							var meshes = [hair,bra,panties,torso,skirt,shoes];
+							var mapping = THREE.SphericalReflectionMapping;		// important!
+							var texture = new THREE.Texture( image, mapping );	// important!
+							texture.sourceFile = image.src;						// important!
+							meshes.forEach( applyMatcap );
+						});
+
 
 					/*
 					//	Dynamic reset materials function.
