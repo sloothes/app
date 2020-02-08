@@ -1033,15 +1033,11 @@
 							var option = createOption.apply(this, materials);
 							option.text = "All";
 							option.selected = true;
+							option.value = Object.keys(materials).join();
 							select.appendChild( option );
 						//	init all as selected materials.
-							var array = [];
-							for ( var uuid in materials ){
-								array.push( materials[ uuid ] );
-								debugMode && console.log( materials[ uuid ]  );
-							}
-							debugMode && console.log( array );
-							materialSelected.dispatch( array );
+							debugMode && console.log( Object.values(materials) );
+							materialSelected.dispatch( Object.values(materials) );
 						})();
 
 						function createOption(){
