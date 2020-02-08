@@ -953,25 +953,32 @@
 
 						bra.material = new THREE.MeshStandardMaterial({skinning:true, name:"Bra"});
 						hair.material = new THREE.MeshStandardMaterial({skinning:true, name:"Hair", side:2});
-					//	body.material = new THREE.MeshStandardMaterial({skinning:true, name:"Body"}); // has 3 materials.
+					//	body.material = new THREE.MeshStandardMaterial({skinning:true, name:"Body"}); // has [body, eyes, nails] materials.
 						skirt.material = new THREE.MeshStandardMaterial({skinning:true, name:"Skirt", side:2});
 						torso.material = new THREE.MeshStandardMaterial({skinning:true, name:"Torso"});
 						shoes.material = new THREE.MeshStandardMaterial({skinning:true, name:"Shoes"});
 						panties.material = new THREE.MeshStandardMaterial({skinning:true, name:"Panties"});
 
+					/*
 						loadMatcap("aCAVXQb", function( image ){
+						//	body has (3) [body, eyes, nails] materials.
 							var mapping = THREE.SphericalReflectionMapping;		// important!
 							var texture = new THREE.Texture( image, mapping );	// important!
 							texture.sourceFile = image.src;						// important!
-							applyMatcap.bind(texture).call(texture, body);
+							body.material.forEach(function( material ){
+								applyMatcap.bind(texture).call(texture, material);
+							});
 						});
+					*/
 
 						loadMatcap("bixnsMm", function( image ){
 							var meshes = [hair,bra,panties,torso,skirt,shoes];
 							var mapping = THREE.SphericalReflectionMapping;		// important!
 							var texture = new THREE.Texture( image, mapping );	// important!
 							texture.sourceFile = image.src;						// important!
-							meshes.forEach( applyMatcap.bind(texture) );
+							meshes.forEach( function( mesh ){
+								applyMatcap.bind(texture).call(texture, mesh.material );
+							});
 						});
 
 						function loadMatcap( id, callback ){
@@ -981,12 +988,12 @@
 							loader.load( url, callback );
 						}
 
-						function applyMatcap( mesh ){
-							mesh.material.roughness = 0;
-							mesh.material.metalness = 1;
-							mesh.material.envMap = this;
-							mesh.material.needsUpdate = true;
-							mesh.material.envMap.needsUpdate = true;
+						function applyMatcap( material ){
+							material.roughness = 0;
+							material.metalness = 1;
+							material.envMap = this;
+							material.needsUpdate = true;
+							material.envMap.needsUpdate = true;
 						}
 
 
