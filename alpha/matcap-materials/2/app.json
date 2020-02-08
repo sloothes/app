@@ -1,0 +1,90 @@
+{
+	"metadata": {
+		"type": "App"
+	},
+	"project": {
+		"shadows": true,
+		"vr": false
+	},
+	"camera": {
+		"metadata": {
+			"version": 4.5,
+			"type": "Object",
+			"generator": "Object3D.toJSON"
+		},
+		"object": {
+			"uuid": "34F3674A-85A2-40F1-A648-B0C80F35F4BE",
+			"type": "PerspectiveCamera",
+			"name": "Camera",
+			"layers": 1,
+			"matrix": [0.22655334721077924,5.551115123125783e-17,-0.9739987581447894,0,-0.5705120473851812,0.8104975194912782,-0.1327018262378253,0,0.7894235774639372,0.5857420685749702,0.18362092594678292,0,37.53265094272319,26.454951844728026,6.232127856398353,1],
+			"fov": 50,
+			"zoom": 1,
+			"near": 1,
+			"far": 10000,
+			"focus": 10,
+			"aspect": 1.7741935483870968,
+			"filmGauge": 35,
+			"filmOffset": 0
+		}
+	},
+	"scene": {
+		"metadata": {
+			"version": 4.5,
+			"type": "Object",
+			"generator": "Object3D.toJSON"
+		},
+		"object": {
+			"uuid": "35FE846C-9400-4098-8839-441011ED2200",
+			"type": "Scene",
+			"name": "Scene",
+			"layers": 1,
+			"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1],
+			"children": [
+				{
+					"uuid": "1744306D-7E27-4413-B7EC-81058305A0D4",
+					"type": "Group",
+					"name": "Ground Helper",
+					"visible": false,
+					"layers": 1,
+					"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]
+				},
+				{
+					"uuid": "1A015A5C-77F8-40B3-8D56-41A88231A1DA",
+					"type": "DirectionalLight",
+					"name": "DirectionalLight",
+					"layers": 1,
+					"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,5,10,7.5,1],
+					"color": 16777215,
+					"intensity": 1,
+					"shadow": {
+						"camera": {
+							"uuid": "1D55C251-3C99-4B03-B613-D18952E58323",
+							"type": "OrthographicCamera",
+							"layers": 1,
+							"zoom": 1,
+							"left": -5,
+							"right": 5,
+							"top": 5,
+							"bottom": -5,
+							"near": 0.5,
+							"far": 500
+						}
+					}
+				}],
+			"background": 0
+		}
+	},
+	"scripts": {
+		"1744306D-7E27-4413-B7EC-81058305A0D4": [
+			{
+				"name": "ground-helper.js",
+				"source": "this.add( new THREE.GridHelper( 1000, 100, 0x444444, 0x444444 ) );"
+			}],
+		"1A015A5C-77F8-40B3-8D56-41A88231A1DA": [
+			{
+				"name": "camera light.js",
+				"source": "function update() {\n\n\tthis.position.copy( camera.position );\n\n}"
+			}]
+	}
+}
