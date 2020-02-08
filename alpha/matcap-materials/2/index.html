@@ -1008,6 +1008,7 @@
 						materials[body.material[1].uuid] = body.material[1];
 						materials[body.material[2].uuid] = body.material[2];
 
+
 					//	Material droplist.
 
 						var select = document.createElement("select");
@@ -1036,8 +1037,10 @@
 						//	init all as selected materials.
 							var array = [];
 							for ( var uuid in materials ){
-								array.push( materials[uuid] );
+								array.push( materials[ uuid ] );
+								debugMode && console.log( materials[ uuid ]  );
 							}
+							debugMode && console.log( array );
 							materialSelected.dispatch( array );
 						})();
 
