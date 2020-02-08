@@ -899,6 +899,7 @@
 
 				//	get skinned meshes.
 
+				/*
 					bra = object.getObjectByName( "Bra" );
 					hair = object.getObjectByName( "Hair" );
 					body = object.getObjectByName( "Body" );
@@ -906,8 +907,8 @@
 					skirt = object.getObjectByName( "Skirt" );
 					shoes = object.getObjectByName( "Shoes" );
 					panties = object.getObjectByName( "Panties" );
+				*/
 
-				/*
 				//	Dynamic get skinned meshes function.
 					( new Function( "object", object.children.filter( function( child ){
 							return child.type == "SkinnedMesh";
@@ -917,7 +918,6 @@
 							return "\t"+name.toLowerCase()+" = object.getObjectByName(\""+name+"\");";
 						}).join("\n")
 					) )( object );
-				*/
 
 				//	Materials.
 
