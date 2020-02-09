@@ -1003,6 +1003,7 @@
 							var texture = new THREE.Texture( image, mapping );	// important!
 							texture.sourceFile = image.src;						// important!
 							applyMatcap.bind(texture).call(texture, body.material[0]);
+							applyMatcap.bind(texture).call(texture, body.material[2]);
 						});
 
 						loadMatcap("eJKcnE2", function( image ){
