@@ -485,12 +485,12 @@
 								action.weight = 0; 
 							});
 
-							Jump2.weight = 1; Jump2.play();
+							Jumping.weight = 1; Jumping.play();
 						};
 
 						function onEndJumping(){
 
-							Jump2.stop();
+							Jumping.stop();
 
 							mixer._actions.forEach(function(action){
 								action.weight = 0; 
@@ -498,7 +498,7 @@
 
 							if ( scope.controller.isRunning && scope.controller.isWalking ) {
 
-							//	Jump2.stop();
+							//	Jumping.stop();
 
 								scope.controller.movementSpeed = 28;
 								scope.controller.dispatchEvent({type:"startRunning"});
@@ -507,7 +507,7 @@
 
 							} else if ( scope.controller.isRunning && !scope.controller.isWalking ) {
 
-							//	Jump2.stop();
+							//	Jumping.stop();
 
 								scope.controller.movementSpeed = 45;
 								scope.controller.dispatchEvent({type:"startRunning"});
@@ -516,7 +516,7 @@
 
 							} else {
 
-							//	Jump2.stop();
+							//	Jumping.stop();
 
 								scope.controller.movementSpeed = 0;
 								scope.controller.dispatchEvent({type:"startIdling"});
