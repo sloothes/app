@@ -503,7 +503,7 @@
 								scope.controller.movementSpeed = 28;
 								scope.controller.dispatchEvent({type:"startRunning"});
 
-								Walking.weight = 1;
+								Jogging.weight = 1;
 
 							} else if ( scope.controller.isRunning && !scope.controller.isWalking ) {
 
@@ -512,7 +512,7 @@
 								scope.controller.movementSpeed = 45;
 								scope.controller.dispatchEvent({type:"startRunning"});
 
-								Jogging.weight = 1;
+								MediumRun.weight = 1;
 
 							} else {
 
@@ -637,7 +637,7 @@
 							action.weight = 0; 
 						});
 
-						Walking.weight = 1;
+						Jogging.weight = 1;
 
 						localPlayer.controller.isRunning = true; 
 						localPlayer.controller.isWalking = true;
@@ -737,13 +737,13 @@
 
 						if ( localPlayer.controller.isRunning && !localPlayer.controller.isWalking ) {
 
-							Jogging.weight = 1; 
+							MediumRun.weight = 1; 
 
 							localPlayer.controller.movementSpeed = 45;
 
 						} else {
 
-							Walking.weight = 1; 
+							Jogging.weight = 1; 
 
 							localPlayer.controller.isRunning = true; 
 							localPlayer.controller.isWalking = false;  // !!!danger: "false" cause bug in production server ??? //
