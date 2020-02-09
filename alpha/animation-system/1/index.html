@@ -1087,11 +1087,12 @@
 						}
 
 						select.addEventListener( "change", function(){
-							debugMode && console.log( select.value );
 							for ( var name in animations ){
 								animations[name].weigth = 0;
 							}
 							animations[ select.value ].weight = 1;
+							debugMode && console.log( animations[ select.value ] );
+
 						});
 
 						var tab = TabUI.add( "Animation", "animation-tab" );
