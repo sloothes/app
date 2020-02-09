@@ -97,10 +97,10 @@
 				(function(){
 
 					var sidePanel = document.createElement("div");
-					sidePanel.id = "side-panel";
+					sidePanel.id = "side-panle";
 					sidePanel.classList.add("side-panel");
-					sidePanel.style.cssText = "position:absolute;top:0;right:0;bottom:0;width:370px;color:#eee;background:rgba(0,0,0,0.4);"
-						+ " -webkit-transform:translateX( 340px ); -webkit-transition:-webkit-transform 500ms ease-out; z-index:9999;";
+					sidePanel.style.cssText = "position:absolute;top:0;right:0;bottom:0;width:370px;color:#eee;background:rgba(0,0,0,0.4); "
+							+ "-webkit-transform:translateX( 340px ); -webkit-transition:-webkit-transform 500ms ease-out; z-index:9999;";
 
 					var container = document.createElement("div");
 					container.id = "side-panel-content";
@@ -112,13 +112,13 @@
 					sidePillBar.style.cssText = "margin-bottom:20px;";
 					container.appendChild( sidePillBar );
 
-					sideTabPills = document.createElement("ul");
+					var sideTabPills = document.createElement("ul");
 					sideTabPills.id = "side-tab-pills";
 					sideTabPills.classList.add("nav","nav-tabs","nav-pills");
 					sideTabPills.style.cssText = "display:inline-flex!important;overflow-y:hidden;width:300px;scroll-behavior:smooth;";
 					sidePillBar.appendChild( sideTabPills );
 
-					sideTabPanel = document.createElement("div");
+					var sideTabPanel = document.createElement("div");
 					sideTabPanel.id = "side-tab-panel";
 					sideTabPanel.classList.add("tab-content");
 					container.appendChild( sideTabPanel );
@@ -889,13 +889,13 @@
 
 					var tab = TabUI.add( "Matcap", "matcap-tab" );
 
+					var header = document.createElement("h3");
+					header.id = "matcap-header";
+					header.textContent = "Materials";
+
 					var container = document.createElement("div");
-					container.id = "matcap-list";
+					container.id = "matcap-buttons";
 					container.style.width = "300px";
-					var title = document.createElement("h3");
-					title.id = "material-title";
-					title.textContent = "Materials";
-					container.appendChild( title );
 
 					while ( matcaps.length ) {
 						(function( id ){
@@ -935,7 +935,9 @@
 
 					debugMode && console.log( textures );
 
+					tab.appendChild( header );
 					tab.appendChild( container );
+					tabUI.append( "Matcap" );
 
 				})();
 
@@ -1179,7 +1181,7 @@
 						});
 				*/
 
-						document.getElementById("material-title").appendChild(select);
+						document.getElementById("matcap-header").appendChild(select);
 
 					})();
 
