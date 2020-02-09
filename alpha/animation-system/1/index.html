@@ -480,23 +480,25 @@
 						};
 
 						function onStartJumping(){
-							Walking.weight = 0; 
-							Jogging.weight = 0; 
-							StandingIdle.weight = 0; 
-							TreadmillRunning.weight = 0;
-							Jump2.play();
+
+							mixer._actions.forEach(function(action){
+								action.weight = 0; 
+							});
+
+							Jump2.weight = 1; Jump2.play();
 						};
 
 						function onEndJumping(){
 
-							Walking.weight = 0; 
-							Jogging.weight = 0; 
-							StandingIdle.weight = 0; 
-							TreadmillRunning.weight = 0;
+							Jump2.stop();
+
+							mixer._actions.forEach(function(action){
+								action.weight = 0; 
+							});
 
 							if ( scope.controller.isRunning && scope.controller.isWalking ) {
 
-								Jump2.stop();
+							//	Jump2.stop();
 
 								scope.controller.movementSpeed = 28;
 								scope.controller.dispatchEvent({type:"startRunning"});
@@ -505,7 +507,7 @@
 
 							} else if ( scope.controller.isRunning && !scope.controller.isWalking ) {
 
-								Jump2.stop();
+							//	Jump2.stop();
 
 								scope.controller.movementSpeed = 45;
 								scope.controller.dispatchEvent({type:"startRunning"});
@@ -514,7 +516,7 @@
 
 							} else {
 
-								Jump2.stop();
+							//	Jump2.stop();
 
 								scope.controller.movementSpeed = 0;
 								scope.controller.dispatchEvent({type:"startIdling"});
@@ -631,10 +633,11 @@
 
 						localPlayer.controller.direction = (2 * Math.PI) - cameraControls.getFrontAngle() + this.frontAngle;
 
-						Walking.weight = 1; 
-						Jogging.weight = 0; 
-						StandingIdle.weight = 0; 
-						TreadmillRunning.weight = 0;
+						mixer._actions.forEach(function(action){
+							action.weight = 0; 
+						});
+
+						Walking.weight = 1;
 
 						localPlayer.controller.isRunning = true; 
 						localPlayer.controller.isWalking = true;
@@ -658,10 +661,11 @@
 
 						localPlayer.controller.direction = finalDirection;
 
-						Walking.weight = 0; 
-						Jogging.weight = 0; 
+						mixer._actions.forEach(function(action){
+							action.weight = 0; 
+						});
+
 						StandingIdle.weight = 1;
-						TreadmillRunning.weight = 0;
 
 						localPlayer.controller.isRunning = false;
 						localPlayer.controller.isWalking = false;
@@ -727,21 +731,19 @@
 
 						localPlayer.controller.direction = (3 * Math.PI/2) - cameraControls.getFrontAngle() + this.angle; // important!
 
+						mixer._actions.forEach(function(action){
+							action.weight = 0; 
+						});
+
 						if ( localPlayer.controller.isRunning && !localPlayer.controller.isWalking ) {
 
-							Walking.weight = 0; 
 							Jogging.weight = 1; 
-							StandingIdle.weight = 0; 
-							TreadmillRunning.weight = 0;
 
 							localPlayer.controller.movementSpeed = 45;
 
 						} else {
 
 							Walking.weight = 1; 
-							Jogging.weight = 0; 
-							StandingIdle.weight = 0; 
-							TreadmillRunning.weight = 0;
 
 							localPlayer.controller.isRunning = true; 
 							localPlayer.controller.isWalking = false;  // !!!danger: "false" cause bug in production server ??? //
@@ -758,10 +760,11 @@
 							return;
 						}
 
-						Walking.weight = 0; 
-						Jogging.weight = 0; 
+						mixer._actions.forEach(function(action){
+							action.weight = 0; 
+						});
+
 						StandingIdle.weight = 1; 
-						TreadmillRunning.weight = 0;
 
 						localPlayer.controller.isRunning = false;
 						localPlayer.controller.isWalking = false;
@@ -1036,12 +1039,12 @@
 
 					//	Start clip actions.
 
-						(function(){
-							Walking.weight = 0;          Walking.play();
-							Jogging.weight = 0;          Jogging.play();
-							StandingIdle.weight = 1;     StandingIdle.play();
-							TreadmillRunning.weight = 0; TreadmillRunning.play();
-						})();
+						mixer._actions.forEach(function(action, i){
+							action.play();
+							action.weight = 0; 
+						});
+
+						StandingIdle.weight = 1;
 
 					//	Mixer update.
 
@@ -1069,7 +1072,7 @@
 						+ "color:#000;font-size:20px;margin-left:10px;";
 						header.appendChild( select );
 
-						var actions = {};
+						actions = {};
 
 						mixer._actions.forEach( function(action, i){
 							var name = action._clip.name.replace("Carol|", "").replace(/\s/g, "");
@@ -1077,7 +1080,7 @@
 							select.appendChild( createOption(name) );
 						});
 						
-						debugMode && console.log( animations );
+						debugMode && console.log( actions );
 
 						function createOption(name){
 							var option = document.createElement("option");
@@ -1088,11 +1091,11 @@
 
 						select.addEventListener( "change", function(){
 
-							for ( var name in animations ){
-								actions[name].weight = 0;
-							}
+							mixer._actions.forEach(function(action){
+								action.weight = 0; 
+							});
 
-							mixer.stopAllAction();
+						//	mixer.stopAllAction();
 
 							actions[ select.value ].play();
 							actions[ select.value ].weight = 1;
