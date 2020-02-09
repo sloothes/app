@@ -932,12 +932,13 @@
 
 					debugMode && console.log( textures );
 
-					setTimeout( function(){
-						var tab = TabUI.add( "Matcap", "matcap-tab" );
-						tab.appendChild( header );
-						tab.appendChild( container );
-						tabUI.append( "Matcap" );
-					});
+					var tab = TabUI.add( "Matcap", "matcap-tab" );
+					tab.appendChild( header );
+					tab.appendChild( container );
+
+					TabUI.Matcap.role.classList.add("active");
+					TabUI.Matcap.tab.classList.add("in","active");
+					TabUI.append( "Matcap" );
 
 				})();
 
