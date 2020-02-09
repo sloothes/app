@@ -944,6 +944,15 @@
 
 			//	Avatar loader.
 
+			/*
+				//	cache avatar .fbx model (only once).
+					caches.open("avatars").then(function( cache ){
+						cache.add( "/app/alpha/005/Carol-3material-body.fbx" )
+						.catch(function(err){
+							console.error(err);
+						});
+					});
+			*/
 				var url = "/app/alpha/005/Carol-3material-body.fbx"; // TODO: to cache model.
 				var loader = new THREE.FBXLoader();
 				loader.load( url, function( object ){
