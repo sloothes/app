@@ -75,10 +75,6 @@
 			var keyInputControls;
 			var debugMode = true;
 
-			var Walking, Jogging, 
-				Running, Idleing, 
-				Jumping;
-
 			var Signal = signals.Signal;
 			var materialSelected = new Signal();
 
@@ -1084,13 +1080,13 @@
 						
 						debugMode && console.log( animations );
 
-						Walking = animations.CatwalkWalking; 
-						Jogging = animations.Jogging; 
-						Running = animations.StandardRun;
-						Idleing = animations.StandingIdle; 
-						Jumping = animations.Jump2;
-						
-						Idleing.weight = 1;
+						setTimeout( function(){
+							Walking = animations.CatwalkWalking; 
+							Jogging = animations.Jogging; 
+							Running = animations.StandardRun;
+							Idleing = animations.StandingIdle; Idleing.weight = 1;
+							Jumping = animations.Jump2;
+						});
 
 						function createOption(name){
 							var option = document.createElement("option");
