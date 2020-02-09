@@ -49,6 +49,21 @@
 				position:absolute;
 			}
 
+			.btn-action {
+				width:24%;
+				color:#fff;
+				height:40px;
+				font-size:large;
+				border:1px solid;
+				text-align:center;
+				border-radius:4px;
+				display:inline-block;
+			}
+			
+			.btn-action + .btn-action {
+				margin-right:1%;
+			}
+
 		</style>
 
 	</head>
@@ -882,19 +897,19 @@
 						var container = document.createElement("div");
 						container.style.cssText = "margin:10px 0px;min-height:40px;text-align:center;";
 
-						function Button(name){
+						function ActionButton(name){
 							var button = document.createElement("div");
 							button.textContent = name;
 							button.classList.add("btn", "btn-white-outline", "btn-action");
 							button.style.cssText = "width:24%;height:40px;font-size:large;"
 								+ "border:1px solid;border-radius:4px;display:inline-block;"
-								+ "color:#fff;padding-right:1%;text-align:center;";
+								+ "color:#fff;margin-right:1%;text-align:center;";
 							return button;
 						}
 
 						(function(){
 
-							var button = new Button( "Idle" );
+							var button = new ActionButton( "Idle" );
 							button.addEventListener( "click", function(){
 								clearTimeout( interval );
 								if ( localPlayer.controller.isIdling ) return;
@@ -909,7 +924,7 @@
 
 						(function(){
 
-							var button = new Button( "Walk" );
+							var button = new ActionButton( "Walk" );
 							button.addEventListener( "click", function(){
 								clearTimeout( interval );
 								if ( localPlayer.controller.isJumping ) return;
@@ -925,7 +940,7 @@
 
 						(function(){
 
-							var button = new Button( "Run" );
+							var button = new ActionButton( "Run" );
 							button.addEventListener( "click", function(){
 								clearTimeout( interval );
 								if ( localPlayer.controller.isJumping ) return;
@@ -941,7 +956,7 @@
 
 						(function(){
 
-							var button = new Button( "Jump" );
+							var button = new ActionButton( "Jump" );
 							button.addEventListener( "click", function(){
 								clearTimeout( interval );
 								if ( localPlayer.controller.isJumping ) return;
