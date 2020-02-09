@@ -1073,7 +1073,7 @@
 
 						mixer._actions.forEach( function(action, i){
 							var name = action._clip.name.replace("Carol|", "").replace(/\s/g, "");
-							animations[ name ] = action._clip.name.replace("Carol|", "").replace(/\s/g, "");
+							animations[ name ] = action._clip;
 							select.appendChild( createOption(name) );
 						});
 						
