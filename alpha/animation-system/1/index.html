@@ -938,7 +938,7 @@
 
 					TabUI.Matcap.role.classList.add("active");
 					TabUI.Matcap.tab.classList.add("in","active");
-					TabUI.append( "Matcap" );
+					TabUI.append( "Matcap" ); // important!
 
 				})();
 
@@ -1038,7 +1038,6 @@
 							Walking.weight = 0;      Walking.play();
 							Jogging.weight = 0;      Jogging.play();
 							StandardRun.weight = 0;  StandardRun.play();
-						//	StandingJump.weight = 0; StandingJump.play();
 							StandingIdle.weight = 1; StandingIdle.play();
 						})();
 
@@ -1051,6 +1050,42 @@
 							var delta = clock.getDelta();
 							mixer.update( delta );
 						})();
+
+					})();
+
+				//	Animation tab.
+
+					(function(){
+
+						var header = document.createElement("h3");
+						header.id = "animation-header";
+						header.textContent = "Animations";
+
+						var select = document.createElement("select");
+						select.style.cssText = "width:180px;float:right;"
+						+ "border:1px solid;border-radius:4px;"
+						+ "color:#000;font-size:20px;margin-right:18px;";
+						header.appendChild( select );
+					
+						object.animations.forEach( function(animation, i){
+							var name = animation.name.replace("Carol|", "").replace(/\s/g, ""); 
+							select.appendChild( createOption(name) );
+						});
+
+						function createOption(name){
+							var option = document.createElement("option");
+							option.text = name;
+							option.value = name;
+							return option;
+						}
+
+						var tab = TabUI.add( "Animation", "animation-tab" );
+						tab.appendChild( header );
+					//	tab.appendChild( container );
+
+						TabUI.append( "Animation" ); // important!
+					//	TabUI.Animation.role.classList.add("active");
+					//	TabUI.Animation.tab.classList.add("in","active");
 
 					})();
 
