@@ -1077,6 +1077,16 @@
 							animations[name].weight = 0; animations[name].play();
 							select.appendChild( createOption(name) );
 						});
+						
+						debugMode && console.log( animations );
+
+						Walking = animations.CatwalkWalking; 
+						Jogging = animations.Jogging; 
+						Running = animations.StandardRun;
+						Idleing = animations.StandingIdle; 
+						Jumping = animations.Jump2;
+						
+						Idleing.weight = 1;
 
 						function createOption(name){
 							var option = document.createElement("option");
@@ -1091,12 +1101,6 @@
 							}
 							animations[ select.value ].weight = 1;
 						});
-
-						Walking = animations.CatwalkWalking; 
-						Jogging = animations.Jogging; 
-						Running = animations.StandardRun;
-						Idleing = animations.StandingIdle; 
-						Jumping = animations.Jump2;
 
 						var tab = TabUI.add( "Animation", "animation-tab" );
 						tab.appendChild( header );
