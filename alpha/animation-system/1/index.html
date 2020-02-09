@@ -482,21 +482,21 @@
 						function onStartJumping(){
 							Walking.weight = 0; 
 							Jogging.weight = 0; 
-							Running.weight = 0;
-							Idleing.weight = 0; 
-							Jumping.play();
+							StandardRun.weight = 0;
+							StandingIdle.weight = 0; 
+							Jump2.play();
 						};
 
 						function onEndJumping(){
 
 							Walking.weight = 0; 
 							Jogging.weight = 0; 
-							Running.weight = 0;
-							Idleing.weight = 0; 
+							StandardRun.weight = 0;
+							StandingIdle.weight = 0; 
 
 							if ( scope.controller.isRunning && scope.controller.isWalking ) {
 
-								Jumping.stop();
+								Jump2.stop();
 
 								scope.controller.movementSpeed = 28;
 								scope.controller.dispatchEvent({type:"startRunning"});
@@ -505,7 +505,7 @@
 
 							} else if ( scope.controller.isRunning && !scope.controller.isWalking ) {
 
-								Jumping.stop();
+								Jump2.stop();
 
 								scope.controller.movementSpeed = 45;
 								scope.controller.dispatchEvent({type:"startRunning"});
@@ -514,12 +514,12 @@
 
 							} else {
 
-								Jumping.stop();
+								Jump2.stop();
 
 								scope.controller.movementSpeed = 0;
 								scope.controller.dispatchEvent({type:"startIdling"});
 
-								Idleing.weight = 1;
+								StandingIdle.weight = 1;
 							}
 						}
 
@@ -633,7 +633,7 @@
 
 						Walking.weight = 1; 
 						Jogging.weight = 0; 
-						Running.weight = 0;
+						StandardRun.weight = 0;
 						Idleing.weight = 0; 
 
 						localPlayer.controller.isRunning = true; 
@@ -660,8 +660,8 @@
 
 						Walking.weight = 0; 
 						Jogging.weight = 0; 
-						Running.weight = 0;
-						Idleing.weight = 1;
+						StandardRun.weight = 0;
+						StandingIdle.weight = 1;
 
 						localPlayer.controller.isRunning = false;
 						localPlayer.controller.isWalking = false;
@@ -731,8 +731,8 @@
 
 							Walking.weight = 0; 
 							Jogging.weight = 1; 
-							Running.weight = 0;
-							Idleing.weight = 0; 
+							StandardRun.weight = 0;
+							StandingIdle.weight = 0; 
 
 							localPlayer.controller.movementSpeed = 45;
 
@@ -740,8 +740,8 @@
 
 							Walking.weight = 1; 
 							Jogging.weight = 0; 
-							Running.weight = 0;
-							Idleing.weight = 0; 
+							StandardRun.weight = 0;
+							StandingIdle.weight = 0; 
 
 							localPlayer.controller.isRunning = true; 
 							localPlayer.controller.isWalking = false;  // !!!danger: "false" cause bug in production server ??? //
@@ -760,8 +760,8 @@
 
 						Walking.weight = 0; 
 						Jogging.weight = 0; 
-						Running.weight = 0;
-						Idleing.weight = 1; 
+						StandardRun.weight = 0;
+						StandingIdle.weight = 1; 
 
 						localPlayer.controller.isRunning = false;
 						localPlayer.controller.isWalking = false;
@@ -1021,7 +1021,7 @@
 					})();
 
 				//	Animations.
-				/*
+				
 					(function(){
 
 						mixer = new THREE.AnimationMixer( object );
@@ -1054,13 +1054,10 @@
 						})();
 
 					})();
-				*/
 
 				//	Animation tab.
 
 					(function(){
-					
-						mixer = new THREE.AnimationMixer( object );
 
 						var header = document.createElement("h3");
 						header.id = "animation-header";
@@ -1074,19 +1071,7 @@
 
 						object.animations.forEach( function(animation, i){
 							var name = animation.name.replace("Carol|", "").replace(/\s/g, ""); 
-							animations[name] = mixer.animation.clipAction( animation, object );
-							animations[name].weight = 0; animations[name].play();
 							select.appendChild( createOption(name) );
-						});
-						
-						debugMode && console.log( animations );
-
-						setTimeout( function(){
-							Walking = animations.CatwalkWalking; 
-							Jogging = animations.Jogging; 
-							Running = animations.StandardRun;
-							Idleing = animations.StandingIdle; Idleing.weight = 1;
-							Jumping = animations.Jump2;
 						});
 
 						function createOption(name){
@@ -1097,10 +1082,7 @@
 						}
 
 						select.addEventListener( "change", function(){
-							for ( var name in animations ){
-								animations[name].weight = 0;
-							}
-							animations[ select.value ].weight = 1;
+
 						});
 
 						var tab = TabUI.add( "Animation", "animation-tab" );
@@ -1110,15 +1092,6 @@
 						TabUI.append( "Animation" ); // important!
 					//	TabUI.Animation.role.classList.add("active");
 					//	TabUI.Animation.tab.classList.add("in","active");
-
-					//	Mixer update.
-						var clock = new THREE.Clock();
-
-						(function update(){
-							requestAnimationFrame( update );
-							var delta = clock.getDelta();
-							mixer.update( delta );
-						})();
 
 					})();
 
