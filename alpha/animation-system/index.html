@@ -580,64 +580,6 @@
 
 				})();
 
-			//	turnTo.js
-
-				(function(){
-
-					localPlayer.turnTo    = turnto.bind( localPlayer );
-					localPlayer.turnBack  = turnto.bind( localPlayer,  0 );
-					localPlayer.turnFront = turnto.bind( localPlayer,  Math.PI );
-					localPlayer.turnLeft  = turnto.bind( localPlayer, -Math.PI/2 );
-					localPlayer.turnRight = turnto.bind( localPlayer,  Math.PI/2 );
-
-					localPlayer.turnBack();
-
-					function turnto( rad, immediate ){
-
-						var limit = THREE.Math.degToRad(1);
-						var frontAngle = Math.PI - cameraControls.getFrontAngle();
-						var deltaAngle = getDeltaAngle( this.controller.direction, frontAngle + rad );
-
-						var turn = () => {
-
-							windowAnimationFrameRequestID = requestAnimationFrame( turn );
-
-							if ( isNaN( deltaAngle ) ) {
-								cancelAnimationFrame( windowAnimationFrameRequestID );
-								this.outfit.update(); return;
-							}
-
-							if ( immediate ) {
-								this.controller.direction += deltaAngle;
-								cancelAnimationFrame( windowAnimationFrameRequestID );
-								this.outfit.update(); return;
-							}
-
-							if ( Math.abs( deltaAngle ) < limit ) {
-								this.controller.direction += deltaAngle;
-								cancelAnimationFrame( windowAnimationFrameRequestID );
-								this.outfit.update(); return;
-							}
-
-							this.controller.direction = mod( this.controller.direction += ( deltaAngle *= 0.5 ), 2 * Math.PI );
-						}
-
-						return turn();
-
-						function mod( a, n ) { 
-							return ( a % n + n ) % n;  // important!
-						} 
-
-						function getDeltaAngle( current, target ) {
-							var a = mod( ( current - target ), 2 * Math.PI );
-							var b = mod( ( target - current ), 2 * Math.PI );
-							return a < b ? -a : b;
-						}
-
-					}
-
-				})();
-
 			//	keyInputControls.js
 
 				(function(){
@@ -1078,6 +1020,64 @@
 							requestAnimationFrame( update );
 							localPlayer.outfit.update();
 						})();
+
+					})();
+
+				//	turnTo.js
+
+					(function(){
+
+						localPlayer.turnTo    = turnto.bind( localPlayer );
+						localPlayer.turnBack  = turnto.bind( localPlayer,  0 );
+						localPlayer.turnFront = turnto.bind( localPlayer,  Math.PI );
+						localPlayer.turnLeft  = turnto.bind( localPlayer, -Math.PI/2 );
+						localPlayer.turnRight = turnto.bind( localPlayer,  Math.PI/2 );
+
+						localPlayer.turnBack();
+
+						function turnto( rad, immediate ){
+
+							var limit = THREE.Math.degToRad(1);
+							var frontAngle = Math.PI - cameraControls.getFrontAngle();
+							var deltaAngle = getDeltaAngle( this.controller.direction, frontAngle + rad );
+
+							var turn = () => {
+
+								windowAnimationFrameRequestID = requestAnimationFrame( turn );
+
+								if ( isNaN( deltaAngle ) ) {
+									cancelAnimationFrame( windowAnimationFrameRequestID );
+									this.outfit.update(); return;
+								}
+
+								if ( immediate ) {
+									this.controller.direction += deltaAngle;
+									cancelAnimationFrame( windowAnimationFrameRequestID );
+									this.outfit.update(); return;
+								}
+
+								if ( Math.abs( deltaAngle ) < limit ) {
+									this.controller.direction += deltaAngle;
+									cancelAnimationFrame( windowAnimationFrameRequestID );
+									this.outfit.update(); return;
+								}
+
+								this.controller.direction = mod( this.controller.direction += ( deltaAngle *= 0.5 ), 2 * Math.PI );
+							}
+
+							return turn();
+
+							function mod( a, n ) { 
+								return ( a % n + n ) % n;  // important!
+							} 
+
+							function getDeltaAngle( current, target ) {
+								var a = mod( ( current - target ), 2 * Math.PI );
+								var b = mod( ( target - current ), 2 * Math.PI );
+								return a < b ? -a : b;
+							}
+
+						}
 
 					})();
 
