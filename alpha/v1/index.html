@@ -99,173 +99,6 @@
 
 		<script>
 
-			function NumberInput( options ){
-			//	options: {min, max, val, step, delay, placeholder, target}
-
-				var interval;
-				var Signal = signals.Signal;
-
-				var row = document.createElement("div");
-				row.style.cssText = "width:49.5%;height:35px;text-align:center;display:inline;float:right;";
-
-				var prev = document.createElement("li");
-				prev.innerHTML = "&#9668;";
-				prev.style.display = "inline";
-				prev.classList.add("btn","btn-primary","get-prev-btn","pull-left");
-
-				var next = document.createElement("li");
-				next.innerHTML = "&#9658;";
-				next.style.display = "inline";
-				next.classList.add("btn","btn-primary","get-next-btn","pull-right");
-
-				var input = document.createElement("input");
-
-				input.type = "text";
-				input.style.color = "#fff";
-				input.style.display = "inline";
-				input.style.width = "40%";
-				input.style.padding = "6px";
-				input.style.fontSize = "large";
-				input.style.fontWeight = "bold";
-				input.style.background = "none";
-				input.setAttribute("placeholder", options.placeholder );
-				input.classList.add("form-control","text-center");
-
-				row.changed = new Signal();
-				row.changing = new Signal();
-
-				var value = round( options.val, 2 );
-
-				row.reset = function (){
-					value = round( options.val, 2 );
-					input.value = value.toFixed(2);
-					row.changed.dispatch( value );
-				};
-
-				row.getValue = function(){
-					return value;
-				}
-
-				row.setValue = function( num ){
-					value = round( parseFloat( num ), 2 );
-					input.value = value.toFixed(2);
-					row.changed.dispatch( value );
-				}
-
-				input.decrease = function(){
-
-					if ( value < options.min + options.step ) 
-						value = options.min;
-					else
-						value -= options.step;
-
-					input.value = value.toFixed(2);
-					row.changing.dispatch( value );
-
-				};
-
-				input.increase = function(){
-
-					var limit = options.max - options.step;
-
-					if ( value > limit ) 
-						value = options.max;
-					else
-						value += options.step;
-
-					input.value = value.toFixed(2);
-					row.changing.dispatch( value );
-
-				};
-
-				input.update = function(){
-
-					value = round( value, 2 );
-					input.value = value.toFixed(2);
-					row.changed.dispatch( value );
-
-				};
-
-			//	Event handlers.
-
-				input.addEventListener( "change", function(){
-					value = round( parseFloat( this.value ), 2 );
-					input.value = value.toFixed(2);
-					row.changed.dispatch( value );
-				});
-
-				prev.addEventListener("click", descendHandler);
-				next.addEventListener("click", increaseHandler);
-
-				function descendHandler(){
-					clearTimeout( interval );
-					input.decrease();
-					interval = setTimeout( input.update, 250 );
-				}
-
-				function increaseHandler(){
-					clearTimeout( interval );
-					input.increase();
-					interval = setTimeout( input.update, 250 );
-				}
-
-				prev.addEventListener("mousedown", function(){
-					clearTimeout( interval );
-					interval = setTimeout( function(){
-						interval = setInterval( function(){
-							input.decrease();
-						}, options.delay );
-					}, 350);
-				});
-
-				next.addEventListener("mousedown", function(){
-					clearTimeout( interval );
-					interval = setTimeout( function(){
-						interval = setInterval( function(){
-							input.increase();
-						}, options.delay );
-					}, 350);
-				});
-
-				prev.addEventListener("mouseleave", function(e){
-					clearTimeout( interval );
-					if ( e.buttons == 0 ) return;
-					setTimeout( input.update, 250 );
-				});
-
-				next.addEventListener("mouseleave", function(e){
-					clearTimeout( interval );
-					if ( e.buttons == 0 ) return;
-					setTimeout( input.update, 250 );
-				});
-
-				row.appendChild(prev);
-				row.appendChild(input);
-				row.appendChild(next);
-
-				setTimeout( input.update );
-
-				return row;
-
-				function round(number, precision) {
-
-					var shift = function (number, precision, reverseShift) {
-						if (reverseShift) {
-							precision = -precision;
-						}  
-						numArray = ("" + number).split("e");
-						return +(numArray[0] + "e" + (numArray[1] ? (+numArray[1] + precision) : precision));
-					};
-					return shift(Math.round(shift(number, precision, false)), precision, true);
-
-				}
-
-			}
-
-		</script>
-
-		<script>
-
 			var player;
 			var fbx, mixer;
 			var localPlayer;
@@ -1298,6 +1131,163 @@
 
 						tab.appendChild( header );
 						tab.appendChild( container );
+
+						function NumberInput( options ){
+						//	options: {min, max, val, step, delay, placeholder, target}
+
+							var interval;
+
+							var row = document.createElement("div");
+							row.style.cssText = "width:49.5%;height:35px;text-align:center;display:inline;float:right;";
+
+							var prev = document.createElement("li");
+							prev.innerHTML = "&#9668;";
+							prev.style.display = "inline";
+							prev.classList.add("btn","btn-primary","get-prev-btn","pull-left");
+
+							var next = document.createElement("li");
+							next.innerHTML = "&#9658;";
+							next.style.display = "inline";
+							next.classList.add("btn","btn-primary","get-next-btn","pull-right");
+
+							var input = document.createElement("input");
+
+							input.type = "text";
+							input.classList.add("form-control","text-center");
+							input.style.cssText = "color:#fff;display:inline;width:40%;"
+							+ "padding:6px;font-size:large;font-weight:bold;background:none;";
+							input.setAttribute("placeholder", options.placeholder );
+
+							row.changed = new Signal();
+							row.changing = new Signal();
+
+							var value = round( options.val, 2 );
+
+							row.reset = function (){
+								value = round( options.val, 2 );
+								input.value = value.toFixed(2);
+								row.changed.dispatch( value );
+							};
+
+							row.getValue = function(){
+								return value;
+							}
+
+							row.setValue = function( num ){
+								value = round( parseFloat( num ), 2 );
+								input.value = value.toFixed(2);
+								row.changed.dispatch( value );
+							}
+
+							input.decrease = function(){
+
+								if ( value < options.min + options.step ) 
+									value = options.min;
+								else
+									value -= options.step;
+
+								input.value = value.toFixed(2);
+								row.changing.dispatch( value );
+
+							};
+
+							input.increase = function(){
+
+								var limit = options.max - options.step;
+
+								if ( value > limit ) 
+									value = options.max;
+								else
+									value += options.step;
+
+								input.value = value.toFixed(2);
+								row.changing.dispatch( value );
+
+							};
+
+							input.update = function(){
+
+								value = round( value, 2 );
+								input.value = value.toFixed(2);
+								row.changed.dispatch( value );
+
+							};
+
+						//	Event handlers.
+
+							input.addEventListener( "change", function(){
+								value = round( parseFloat( this.value ), 2 );
+								input.value = value.toFixed(2);
+								row.changed.dispatch( value );
+							});
+
+							prev.addEventListener("click", descendHandler);
+							next.addEventListener("click", increaseHandler);
+
+							function descendHandler(){
+								clearTimeout( interval );
+								input.decrease();
+								interval = setTimeout( input.update, 250 );
+							}
+
+							function increaseHandler(){
+								clearTimeout( interval );
+								input.increase();
+								interval = setTimeout( input.update, 250 );
+							}
+
+							prev.addEventListener("mousedown", function(){
+								clearTimeout( interval );
+								interval = setTimeout( function(){
+									interval = setInterval( function(){
+										input.decrease();
+									}, options.delay );
+								}, 350);
+							});
+
+							next.addEventListener("mousedown", function(){
+								clearTimeout( interval );
+								interval = setTimeout( function(){
+									interval = setInterval( function(){
+										input.increase();
+									}, options.delay );
+								}, 350);
+							});
+
+							prev.addEventListener("mouseleave", function(e){
+								clearTimeout( interval );
+								if ( e.buttons == 0 ) return;
+								setTimeout( input.update, 250 );
+							});
+
+							next.addEventListener("mouseleave", function(e){
+								clearTimeout( interval );
+								if ( e.buttons == 0 ) return;
+								setTimeout( input.update, 250 );
+							});
+
+							row.appendChild(prev);
+							row.appendChild(input);
+							row.appendChild(next);
+
+							setTimeout( input.update );
+
+							return row;
+
+							function round(number, precision) {
+
+								var shift = function (number, precision, reverseShift) {
+									if (reverseShift) {
+										precision = -precision;
+									}  
+									numArray = ("" + number).split("e");
+									return +(numArray[0] + "e" + (numArray[1] ? (+numArray[1] + precision) : precision));
+								};
+								return shift(Math.round(shift(number, precision, false)), precision, true);
+
+							}
+
+						}
 
 					})();
 
