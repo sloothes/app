@@ -482,8 +482,8 @@
 						function onStartJumping(){
 							Walking.weight = 0; 
 							Jogging.weight = 0; 
-							StandardRun.weight = 0;
 							StandingIdle.weight = 0; 
+							TreadmillRunning.weight = 0;
 							Jump2.play();
 						};
 
@@ -491,8 +491,8 @@
 
 							Walking.weight = 0; 
 							Jogging.weight = 0; 
-							StandardRun.weight = 0;
 							StandingIdle.weight = 0; 
+							TreadmillRunning.weight = 0;
 
 							if ( scope.controller.isRunning && scope.controller.isWalking ) {
 
@@ -633,8 +633,8 @@
 
 						Walking.weight = 1; 
 						Jogging.weight = 0; 
-						StandardRun.weight = 0;
-						Idleing.weight = 0; 
+						StandingIdle.weight = 0; 
+						TreadmillRunning.weight = 0;
 
 						localPlayer.controller.isRunning = true; 
 						localPlayer.controller.isWalking = true;
@@ -660,8 +660,8 @@
 
 						Walking.weight = 0; 
 						Jogging.weight = 0; 
-						StandardRun.weight = 0;
 						StandingIdle.weight = 1;
+						TreadmillRunning.weight = 0;
 
 						localPlayer.controller.isRunning = false;
 						localPlayer.controller.isWalking = false;
@@ -731,8 +731,8 @@
 
 							Walking.weight = 0; 
 							Jogging.weight = 1; 
-							StandardRun.weight = 0;
 							StandingIdle.weight = 0; 
+							TreadmillRunning.weight = 0;
 
 							localPlayer.controller.movementSpeed = 45;
 
@@ -740,8 +740,8 @@
 
 							Walking.weight = 1; 
 							Jogging.weight = 0; 
-							StandardRun.weight = 0;
 							StandingIdle.weight = 0; 
+							TreadmillRunning.weight = 0;
 
 							localPlayer.controller.isRunning = true; 
 							localPlayer.controller.isWalking = false;  // !!!danger: "false" cause bug in production server ??? //
@@ -760,8 +760,8 @@
 
 						Walking.weight = 0; 
 						Jogging.weight = 0; 
-						StandardRun.weight = 0;
 						StandingIdle.weight = 1; 
+						TreadmillRunning.weight = 0;
 
 						localPlayer.controller.isRunning = false;
 						localPlayer.controller.isWalking = false;
@@ -1037,10 +1037,10 @@
 					//	Start clip actions.
 
 						(function(){
-							Walking.weight = 0;      Walking.play();
-							Jogging.weight = 0;      Jogging.play();
-							StandardRun.weight = 0;  StandardRun.play();
-							StandingIdle.weight = 1; StandingIdle.play();
+							Walking.weight = 0;          Walking.play();
+							Jogging.weight = 0;          Jogging.play();
+							StandingIdle.weight = 1;     StandingIdle.play();
+							TreadmillRunning.weight = 0; TreadmillRunning.play();
 						})();
 
 					//	Mixer update.
