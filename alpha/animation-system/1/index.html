@@ -1132,7 +1132,7 @@
 						var select = document.createElement("select");
 						select.style.cssText = "width:180px;float:right;"
 						+ "border:1px solid;border-radius:4px;"
-						+ "color:#000;font-size:20px;margin-right:8px;";
+						+ "color:#000;font-size:20px;margin-right:18px;";
 
 						select.appendChild( createOption(hair.material) );
 						select.appendChild( createOption(body.material[0]) );
@@ -1143,7 +1143,7 @@
 						select.appendChild( createOption(bra.material, panties.material) );
 						select.appendChild( createOption(torso.material) );
 						select.appendChild( createOption(skirt.material) );
-						select.appendChild( createOption(torso.material, skirt.material) );
+						select.appendChild( createOption(skirt.material, torso.material) );
 						select.appendChild( createOption(shoes.material) );
 
 					//	All.
