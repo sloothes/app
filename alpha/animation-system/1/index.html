@@ -887,8 +887,6 @@
 
 				//
 
-					var tab = TabUI.add( "Matcap", "matcap-tab" );
-
 					var header = document.createElement("h3");
 					header.id = "matcap-header";
 					header.textContent = "Materials";
@@ -932,12 +930,14 @@
 						})( matcaps.shift() );
 					}
 
-
 					debugMode && console.log( textures );
 
-					tab.appendChild( header );
-					tab.appendChild( container );
-					tabUI.append( "Matcap" );
+					setTimeout( function(){
+						var tab = TabUI.add( "Matcap", "matcap-tab" );
+						tab.appendChild( header );
+						tab.appendChild( container );
+						tabUI.append( "Matcap" );
+					});
 
 				})();
 
@@ -1181,7 +1181,9 @@
 						});
 				*/
 
-						document.getElementById("matcap-header").appendChild(select);
+						setTimeout(function(){
+							document.getElementById("matcap-header").appendChild(select);
+						});
 
 					})();
 
