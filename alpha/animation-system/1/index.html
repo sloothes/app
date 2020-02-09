@@ -1085,9 +1085,9 @@
 						}
 
 						select.addEventListener( "change", function(){
-							for ( var name in animations )
+							for ( var name in animations ){
 								animations[name].weigth = 0;
-							});
+							}
 							animations[ select.value ].weight = 1;
 						});
 
