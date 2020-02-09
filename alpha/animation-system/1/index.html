@@ -1088,9 +1088,9 @@
 
 						select.addEventListener( "change", function(){
 							for ( var name in animations ){
-								animations[name].weigth = 0;
+								animations[name].weight = 0;
 							}
-							animations[ select.value ].weigth = 1;
+							animations[ select.value ].weight = 1;
 							debugMode && console.log( animations[ select.value ] );
 
 						});
