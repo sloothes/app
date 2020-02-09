@@ -75,6 +75,8 @@
 			var keyInputControls;
 			var debugMode = true;
 
+			var animations = {};
+
 			var Signal = signals.Signal;
 			var materialSelected = new Signal();
 
@@ -1058,7 +1060,6 @@
 
 					(function(){
 					
-						var animations = {};
 						mixer = new THREE.AnimationMixer( object );
 
 						var header = document.createElement("h3");
