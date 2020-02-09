@@ -1069,8 +1069,11 @@
 						+ "color:#000;font-size:20px;margin-left:10px;";
 						header.appendChild( select );
 
-						object.animations.forEach( function(animation, i){
-							var name = animation.name.replace("Carol|", "").replace(/\s/g, ""); 
+						var animations = {}
+
+						mixer._actions.forEach( function(action, i){
+							var name = action._clip.name.replace("Carol|", "").replace(/\s/g, "");
+							animations[ name ] = action._clip.name;
 							select.appendChild( createOption(name) );
 						});
 
@@ -1082,7 +1085,10 @@
 						}
 
 						select.addEventListener( "change", function(){
-
+							for ( var name in animations )
+								animations[name].weigth = 0;
+							});
+							animations[ select.value ].weight = 1;
 						});
 
 						var tab = TabUI.add( "Animation", "animation-tab" );
