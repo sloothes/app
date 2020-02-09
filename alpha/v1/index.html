@@ -999,14 +999,59 @@
 
 					(function(){
 
+						var interval;
 
+						var header = document.createElement("h3");
+						header.textContent = "Direction controls:";
 
+						var container = document.createElement("div");
+						container.style.cssText = "margin:10px 0px;min-height:40px;text-align:center;";
 
+						function DirectionButton(name){
+							var button = document.createElement("div");
+							button.textContent = name;
+							button.classList.add("btn", "btn-white-outline", "btn-direction");
+							return button;
+						}
 
+						(function(){
+							var button = new DirectionButton( "Front" );
+							button.addEventListener( "click", function(){
+								clearTimeout( interval );
+								interval = setTimeout( localPlayer.turnFront, 250 );
+							});
+							container.appendChild( button );
+						})();
 
+						(function(){
+							var button = new DirectionButton( "Back" );
+							button.addEventListener( "click", function(){
+								clearTimeout( interval );
+								interval = setTimeout( localPlayer.turnBack, 250 );
+							});
+							container.appendChild( button );
+						})();
 
+						(function(){
+							var button = new DirectionButton( "Left" );
+							button.addEventListener( "click", function(){
+								clearTimeout( interval );
+								interval = setTimeout( localPlayer.turnLeft, 250 );
+							});
+							container.appendChild( button );
+						})();
 
+						(function(){
+							var button = new DirectionButton( "Right" );
+							button.addEventListener( "click", function(){
+								clearTimeout( interval );
+								interval = setTimeout( localPlayer.turnRight, 250 );
+							});
+							container.appendChild( button );
+						})();
 
+						tab.appendChild( header );
+						tab.appendChild( container );
 
 					})();
 
