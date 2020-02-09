@@ -1076,6 +1076,8 @@
 							animations[ name ] = action._clip.name.replace("Carol|", "").replace(/\s/g, "");
 							select.appendChild( createOption(name) );
 						});
+						
+						debugMode && console.log( animations );
 
 						function createOption(name){
 							var option = document.createElement("option");
