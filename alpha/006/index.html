@@ -318,6 +318,7 @@
 
 						mixer = new THREE.AnimationMixer( object );
 
+				/*
 					//	Dynamic create mixer clip action animations function.
 						( new Function( "object", object.animations.map( function(animation, i){
 								var name = animation.name.replace("Armature|", "").replace(/\s/g, ""); 
@@ -325,6 +326,13 @@
 								return "\t"+name+" = mixer.clipAction( object.animations["+i+"], object );";
 							}).join("\n")
 						) )( object );
+				*/
+						
+						object.animations.forEach( function(animation, i){
+							var name = animation.name.replace("Armature|", "").replace(/\s/g, ""); 
+							debugMode && console.log( i+".\t"+name );
+							window[ name ] = mixer.clipAction( animation, object );
+						});
 
 					//	Start clip actions.
 
@@ -333,7 +341,7 @@
 							action.weight = 0; 
 						});
 
-						ActionPose.weight = 1;
+					//	ActionPose.weight = 1;
 
 					//	Mixer update.
 
@@ -387,7 +395,7 @@
 
 						//	mixer.stopAllAction();
 
-							actions[ select.value ].play();
+						//	actions[ select.value ].play();
 							actions[ select.value ].weight = 1;
 							console.log( actions[ select.value ] );
 						});
