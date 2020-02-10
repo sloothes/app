@@ -257,17 +257,11 @@
 				var loader = new THREE.FBXLoader();
 				loader.load( url, function( object ){
 
+					object.name = "model";
+					object.scale.set(0.1,0.1,0.1);
 					scene.add( object );
-					object.name = "Charlotte";
-					console.log( object ); // object is THREE.Group.
 
-					object.children.filter( function( child ){
-						return child.type == "SkinnedMesh";
-					}).forEach( function( skinned ){
-						var name = skinned.name;
-						debugMode && console.log( name );
-						window[name] = object.getObjectByName( name );
-					});
+					console.log( object ); // object is THREE.Group.
 
 				//	SkinnedMesh tab.
 
@@ -292,7 +286,9 @@
 						}).forEach( function( mesh ){
 							var name = mesh.name;
 							meshes[ name ] = mesh;
+							mesh.material = new THREE.MeshStandardMaterial({skinning:true, side:2});
 							select.appendChild( createOption(name) );
+							debugMode && console.log( name );
 						});
 						
 						select.addEventListener( "change", function(){
