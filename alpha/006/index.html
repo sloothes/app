@@ -100,6 +100,7 @@
 
 			var mixer;
 			var player;
+			var controls;
 			var localPlayer;
 			var cameraControls;
 			var keyInputControls;
@@ -117,6 +118,7 @@
 				player.play();
 
 				document.body.appendChild( player.dom );
+				controls = new THREE.EditorControls( camera, player.dom );
 
 				window.addEventListener( "resize", function () {
 					player.setSize( window.innerWidth, window.innerHeight );
@@ -255,22 +257,17 @@
 				var loader = new THREE.FBXLoader();
 				loader.load( url, function( object ){
 
-					object.name = "Carol";
+					scene.add( object );
+					object.name = "Charlotte";
 					console.log( object ); // object is THREE.Group.
 
-					(function(){
-
-					//	Dynamic get skinned meshes function.
-						( new Function( "object", object.children.filter( function( child ){
-								return child.type == "SkinnedMesh";
-							}).map( function( skinned ){
-								var name = skinned.name;
-								debugMode && console.log( "\t"+name.toLowerCase() );
-								return "\t"+name.toLowerCase()+" = object.getObjectByName(\""+name+"\");";
-							}).join("\n")
-						) )( object );
-
-					})();
+					object.children.filter( function( child ){
+						return child.type == "SkinnedMesh";
+					}).forEach( function( skinned ){
+						var name = skinned.name;
+						debugMode && console.log( name );
+						window[name] = object.getObjectByName( name );
+					});
 
 				//	SkinnedMesh tab.
 
