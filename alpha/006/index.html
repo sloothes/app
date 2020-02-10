@@ -252,7 +252,7 @@
 
 			//	Avatar loader.
 
-				var url = "/app/alpha/006/carol_mxr_poses_demo4.fbx";
+				var url = "/app/alpha/006/carol_mxr_poses_demo5.fbx";
 				var loader = new THREE.FBXLoader();
 				loader.load( url, function( object ){
 
@@ -285,7 +285,7 @@
 						}).forEach( function( mesh ){
 							var name = mesh.name;
 							meshes[ name ] = mesh;
-						//	mesh.material = new THREE.MeshStandardMaterial({skinning:true, side:2});
+							mesh.material = new THREE.MeshStandardMaterial({skinning:true, side:2});
 							select.appendChild( createOption(name) );
 							debugMode && console.log( name );
 						});
