@@ -1015,6 +1015,15 @@
 						}
 
 						(function(){
+							var button = new DirectionButton( "Left" );
+							button.addEventListener( "click", function(){
+								clearTimeout( interval );
+								interval = setTimeout( localPlayer.turnLeft, 250 );
+							});
+							container.appendChild( button );
+						})();
+
+						(function(){
 							var button = new DirectionButton( "Front" );
 							button.addEventListener( "click", function(){
 								clearTimeout( interval );
@@ -1028,15 +1037,6 @@
 							button.addEventListener( "click", function(){
 								clearTimeout( interval );
 								interval = setTimeout( localPlayer.turnBack, 250 );
-							});
-							container.appendChild( button );
-						})();
-
-						(function(){
-							var button = new DirectionButton( "Left" );
-							button.addEventListener( "click", function(){
-								clearTimeout( interval );
-								interval = setTimeout( localPlayer.turnLeft, 250 );
 							});
 							container.appendChild( button );
 						})();
