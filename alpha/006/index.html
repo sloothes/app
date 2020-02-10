@@ -258,16 +258,19 @@
 					object.name = "Carol";
 					console.log( object ); // object is THREE.Group.
 
-				//	Dynamic get skinned meshes function.
+					(function(){
 
-					( new Function( "object", object.children.filter( function( child ){
-							return child.type == "SkinnedMesh";
-						}).map( function( skinned ){
-							var name = skinned.name;
-							debugMode && console.log( "\t"+name.toLowerCase() );
-							return "\t"+name.toLowerCase()+" = object.getObjectByName(\""+name+"\");";
-						}).join("\n")
-					) )( object );
+					//	Dynamic get skinned meshes function.
+						( new Function( "object", object.children.filter( function( child ){
+								return child.type == "SkinnedMesh";
+							}).map( function( skinned ){
+								var name = skinned.name;
+								debugMode && console.log( "\t"+name.toLowerCase() );
+								return "\t"+name.toLowerCase()+" = object.getObjectByName(\""+name+"\");";
+							}).join("\n")
+						) )( object );
+
+					})();
 
 				//	SkinnedMesh tab.
 
