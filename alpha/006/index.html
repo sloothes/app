@@ -285,7 +285,7 @@
 						}).forEach( function( mesh ){
 							var name = mesh.name;
 							meshes[ name ] = mesh;
-							mesh.material = new THREE.MeshStandardMaterial({skinning:true, side:2});
+						//	mesh.material = new THREE.MeshStandardMaterial({skinning:true, side:2});
 							select.appendChild( createOption(name) );
 							debugMode && console.log( name );
 						});
