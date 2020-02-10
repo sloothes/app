@@ -99,14 +99,12 @@
 
 		<script>
 
+			var mixer;
 			var player;
-			var fbx, mixer;
 			var localPlayer;
 			var cameraControls;
 			var keyInputControls;
 			var debugMode = true;
-
-			var animations = {};
 
 			var Signal = signals.Signal;
 			var materialSelected = new Signal();
@@ -1562,13 +1560,6 @@
 
 					})();
 
-				//	localPlayer.startAction.js
-
-					(function(){
-
-
-					})();
-
 				//	Animations.
 				
 					(function(){
@@ -1618,7 +1609,7 @@
 						+ "font-size:20px;margin-left:10px;";
 						header.appendChild( select );
 
-						actions = {};
+						var actions = {};
 
 						mixer._actions.forEach( function(action, i){
 							var name = action._clip.name.replace("Carol|", "").replace(/\s/g, "");

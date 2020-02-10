@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+
+		<title>alpha (0.0.6)</title>
+
+		<meta charset="utf-8">
+		<meta name="generator" content="Three.js Editor">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+		<link rel="stylesheet" href="/css/joystick.css">
+		<link rel="stylesheet" href="/css/bootstrap.min.css">
+		<link rel="stylesheet" href="/css/bootbox-dialoges.css">
+
+		<script src="/js/Objectid.js"></script>
+		<script src="/js/jquery.min.js"></script> 
+		<script src="/js/system.min.js"></script>
+		<script src="/js/signals.min.js"></script>
+		<script src="/js/inflate.min.js"></script>
+		<script src="/js/zangodb.min.js"></script>
+		<script src="/js/bootstrap.min.js"></script>
+
+		<style>
+
+			body {
+				font-family: sans-serif;
+				font-size: 13px;
+				background-color: #000;
+				margin: 0px;
+				overflow: hidden;
+			}
+
+			#loading-bar {
+				width:100%;
+				height:100%;
+				top:0; left:0;
+				position:fixed;
+				display:flex;
+				align-items:center;
+				justify-content:center;
+			}
+
+			.middle > * {
+				top:0; 
+				left:0;
+				right:0;
+				bottom:0;
+				margin:auto;"
+				position:absolute;
+			}
+
+			.btn-action {
+				width:24%;
+				color:#fff;
+				height:40px;
+				font-size:large;
+				border:1px solid;
+				text-align:center;
+				border-radius:4px;
+				display:inline-block;
+			}
+			
+			.btn-action + .btn-action {
+				margin-left:1%;
+			}
+			
+			.btn-matcap {
+				padding:0;
+				float:left;
+				width:33px;
+				height:33px;
+				border:1px solid;
+				border-radius:4px;
+				margin-right:4px;
+				margin-bottom:4px;
+				display:inline-block;
+			}
+			
+			.btn-matcap + .btn-matcap {
+				margin-right:4px;
+			}
+
+		</style>
+
+	</head>
+
+	<body ontouchstart="">
+
+		<script src="js/three.js"></script>
+		<script src="js/app.js"></script>
+		<script src="js/UVsDebug.js"></script>
+		<script src="js/FBXLoader.js"></script>
+		<script src="js/EditorControls.js"></script>
+
+		<script src="/js/MW.js"></script>
+		<script src="/js/MWtps.js"></script>
+		<script src="/js/VirtualInput.js"></script>
+
+		<script>
+
+			var mixer;
+			var player;
+			var localPlayer;
+			var cameraControls;
+			var keyInputControls;
+			var debugMode = true;
+
+			var Signal = signals.Signal;
+			var materialSelected = new Signal();
+
+			var loader = new THREE.FileLoader();
+			loader.load( "app.json", function ( text ) {
+
+				player = new APP.Player();
+				player.load( JSON.parse( text ) );
+				player.setSize( window.innerWidth, window.innerHeight );
+				player.play();
+
+				document.body.appendChild( player.dom );
+
+				window.addEventListener( "resize", function () {
+					player.setSize( window.innerWidth, window.innerHeight );
+				});
+
+			//	Side panel.js
+
+				(function(){
+
+					var sidePanel = document.createElement("div");
+					sidePanel.id = "side-panel";
+					sidePanel.classList.add("side-panel");
+					sidePanel.style.cssText = "position:absolute;top:0;right:0;bottom:0;width:370px;color:#eee;background:rgba(0,0,0,0.4); "
+							+ "-webkit-transform:translateX( 340px ); -webkit-transition:-webkit-transform 500ms ease-out; z-index:9999;";
+
+					var container = document.createElement("div");
+					container.id = "side-panel-content";
+					container.style.cssText = "position:absolute;top:40px;left:40px;bottom:20px;right:20px;overflow-x:hidden;";
+
+					var sidePillBar = document.createElement("div");
+					sidePillBar.id = "side-pill-bar";
+					sidePillBar.classList.add("side-holder");
+					sidePillBar.style.cssText = "margin-bottom:20px;";
+					container.appendChild( sidePillBar );
+
+					var sideTabPills = document.createElement("ul");
+					sideTabPills.id = "side-tab-pills";
+					sideTabPills.classList.add("nav","nav-tabs","nav-pills");
+					sideTabPills.style.cssText = "display:inline-flex!important;overflow-y:hidden;width:300px;scroll-behavior:smooth;";
+					sidePillBar.appendChild( sideTabPills );
+
+					var sideTabPanel = document.createElement("div");
+					sideTabPanel.id = "side-tab-panel";
+					sideTabPanel.classList.add("tab-content");
+					container.appendChild( sideTabPanel );
+
+					sidePanel.addEventListener( "mouseenter", function(){
+						this.classList.toggle( "pinned", true );
+						this.style["-webkit-transform"] = "translateX( 0 )";
+					});
+
+					sidePanel.addEventListener( "mouseleave", function(){
+						this.classList.toggle( "pinned", false );
+						this.style["-webkit-transform"] = "translateX( 340px )";
+					});
+
+					sidePanel.appendChild( container );
+					player.dom.appendChild( sidePanel );
+
+				})();
+
+			//	TabUI.js
+
+				(function(){
+
+					TabUI = {};
+
+					TabUI.add = function(name, id){
+
+						var role, pill, tab;
+
+						role = document.createElement("li");
+						role.setAttribute("role", "presentation");
+						role.style.display = "inline-block";
+
+						pill = document.createElement("a");
+						pill.href = "#"+id; // important!
+						pill.setAttribute("data-toggle", "pill");
+						pill.classList.add("pills","right-pill","right-pill-avatar");
+						pill.text = name; // pill.innerHTML = name;
+						role.appendChild( pill );
+
+						tab = document.createElement("li");
+						tab.id = id; // important!
+						tab.classList.add("component-pane","tab-pane","fade");
+
+					//	document.getElementById("side-tab-panel").appendChild( tab );
+					//	document.getElementById("side-tab-pills").appendChild( role );
+
+						this[ name ] = {
+							id: id,
+							tab: tab,
+							role: role,
+							pill: pill,
+							name: name,
+						};
+
+						return tab;
+
+					};
+
+					TabUI.append = function(){
+
+						for ( var arg in arguments ){
+
+							var name = arguments[ arg ];
+
+							document.getElementById("side-tab-panel").appendChild( this[ name ].tab );
+							document.getElementById("side-tab-pills").appendChild( this[ name ].role );
+
+						}
+					};
+					
+				})();
+
+			//	Loading bar.
+
+				(function(){
+
+					var container = document.createElement("div");
+					container.id = "loading-bar";
+					container.classList.add("middle");
+
+					var progress = document.createElement("div");
+					progress.style.width = "250px";
+					progress.style.height = "fit-content";
+					progress.classList.add("progress");
+					container.appendChild( progress );
+
+					var bar = document.createElement("div");
+					bar.style.width = "100%";
+					bar.textContent = "Loading...";
+					bar.setAttribute("role", "progressbar");
+					bar.setAttribute("aria-valuemin", "0");
+					bar.setAttribute("aria-valuemax", "100");
+					bar.classList.add("progress-bar", "progress-bar-striped", "active");
+					progress.appendChild( bar );
+
+					document.body.appendChild( container );
+
+				})();
+
+			//	Avatar loader.
+
+				var url = "/app/alpha/006/model_full_mixamo_poses_demo.fbx";
+				var loader = new THREE.FBXLoader();
+				loader.load( url, function( object ){
+
+					object.name = "Carol";
+					console.log( object ); // object is THREE.Group.
+
+				//	Dynamic get skinned meshes function.
+
+					( new Function( "object", object.children.filter( function( child ){
+							return child.type == "SkinnedMesh";
+						}).map( function( skinned ){
+							var name = skinned.name;
+							debugMode && console.log( "\t"+name.toLowerCase() );
+							return "\t"+name.toLowerCase()+" = object.getObjectByName(\""+name+"\");";
+						}).join("\n")
+					) )( object );
+
+				//	SkinnedMesh tab.
+
+					(function(){
+
+					//	var selected;
+
+						var header = document.createElement("h3");
+						header.id = "skinned-header";
+						header.textContent = "Selected";
+
+						var select = document.createElement("select");
+						select.style.cssText = "width:180px;color:#000;" // float:left;
+						+ "border:1px solid;border-radius:4px;padding:2px 4px 4px 4px;"
+						+ "font-size:20px;margin-left:10px;";
+						header.appendChild( select );
+
+						var meshes = {};
+
+						object.children.filter( function( child ){
+							return child.type == "SkinnedMesh";
+						}).forEach( function( mesh ){
+							var name = mesh.name;
+							meshes[ name ] = mesh;
+							select.appendChild( createOption(name) );
+						});
+						
+						select.addEventListener( "change", function(){
+							selected = meshes[ select.value ];
+							debugMode && console.log( selected );
+						});
+
+						function createOption(name){
+							var option = document.createElement("option");
+							option.text = name;
+							option.value = name;
+							return option;
+						}
+
+						var tab = TabUI.add( "Skinned", "skinned-tab" );
+						tab.appendChild( header );
+
+						TabUI.append( "Skinned" ); // important!
+					//	TabUI.Animation.role.classList.add("active");
+					//	TabUI.Animation.tab.classList.add("in","active");
+
+					})();
+
+				//	Animations.
+				
+					(function(){
+
+						mixer = new THREE.AnimationMixer( object );
+
+					//	Dynamic create mixer clip action animations function.
+						( new Function( "object", object.animations.map( function(animation, i){
+								var name = animation.name.replace("Armature|", "").replace(/\s/g, ""); 
+								debugMode && console.log( "\t"+name );
+								return "\t"+name+" = mixer.clipAction( object.animations["+i+"], object );";
+							}).join("\n")
+						) )( object );
+
+					//	Start clip actions.
+
+						mixer._actions.forEach(function(action, i){
+							action.play();
+							action.weight = 0; 
+						});
+
+						ActionPose.weight = 1;
+
+					//	Mixer update.
+
+						var clock = new THREE.Clock();
+
+						(function update(){
+							requestAnimationFrame( update );
+							var delta = clock.getDelta();
+							mixer.update( delta );
+						})();
+
+					})();
+
+
+				//	Animation tab.
+
+					(function(){
+
+						var header = document.createElement("h3");
+						header.id = "animation-header";
+						header.textContent = "Animations";
+
+						var select = document.createElement("select");
+						select.style.cssText = "width:180px;color:#000;" // float:left;
+						+ "border:1px solid;border-radius:4px;padding:2px 4px 4px 4px;"
+						+ "font-size:20px;margin-left:10px;";
+						header.appendChild( select );
+
+						var actions = {};
+
+						mixer._actions.forEach( function(action, i){
+							var name = action._clip.name.replace("Armature|", "").replace(/\s/g, "");
+							actions[ name ] = action;
+							select.appendChild( createOption(name) );
+						});
+						
+						debugMode && console.log( actions );
+
+						function createOption(name){
+							var option = document.createElement("option");
+							option.text = name;
+							option.value = name;
+							return option;
+						}
+
+						select.addEventListener( "change", function(){
+
+							mixer._actions.forEach(function(action){
+								action.weight = 0; 
+							});
+
+						//	mixer.stopAllAction();
+
+							actions[ select.value ].play();
+							actions[ select.value ].weight = 1;
+							console.log( actions[ select.value ] );
+						});
+
+						var tab = TabUI.add( "Animation", "animation-tab" );
+						tab.appendChild( header );
+
+						TabUI.append( "Animation" ); // important!
+						TabUI.Animation.role.classList.add("active");
+						TabUI.Animation.tab.classList.add("in","active");
+
+					})();
+
+				//	Remove loading bar.
+					document.getElementById("loading-bar").remove();
+
+				});
+
+			});
+
+		</script>
+
+	</body>
+</html>
