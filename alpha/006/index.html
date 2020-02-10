@@ -253,12 +253,12 @@
 
 			//	Avatar loader.
 
-				var url = "/app/alpha/006/carol_mxr_poses_demo2.fbx";
+				var url = "/app/alpha/006/carol_mxr_poses_demo3.fbx";
 				var loader = new THREE.FBXLoader();
 				loader.load( url, function( object ){
 
 					object.name = "model";
-				//	object.scale.set(0.1,0.1,0.1);
+					object.scale.set(0.1, 0.1, 0.1);
 					scene.add( object );
 
 					console.log( object ); // object is THREE.Group.
