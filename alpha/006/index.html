@@ -118,7 +118,6 @@
 				player.play();
 
 				document.body.appendChild( player.dom );
-				controls = new THREE.EditorControls( camera, player.dom );
 
 				window.addEventListener( "resize", function () {
 					player.setSize( window.innerWidth, window.innerHeight );
