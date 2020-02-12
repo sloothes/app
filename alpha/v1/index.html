@@ -1437,15 +1437,15 @@
 						});
 					});
 			*/
-				var url = "/app/alpha/005/Carol-3material-body.fbx"; // TODO: to cache model.
+				var url = "/app/alpha/v1/SchoolSkirtCorset_onHighBoots_poses_v1.fbx"; // TODO: cache model.
 				var loader = new THREE.FBXLoader();
 				loader.load( url, function( object ){
 
-					object.name = "Carol";
+					object.name = "SchoolSkirtCorset_v1";
 					console.log( object ); // object is THREE.Group.
 
 				//	Outfit Manager.
-
+				/*
 					(function(){
 
 						localPlayer.outfit = new OutfitManager();
@@ -1483,17 +1483,15 @@
 						shoes = object.getObjectByName( "Shoes" );
 						panties = object.getObjectByName( "Panties" );
 
-					/*
 					//	Dynamic get skinned meshes function.
-						( new Function( "object", object.children.filter( function( child ){
-								return child.type == "SkinnedMesh";
-							}).map( function( skinned ){
-								var name = skinned.name;
-								debugMode && console.log( "\t"+name.toLowerCase() );
-								return "\t"+name.toLowerCase()+" = object.getObjectByName(\""+name+"\");";
-							}).join("\n")
-						) )( object );
-					*/
+					//	( new Function( "object", object.children.filter( function( child ){
+					//			return child.type == "SkinnedMesh";
+					//		}).map( function( skinned ){
+					//			var name = skinned.name;
+					//			debugMode && console.log( "\t"+name.toLowerCase() );
+					//			return "\t"+name.toLowerCase()+" = object.getObjectByName(\""+name+"\");";
+					//		}).join("\n")
+					//	) )( object );
 
 						(function update(){
 							requestAnimationFrame( update );
@@ -1559,6 +1557,7 @@
 						}
 
 					})();
+				*/
 
 				//	Animations.
 				
@@ -1581,7 +1580,7 @@
 							action.weight = 0; 
 						});
 
-						StandingIdle.weight = 1;
+						mixer._actions[0].weight = 1;
 
 					//	Mixer update.
 
@@ -1595,13 +1594,13 @@
 
 					})();
 
-				//	Animation tab.
+				//	Pose tab.
 
 					(function(){
 
 						var header = document.createElement("h3");
-						header.id = "animation-header";
-						header.textContent = "Animations";
+						header.id = "pose-header";
+						header.textContent = "Pose";
 
 						var select = document.createElement("select");
 						select.style.cssText = "width:180px;color:#000;" // float:left;
@@ -1612,16 +1611,16 @@
 						var actions = {};
 
 						mixer._actions.forEach( function(action, i){
-							var name = action._clip.name.replace("Carol|", "").replace(/\s/g, "");
+							var name = action._clip.name.replace("Armature|", "").replace(/\s/g, "");
 							actions[ name ] = action;
-							select.appendChild( createOption(name) );
+							select.appendChild( createOption(name, i) );
 						});
 						
 						debugMode && console.log( actions );
 
-						function createOption(name){
+						function createOption(name, i){
 							var option = document.createElement("option");
-							option.text = name;
+							option.text = i+"."+name;
 							option.value = name;
 							return option;
 						}
@@ -1633,24 +1632,24 @@
 							});
 
 						//	mixer.stopAllAction();
+						//	actions[ select.value ].play();
 
-							actions[ select.value ].play();
 							actions[ select.value ].weight = 1;
 							console.log( actions[ select.value ] );
 						});
 
-						var tab = TabUI.add( "Animation", "animation-tab" );
+						var tab = TabUI.add( "Pose", "pose-tab" );
 						tab.appendChild( header );
 					//	tab.appendChild( container );
 
-						TabUI.append( "Animation" ); // important!
-					//	TabUI.Animation.role.classList.add("active");
-					//	TabUI.Animation.tab.classList.add("in","active");
+						TabUI.append( "Pose" ); // important!
+						TabUI.Pose.role.classList.add("active");
+						TabUI.Pose.tab.classList.add("in","active");
 
 					})();
 
 				//	Materials.
-
+				/*
 					(function(){
 
 					//	Reset materials.
@@ -1778,18 +1777,17 @@
 							materialSelected.dispatch( array );
 						});
 
-				/*
 					//	Single material.
-						select.addEventListener( "change", function(){
-							var uuid = select.value;
-							materialSelected.dispatch( [materials[uuid]] );
-						});
-				*/
+					//	select.addEventListener( "change", function(){
+					//		var uuid = select.value;
+					//		materialSelected.dispatch( [materials[uuid]] );
+					//	});
 
 						setTimeout(function(){
 							document.getElementById("matcap-header").appendChild(select);
 						});
-						
+				*/
+
 					//	Open side panel.
 
 						setTimeout(function(){
