@@ -260,7 +260,10 @@
 
 					debugMode && console.log( object ); // object is THREE.Group.
 
-					var mesh = object.children[0];
+					var mesh = object.children.find( function( child ){
+						return child.type == "SkinnedMesh";
+					});
+
 					debugMode && console.log( mesh );
 
 				//	Outfit Manager.
@@ -377,7 +380,7 @@
 							action.weight = 0; 
 						});
 
-						mixer._actions[0].weight = 1;
+						Idling.weight = 1;
 
 					//	Mixer update.
 
@@ -523,6 +526,7 @@
 								var material = mesh.material.find( function( item ){
 									return item.name == "BodyMaterial";
 								});
+								debugMode && console.log( material );
 								material.envMap = texture;
 								material.envMap.needsUpdate = true;
 								material.needsUpdate = true;
