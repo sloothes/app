@@ -251,7 +251,7 @@
 
 			//	Avatar loader.
 
-				var url = "/app/alpha/v3/SchoolSkirtCorset_onHighBoots_animations_v2.fbx";
+				var url = "/app/alpha/v3/SchoolSkirtCorset_onHighBoots_animations_v2(42b).fbx";
 				var loader = new THREE.FBXLoader();
 				loader.load( url, function( object ){
 
@@ -991,7 +991,7 @@
 								scope.controller.movementSpeed = 45;
 								scope.controller.dispatchEvent({type:"startRunning"});
 
-								MediumRun.weight = 1;
+								Running.weight = 1;
 
 							} else {
 
@@ -1000,7 +1000,7 @@
 								scope.controller.movementSpeed = 0;
 								scope.controller.dispatchEvent({type:"startIdling"});
 
-								StandingIdle.weight = 1;
+								Idling.weight = 1;
 							}
 						}
 
@@ -1142,7 +1142,7 @@
 							action.weight = 0; 
 						});
 
-						StandingIdle.weight = 1;
+						Idling.weight = 1;
 
 						localPlayer.controller.isRunning = false;
 						localPlayer.controller.isWalking = false;
@@ -1213,7 +1213,7 @@
 
 						if ( localPlayer.controller.isRunning && !localPlayer.controller.isWalking ) {
 
-							MediumRun.weight = 1; 
+							Running.weight = 1; 
 
 							localPlayer.controller.movementSpeed = 45;
 
@@ -1240,7 +1240,7 @@
 							action.weight = 0; 
 						});
 
-						StandingIdle.weight = 1; 
+						Idling.weight = 1; 
 
 						localPlayer.controller.isRunning = false;
 						localPlayer.controller.isWalking = false;
@@ -1319,7 +1319,7 @@
 						this.controller.isWalking = false;
 						this.controller.movementSpeed = 0;
 						this.controller.dispatchEvent({type:"startIdling"});
-						StandingIdle.weight = 1; 
+						Idling.weight = 1; 
 					}
 
 					function startWalking(){
@@ -1337,7 +1337,7 @@
 						this.controller.isRunning = true;
 						this.controller.isWalking = false;
 						this.controller.movementSpeed = 45;
-						MediumRun.weight = 1;
+						Running.weight = 1;
 					}
 
 				}
