@@ -391,16 +391,16 @@
 
 					})();
 
-				//	Pose tab.
+				//	Animation tab.
 
 					(function(){
 
 						var header = document.createElement("h3");
-						header.id = "pose-header";
-						header.textContent = "Poses";
+						header.id = "animation-header";
+						header.textContent = "Animation";
 
 						var select = document.createElement("select");
-						select.style.cssText = "width:220px;color:#000;" // float:left;
+						select.style.cssText = "width:180px;color:#000;" // float:left;
 						+ "border:1px solid;border-radius:4px;padding:2px 4px 4px 4px;"
 						+ "font-size:20px;margin-left:10px;";
 						header.appendChild( select );
@@ -434,11 +434,11 @@
 							console.log( actions[ select.value ] );
 						});
 
-						var tab = TabUI.add( "Pose", "pose-tab" );
+						var tab = TabUI.add( "Animation", "animation-tab" );
 						tab.appendChild( header );
 					//	tab.appendChild( container );
 
-						TabUI.append( "Pose" ); // important!
+						TabUI.append( "Animation" ); // important!
 					//	TabUI.Pose.role.classList.add("active");
 					//	TabUI.Pose.tab.classList.add("in","active");
 
@@ -545,9 +545,6 @@
 								});
 							});
 						})();
-
-
-
 
 						setTimeout(function(){
 							document.getElementById("matcap-header").appendChild(select);
