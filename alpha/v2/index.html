@@ -583,7 +583,7 @@
 
 					cameraControls = new MW.TPSCameraControl(camera, localPlayer.holder, {
 						el: renderer.domElement, // html renderer element.
-						offset: new THREE.Vector3( 0, 15, 0 ), // camera eye height.
+						offset: new THREE.Vector3( 0, 0, 0 ), // camera eye height.
 						radius: 40, // default: 37 // (distance of the character to the camera).
 						minRadius: 6, // default: 10 // (can take and negative values, yes!!!).
 						maxRadius: 100, // default: 64, runtime: 40.
@@ -1653,7 +1653,6 @@
 					})();
 
 				//	Materials.
-					(function(){
 
 					//	Reset materials.
 
@@ -1726,7 +1725,9 @@
 					*/
 
 
-					//	Material droplist.
+				//	Material droplist.
+
+					(function(){
 
 						var materials = {};
 
@@ -1737,7 +1738,10 @@
 
 						mesh.material.forEach(function( mtl, i ){
 							var name = mtl.name;
-							var material = new THREE.MeshStandardMaterial({skinning:true, side:2, name:name});
+							var material = new THREE.MeshStandardMaterial({
+								roughness:0, metalness:1, 
+								skinning:true, side:2, name:name,
+							});
 							mesh.material[i] = material;
 							materials[ material.uuid ] = material;
 							select.appendChild( createOption( material ) );
@@ -1788,6 +1792,43 @@
 					//		var uuid = select.value;
 					//		materialSelected.dispatch( [materials[uuid]] );
 					//	});
+
+						(function(){
+							var url = "https://i.imgur.com/aCAVXQb.jpg";
+							var loader = new THREE.ImageLoader();
+							loader.setCrossOrigin("anonymous"); // important!
+							loader.load( url, function( image ){
+								var mapping = THREE.SphericalReflectionMapping;		// important!
+								var texture = new THREE.Texture( image, mapping );	// important!
+								texture.sourceFile = image.src;						// important!
+								var material = mesh.material.find( function( item ){
+									return item.name == "BodyMaterial";
+								});
+								material.envMap = texture;
+								material.envMap.needsUpdate = true;
+								material.needsUpdate = true;
+							});
+						})();
+
+						(function(){
+							var url = "https://i.imgur.com/bixnsMm.jpg";
+							var loader = new THREE.ImageLoader();
+							loader.setCrossOrigin("anonymous"); // important!
+							loader.load( url, function( image ){
+								var mapping = THREE.SphericalReflectionMapping;		// important!
+								var texture = new THREE.Texture( image, mapping );	// important!
+								texture.sourceFile = image.src;						// important!
+								mesh.material.forEach( function( material ){
+									if ( material.name == "BodyMaterial" ) return;
+									material.envMap = texture;
+									material.envMap.needsUpdate = true;
+								});
+								material.needsUpdate = true;
+							});
+						})();
+
+
+
 
 						setTimeout(function(){
 							document.getElementById("matcap-header").appendChild(select);
