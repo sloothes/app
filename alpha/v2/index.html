@@ -1445,7 +1445,6 @@
 					console.log( object ); // object is THREE.Group.
 
 				//	Outfit Manager.
-				/*
 					(function(){
 
 						localPlayer.outfit = new OutfitManager();
@@ -1473,6 +1472,14 @@
 						localPlayer.outfit.direction = object;
 						scene.add( localPlayer.outfit.direction );
 
+						(function update(){
+							requestAnimationFrame( update );
+							localPlayer.outfit.update();
+						})();
+
+					})();
+
+				/*
 					//	get outfit meshes.
 
 						bra = object.getObjectByName( "Bra" );
@@ -1482,6 +1489,7 @@
 						skirt = object.getObjectByName( "Skirt" );
 						shoes = object.getObjectByName( "Shoes" );
 						panties = object.getObjectByName( "Panties" );
+				*/
 
 					//	Dynamic get skinned meshes function.
 					//	( new Function( "object", object.children.filter( function( child ){
@@ -1492,13 +1500,6 @@
 					//			return "\t"+name.toLowerCase()+" = object.getObjectByName(\""+name+"\");";
 					//		}).join("\n")
 					//	) )( object );
-
-						(function update(){
-							requestAnimationFrame( update );
-							localPlayer.outfit.update();
-						})();
-
-					})();
 
 				//	localPlayer.turnTo.js
 
@@ -1557,9 +1558,8 @@
 						}
 
 					})();
-				*/
 
-				//	Animations.
+				//	Animations/Poses.
 				
 					(function(){
 
@@ -1567,7 +1567,7 @@
 
 					//	Dynamic create mixer clip action animations function.
 						( new Function( "object", object.animations.map( function(animation, i){
-								var name = animation.name.replace("Carol|", "").replace(/\s/g, ""); 
+								var name = animation.name.replace("Armature|", "").replace(/\s/g, ""); 
 								debugMode && console.log( "\t"+name );
 								return "\t"+name+" = mixer.clipAction( object.animations["+i+"], object );";
 							}).join("\n")
