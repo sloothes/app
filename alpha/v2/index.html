@@ -1442,7 +1442,10 @@
 				loader.load( url, function( object ){
 
 					object.name = "SchoolSkirtCorset_v1";
-					console.log( object ); // object is THREE.Group.
+					debugMode && console.log( object ); // object is THREE.Group.
+
+					var mesh = object.getObjectBy("SchoolSkirtCorsetonHighBootsRigged");
+					debugMode && console.log( mesh );
 
 				//	Outfit Manager.
 					(function(){
@@ -1600,7 +1603,7 @@
 
 						var header = document.createElement("h3");
 						header.id = "pose-header";
-						header.textContent = "Pose";
+						header.textContent = "Poses";
 
 						var select = document.createElement("select");
 						select.style.cssText = "width:180px;color:#000;" // float:left;
@@ -1643,17 +1646,17 @@
 					//	tab.appendChild( container );
 
 						TabUI.append( "Pose" ); // important!
-						TabUI.Pose.role.classList.add("active");
-						TabUI.Pose.tab.classList.add("in","active");
+					//	TabUI.Pose.role.classList.add("active");
+					//	TabUI.Pose.tab.classList.add("in","active");
 
 					})();
 
 				//	Materials.
-				/*
 					(function(){
 
 					//	Reset materials.
 
+					/*
 						bra.material = new THREE.MeshStandardMaterial({skinning:true, name:"Bra"});
 						hair.material = new THREE.MeshStandardMaterial({skinning:true, name:"Hair", side:2});
 						skirt.material = new THREE.MeshStandardMaterial({skinning:true, name:"Skirt", side:2});
@@ -1719,28 +1722,30 @@
 						materials[body.material[0].uuid] = body.material[0];
 						materials[body.material[1].uuid] = body.material[1];
 						materials[body.material[2].uuid] = body.material[2];
+					*/
 
 
 					//	Material droplist.
+
+						var materials = {};
 
 						var select = document.createElement("select");
 						select.style.cssText = "width:180px;float:right;"
 						+ "border:1px solid;border-radius:4px;padding:2px 4px 4px 4px;"
 						+ "color:#000;font-size:20px;margin-right:18px;";
 
-						select.appendChild( createOption(hair.material) );
-						select.appendChild( createOption(body.material[0]) );
-						select.appendChild( createOption(body.material[1]) );
-						select.appendChild( createOption(body.material[2]) );
-						select.appendChild( createOption(bra.material) );
-						select.appendChild( createOption(panties.material) );
-						select.appendChild( createOption(bra.material, panties.material) );
-						select.appendChild( createOption(torso.material) );
-						select.appendChild( createOption(skirt.material) );
-						select.appendChild( createOption(skirt.material, torso.material) );
-						select.appendChild( createOption(shoes.material) );
+						mesh.material.forEach(function( mtl, i ){
+							var name = mtl.name;
+							var material = new THREE.MeshStandardMaterial({skinning:true, side:2, name:name});
+							mesh.material[i] = material;
+							materials[ material.uuid ] = material;
+							select.appendChild( createOption( material ) );
+						});
+
+						debugMode && console.log( mesh.material );
 
 					//	All.
+
 						(function(){
 							var option = createOption.apply(this, materials);
 							option.text = "All";
@@ -1796,7 +1801,6 @@
 
 
 					})();
-				*/
 
 				//	Remove loading bar.
 					document.getElementById("loading-bar").remove();
