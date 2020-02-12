@@ -1442,6 +1442,8 @@
 				loader.load( url, function( object ){
 
 					object.name = "SchoolSkirtCorset_v1";
+					object.scale.set(0.01, 0.01, 0.01);
+
 					debugMode && console.log( object ); // object is THREE.Group.
 
 					var mesh = object.children[0];
