@@ -534,7 +534,7 @@
 								scope.controller.movementSpeed = 28;
 								scope.controller.dispatchEvent({type:"startRunning"});
 
-								Jogging.weight = 1;
+								Walking.weight = 1;
 
 							} else if ( scope.controller.isRunning && !scope.controller.isWalking ) {
 
@@ -552,7 +552,7 @@
 								scope.controller.movementSpeed = 0;
 								scope.controller.dispatchEvent({type:"startIdling"});
 
-								StandingIdle.weight = 1;
+								Standing.weight = 1;
 							}
 						}
 
@@ -666,7 +666,7 @@
 							action.weight = 0; 
 						});
 
-						Jogging.weight = 1;
+						Walking.weight = 1;
 
 						localPlayer.controller.isRunning = true; 
 						localPlayer.controller.isWalking = true;
@@ -694,7 +694,7 @@
 							action.weight = 0; 
 						});
 
-						StandingIdle.weight = 1;
+						Standing.weight = 1;
 
 						localPlayer.controller.isRunning = false;
 						localPlayer.controller.isWalking = false;
@@ -792,7 +792,7 @@
 							action.weight = 0; 
 						});
 
-						StandingIdle.weight = 1; 
+						Standing.weight = 1; 
 
 						localPlayer.controller.isRunning = false;
 						localPlayer.controller.isWalking = false;
@@ -871,7 +871,7 @@
 						this.controller.isWalking = false;
 						this.controller.movementSpeed = 0;
 						this.controller.dispatchEvent({type:"startIdling"});
-						StandingIdle.weight = 1; 
+						Standing.weight = 1; 
 					}
 
 					function startWalking(){
@@ -880,7 +880,7 @@
 						this.controller.isRunning = true;
 						this.controller.isWalking = true;
 						this.controller.movementSpeed = 28;
-						Jogging.weight = 1;
+						Walking.weight = 1;
 					}
 
 					function startRunning(){
@@ -1580,11 +1580,19 @@
 
 						select.addEventListener( "change", function(){
 
-							mixer._actions.forEach(function(action){
-								action.weight = 0; 
+							for ( var name in actions){
+								actions[ name ].weight = 0;
+								if ( name == "Jumping" ) {
+									actions["Jumping"].stop();
+								}
 							});
 
 							actions[ select.value ].weight = 1;
+
+							if ( select.value == "Jumping" ) {
+								actions[ "Jumping" ].play();
+							}
+
 							debugMode && console.log( select.value );
 						});
 
