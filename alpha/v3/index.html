@@ -543,7 +543,7 @@
 								scope.controller.movementSpeed = 45;
 								scope.controller.dispatchEvent({type:"startRunning"});
 
-								MediumRun.weight = 1;
+								Running.weight = 1;
 
 							} else {
 
@@ -765,7 +765,7 @@
 
 						if ( localPlayer.controller.isRunning && !localPlayer.controller.isWalking ) {
 
-							MediumRun.weight = 1; 
+							Running.weight = 1; 
 
 							localPlayer.controller.movementSpeed = 45;
 
@@ -889,7 +889,7 @@
 						this.controller.isRunning = true;
 						this.controller.isWalking = false;
 						this.controller.movementSpeed = 45;
-						MediumRun.weight = 1;
+						Running.weight = 1;
 					}
 
 				})();
@@ -1522,7 +1522,7 @@
 						( new Function( "object", object.animations.map( function(animation, i){
 								var name = animation.name.replace("Armature|", "").replace(/\s/g, ""); 
 								debugMode && console.log( "\t"+name );
-								return "\t"+name+" = mixer.clipAction( object.animations["+i+"], object );";
+								return "\t"+name+" = mixer.clipAction( object.animations["+i+"], object );"; // DO NOT TOUCH/CHANGE IT //
 							}).join("\n")
 						) )( object );
 
