@@ -607,6 +607,10 @@
 						cameraControls.frontAngleUpdate();
 					})();
 
+					setTimeout( function(){
+						cameraControls.rigidObjects = scene.getObjectByName("TheCity").children;
+					});
+
 				})();
 
 			//	keyInputControls.js
