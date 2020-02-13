@@ -137,9 +137,6 @@
 				_cameraControls();
 				_keyInputControls();
 				_joystickControls();
-				
-				_controlsTab();
-				_actionControls();
 
 			//	Matcap textures.
 
@@ -369,7 +366,7 @@
 						( new Function( "object", object.animations.map( function(animation, i){
 								var name = animation.name.replace("Armature|", "").replace(/\s/g, ""); 
 								debugMode && console.log( "\t"+name );
-								return "\t"+name+" = mixer.clipAction( object.animations["+i+"], object );";
+								return "\t"+name+" = mixer.clipAction( animation, object );";
 							}).join("\n")
 						) )( object );
 
@@ -392,6 +389,456 @@
 							var delta = clock.getDelta();
 							mixer.update( delta );
 						})();
+
+					})();
+				
+				//	Control tab.
+
+					(function(){
+
+						var tab = TabUI.add( "Control", "control-tab" );
+
+						(function(){
+
+							localPlayer.weightsOff = weightsOff.bind( localPlayer );
+							localPlayer.startIdling = startIdling.bind( localPlayer );
+							localPlayer.startWalking = startWalking.bind( localPlayer );
+							localPlayer.startRunning = startRunning.bind( localPlayer );
+							localPlayer.startJumping = startJumping.bind( localPlayer );
+
+							function weightsOff(){
+								mixer._actions.forEach(function(action){
+									action.weight = 0; 
+								});
+							}
+
+							function startJumping(){
+								this.weightsOff();
+								this.controller.jump();
+							}
+
+							function startIdling(){
+								this.weightsOff();
+								this.controller.isIdling  = true;
+								this.controller.isRunning = false;
+								this.controller.isWalking = false;
+								this.controller.movementSpeed = 0;
+								this.controller.dispatchEvent({type:"startIdling"});
+								Idling.weight = 1; 
+							}
+
+							function startWalking(){
+								this.weightsOff();
+								this.controller.isIdling  = false;
+								this.controller.isRunning = true;
+								this.controller.isWalking = true;
+								this.controller.movementSpeed = 28;
+								Walking.weight = 1;
+							}
+
+							function startRunning(){
+								this.weightsOff();
+								this.controller.isIdling  = false;
+								this.controller.isRunning = true;
+								this.controller.isWalking = false;
+								this.controller.movementSpeed = 45;
+								Running.weight = 1;
+							}
+
+						})();
+
+
+					//	Action controls.
+
+						(function(){
+
+							var interval;
+
+							var header = document.createElement("h3");
+							header.textContent = "Action controls:";
+
+							var container = document.createElement("div");
+							container.style.cssText = "margin:10px 0px;min-height:40px;text-align:center;";
+
+							function ActionButton(name){
+								var button = document.createElement("div");
+								button.textContent = name;
+								button.classList.add("btn", "btn-white-outline", "btn-action");
+								return button;
+							}
+
+							(function(){
+
+								var button = new ActionButton( "Idle" );
+								button.addEventListener( "click", function(){
+									clearTimeout( interval );
+									if ( localPlayer.controller.isIdling ) return;
+									if ( localPlayer.controller.isJumping ) return;
+									if ( localPlayer.controller.isOnSlope ) return;
+									if ( !localPlayer.controller.isGrounded ) return;
+									interval = setTimeout( localPlayer.startIdling, 100 );
+								});
+								container.appendChild( button );
+
+							})();
+
+							(function(){
+
+								var button = new ActionButton( "Walk" );
+								button.addEventListener( "click", function(){
+									clearTimeout( interval );
+									if ( localPlayer.controller.isJumping ) return;
+									if ( localPlayer.controller.isOnSlope ) return;
+									if ( !localPlayer.controller.isGrounded ) return;
+									if ( isWalking() ) 
+										interval = setTimeout( localPlayer.startIdling, 100 );
+									else interval = setTimeout( localPlayer.startWalking, 100 );
+								});
+								container.appendChild( button );
+
+							})();
+
+							(function(){
+
+								var button = new ActionButton( "Run" );
+								button.addEventListener( "click", function(){
+									clearTimeout( interval );
+									if ( localPlayer.controller.isJumping ) return;
+									if ( localPlayer.controller.isOnSlope ) return;
+									if ( !localPlayer.controller.isGrounded ) return;
+									if ( isRunning() )
+										interval = setTimeout( localPlayer.startIdling, 100 );
+									else interval = setTimeout( localPlayer.startRunning, 100 );
+								});
+								container.appendChild( button );
+
+							})();
+
+							(function(){
+
+								var button = new ActionButton( "Jump" );
+								button.addEventListener( "click", function(){
+									clearTimeout( interval );
+									if ( localPlayer.controller.isJumping ) return;
+									if ( localPlayer.controller.isOnSlope ) return;
+									if ( !localPlayer.controller.isGrounded ) return;
+									interval = setTimeout( localPlayer.startJumping, 100 );
+								});
+								container.appendChild( button );
+
+							})();
+
+							function isWalking(){
+								return localPlayer.controller.isRunning && localPlayer.controller.isWalking; // caution!
+							}
+
+							function isRunning(){
+								return localPlayer.controller.isRunning && !localPlayer.controller.isWalking; // caution!
+							}
+
+							tab.appendChild( header );
+							tab.appendChild( container );
+
+						})();
+
+
+					//	Direction controls.
+
+						(function(){
+
+							var interval;
+
+							var header = document.createElement("h3");
+							header.textContent = "Direction controls:";
+
+							var container = document.createElement("div");
+							container.style.cssText = "margin:10px 0px;min-height:40px;text-align:center;";
+
+							function DirectionButton(name){
+								var button = document.createElement("div");
+								button.textContent = name;
+								button.classList.add("btn", "btn-white-outline", "btn-action");
+								return button;
+							}
+
+							(function(){
+								var button = new DirectionButton( "Left" );
+								button.addEventListener( "click", function(){
+									clearTimeout( interval );
+									interval = setTimeout( localPlayer.turnLeft, 250 );
+								});
+								container.appendChild( button );
+							})();
+
+							(function(){
+								var button = new DirectionButton( "Front" );
+								button.addEventListener( "click", function(){
+									clearTimeout( interval );
+									interval = setTimeout( localPlayer.turnFront, 250 );
+								});
+								container.appendChild( button );
+							})();
+
+							(function(){
+								var button = new DirectionButton( "Back" );
+								button.addEventListener( "click", function(){
+									clearTimeout( interval );
+									interval = setTimeout( localPlayer.turnBack, 250 );
+								});
+								container.appendChild( button );
+							})();
+
+							(function(){
+								var button = new DirectionButton( "Right" );
+								button.addEventListener( "click", function(){
+									clearTimeout( interval );
+									interval = setTimeout( localPlayer.turnRight, 250 );
+								});
+								container.appendChild( button );
+							})();
+
+							tab.appendChild( header );
+							tab.appendChild( container );
+
+						})();
+
+					//	Camera controls.
+
+						(function(){
+
+							var header = document.createElement("h3");
+							header.textContent = "Camera controls:";
+
+							var container = document.createElement("div");
+
+							(function(){
+
+								var row = document.createElement("div");
+								row.style.cssText = "margin:10px 10px;height:35px;text-align:center;";
+
+								var label = document.createElement("span");
+								label.textContent = "Vertical offset:";
+								label.style.cssText = "max-width:50%;float:left;font-size:2rem;";
+
+								var verticaloffset = new NumberInput({
+									min: 0, max: 30,
+									placeholder: "(y)",
+									step: 0.1, delay: 50,
+									val: cameraControls.offset.y,
+								}); 
+
+								verticaloffset.changing.add( function( value ){
+									cameraControls.offset.y = value;
+								});
+
+								verticaloffset.changed.add( function( value ){
+									cameraControls.offset.y = value;
+								});
+
+								row.appendChild(label);
+								row.appendChild(verticaloffset);
+								container.appendChild( row );
+
+							})();
+
+							(function(){
+
+								var row = document.createElement("div");
+								row.style.cssText = "margin:10px 10px;height:35px;text-align:center;";
+
+								var label = document.createElement("span");
+								label.textContent = "Camera radius:";
+								label.style.cssText = "max-width:50%;float:left;font-size:2rem;";
+
+								var radiusoffset = new NumberInput({
+									placeholder: "(r)",
+									step: 0.1, delay: 50,
+									val: cameraControls.radius, 
+									min: cameraControls.minRadius, 
+									max: cameraControls.maxRadius, 
+								}); 
+
+								radiusoffset.changing.add( function( value ){
+									cameraControls.radius = value;
+								});
+
+								radiusoffset.changed.add( function( value ){
+									cameraControls.radius = value;
+								});
+
+								window.addEventListener("wheel", function(e){
+									radiusoffset.setValue( cameraControls.radius );
+								});
+
+								row.appendChild(label);
+								row.appendChild(radiusoffset);
+								container.appendChild( row );
+
+							})();
+
+							tab.appendChild( header );
+							tab.appendChild( container );
+
+							function NumberInput( options ){
+							//	options: {min, max, val, step, delay, placeholder, target}
+
+								var interval;
+
+								var row = document.createElement("div");
+								row.style.cssText = "width:49.5%;height:35px;text-align:center;display:inline;float:right;";
+
+								var prev = document.createElement("li");
+								prev.innerHTML = "&#9668;";
+								prev.style.display = "inline";
+								prev.classList.add("btn","btn-primary","get-prev-btn","pull-left");
+
+								var next = document.createElement("li");
+								next.innerHTML = "&#9658;";
+								next.style.display = "inline";
+								next.classList.add("btn","btn-primary","get-next-btn","pull-right");
+
+								var input = document.createElement("input");
+
+								input.type = "text";
+								input.classList.add("form-control","text-center");
+								input.style.cssText = "color:#fff;display:inline;width:40%;"
+								+ "padding:6px;font-size:large;font-weight:bold;background:none;";
+								input.setAttribute("placeholder", options.placeholder );
+
+								row.changed = new Signal();
+								row.changing = new Signal();
+
+								var value = round( options.val, 2 );
+
+								row.reset = function (){
+									value = round( options.val, 2 );
+									input.value = value.toFixed(2);
+									row.changed.dispatch( value );
+								};
+
+								row.getValue = function(){
+									return value;
+								}
+
+								row.setValue = function( num ){
+									value = round( parseFloat( num ), 2 );
+									input.value = value.toFixed(2);
+									row.changed.dispatch( value );
+								}
+
+								input.decrease = function(){
+
+									if ( value < options.min + options.step ) 
+										value = options.min;
+									else
+										value -= options.step;
+
+									input.value = value.toFixed(2);
+									row.changing.dispatch( value );
+
+								};
+
+								input.increase = function(){
+
+									var limit = options.max - options.step;
+
+									if ( value > limit ) 
+										value = options.max;
+									else
+										value += options.step;
+
+									input.value = value.toFixed(2);
+									row.changing.dispatch( value );
+
+								};
+
+								input.update = function(){
+
+									value = round( value, 2 );
+									input.value = value.toFixed(2);
+									row.changed.dispatch( value );
+
+								};
+
+							//	Event handlers.
+
+								input.addEventListener( "change", function(){
+									value = round( parseFloat( this.value ), 2 );
+									input.value = value.toFixed(2);
+									row.changed.dispatch( value );
+								});
+
+								prev.addEventListener("click", descendHandler);
+								next.addEventListener("click", increaseHandler);
+
+								function descendHandler(){
+									clearTimeout( interval );
+									input.decrease();
+									interval = setTimeout( input.update, 250 );
+								}
+
+								function increaseHandler(){
+									clearTimeout( interval );
+									input.increase();
+									interval = setTimeout( input.update, 250 );
+								}
+
+								prev.addEventListener("mousedown", function(){
+									clearTimeout( interval );
+									interval = setTimeout( function(){
+										interval = setInterval( function(){
+											input.decrease();
+										}, options.delay );
+									}, 350);
+								});
+
+								next.addEventListener("mousedown", function(){
+									clearTimeout( interval );
+									interval = setTimeout( function(){
+										interval = setInterval( function(){
+											input.increase();
+										}, options.delay );
+									}, 350);
+								});
+
+								prev.addEventListener("mouseleave", function(e){
+									clearTimeout( interval );
+									if ( e.buttons == 0 ) return;
+									setTimeout( input.update, 250 );
+								});
+
+								next.addEventListener("mouseleave", function(e){
+									clearTimeout( interval );
+									if ( e.buttons == 0 ) return;
+									setTimeout( input.update, 250 );
+								});
+
+								row.appendChild(prev);
+								row.appendChild(input);
+								row.appendChild(next);
+
+								setTimeout( input.update );
+
+								return row;
+
+								function round(number, precision) {
+
+									var shift = function (number, precision, reverseShift) {
+										if (reverseShift) {
+											precision = -precision;
+										}  
+										numArray = ("" + number).split("e");
+										return +(numArray[0] + "e" + (numArray[1] ? (+numArray[1] + precision) : precision));
+									};
+									return shift(Math.round(shift(number, precision, false)), precision, true);
+
+								}
+
+							}
+
+						})();
+
+						TabUI.append( "Control" ); // important!
 
 					})();
 
@@ -570,10 +1017,7 @@
 
 				});
 
-			});
-
-
-
+		//	SCRIPTS.
 
 			//	Side panel.js
 
@@ -1296,455 +1740,7 @@
 
 				}
 
-			//	Controls tab.
-
-				function _controlsTab(){
-
-					localPlayer.weightsOff = weightsOff.bind( localPlayer );
-					localPlayer.startIdling = startIdling.bind( localPlayer );
-					localPlayer.startWalking = startWalking.bind( localPlayer );
-					localPlayer.startRunning = startRunning.bind( localPlayer );
-					localPlayer.startJumping = startJumping.bind( localPlayer );
-
-					function weightsOff(){
-						mixer._actions.forEach(function(action){
-							action.weight = 0; 
-						});
-					}
-
-					function startJumping(){
-						this.weightsOff();
-						this.controller.jump();
-					}
-
-					function startIdling(){
-						this.weightsOff();
-						this.controller.isIdling  = true;
-						this.controller.isRunning = false;
-						this.controller.isWalking = false;
-						this.controller.movementSpeed = 0;
-						this.controller.dispatchEvent({type:"startIdling"});
-						Idling.weight = 1; 
-					}
-
-					function startWalking(){
-						this.weightsOff();
-						this.controller.isIdling  = false;
-						this.controller.isRunning = true;
-						this.controller.isWalking = true;
-						this.controller.movementSpeed = 28;
-						Walking.weight = 1;
-					}
-
-					function startRunning(){
-						this.weightsOff();
-						this.controller.isIdling  = false;
-						this.controller.isRunning = true;
-						this.controller.isWalking = false;
-						this.controller.movementSpeed = 45;
-						Running.weight = 1;
-					}
-
-				}
-
-			//	Action controls.
-
-				function _actionControls(){
-
-					var tab = TabUI.add( "Control", "control-tab" );
-
-					(function(){
-
-						var interval;
-
-						var header = document.createElement("h3");
-						header.textContent = "Action controls:";
-
-						var container = document.createElement("div");
-						container.style.cssText = "margin:10px 0px;min-height:40px;text-align:center;";
-
-						function ActionButton(name){
-							var button = document.createElement("div");
-							button.textContent = name;
-							button.classList.add("btn", "btn-white-outline", "btn-action");
-							return button;
-						}
-
-						(function(){
-
-							var button = new ActionButton( "Idle" );
-							button.addEventListener( "click", function(){
-								clearTimeout( interval );
-								if ( localPlayer.controller.isIdling ) return;
-								if ( localPlayer.controller.isJumping ) return;
-								if ( localPlayer.controller.isOnSlope ) return;
-								if ( !localPlayer.controller.isGrounded ) return;
-								interval = setTimeout( localPlayer.startIdling, 100 );
-							});
-							container.appendChild( button );
-
-						})();
-
-						(function(){
-
-							var button = new ActionButton( "Walk" );
-							button.addEventListener( "click", function(){
-								clearTimeout( interval );
-								if ( localPlayer.controller.isJumping ) return;
-								if ( localPlayer.controller.isOnSlope ) return;
-								if ( !localPlayer.controller.isGrounded ) return;
-								if ( isWalking() ) 
-									interval = setTimeout( localPlayer.startIdling, 100 );
-								else interval = setTimeout( localPlayer.startWalking, 100 );
-							});
-							container.appendChild( button );
-
-						})();
-
-						(function(){
-
-							var button = new ActionButton( "Run" );
-							button.addEventListener( "click", function(){
-								clearTimeout( interval );
-								if ( localPlayer.controller.isJumping ) return;
-								if ( localPlayer.controller.isOnSlope ) return;
-								if ( !localPlayer.controller.isGrounded ) return;
-								if ( isRunning() )
-									interval = setTimeout( localPlayer.startIdling, 100 );
-								else interval = setTimeout( localPlayer.startRunning, 100 );
-							});
-							container.appendChild( button );
-
-						})();
-
-						(function(){
-
-							var button = new ActionButton( "Jump" );
-							button.addEventListener( "click", function(){
-								clearTimeout( interval );
-								if ( localPlayer.controller.isJumping ) return;
-								if ( localPlayer.controller.isOnSlope ) return;
-								if ( !localPlayer.controller.isGrounded ) return;
-								interval = setTimeout( localPlayer.startJumping, 100 );
-							});
-							container.appendChild( button );
-
-						})();
-
-						function isWalking(){
-							return localPlayer.controller.isRunning && localPlayer.controller.isWalking; // caution!
-						}
-
-						function isRunning(){
-							return localPlayer.controller.isRunning && !localPlayer.controller.isWalking; // caution!
-						}
-
-						tab.appendChild( header );
-						tab.appendChild( container );
-
-					})();
-
-
-				//	Direction controls.
-
-					(function(){
-
-						var interval;
-
-						var header = document.createElement("h3");
-						header.textContent = "Direction controls:";
-
-						var container = document.createElement("div");
-						container.style.cssText = "margin:10px 0px;min-height:40px;text-align:center;";
-
-						function DirectionButton(name){
-							var button = document.createElement("div");
-							button.textContent = name;
-							button.classList.add("btn", "btn-white-outline", "btn-action");
-							return button;
-						}
-
-						(function(){
-							var button = new DirectionButton( "Left" );
-							button.addEventListener( "click", function(){
-								clearTimeout( interval );
-								interval = setTimeout( localPlayer.turnLeft, 250 );
-							});
-							container.appendChild( button );
-						})();
-
-						(function(){
-							var button = new DirectionButton( "Front" );
-							button.addEventListener( "click", function(){
-								clearTimeout( interval );
-								interval = setTimeout( localPlayer.turnFront, 250 );
-							});
-							container.appendChild( button );
-						})();
-
-						(function(){
-							var button = new DirectionButton( "Back" );
-							button.addEventListener( "click", function(){
-								clearTimeout( interval );
-								interval = setTimeout( localPlayer.turnBack, 250 );
-							});
-							container.appendChild( button );
-						})();
-
-						(function(){
-							var button = new DirectionButton( "Right" );
-							button.addEventListener( "click", function(){
-								clearTimeout( interval );
-								interval = setTimeout( localPlayer.turnRight, 250 );
-							});
-							container.appendChild( button );
-						})();
-
-						tab.appendChild( header );
-						tab.appendChild( container );
-
-					})();
-
-				//	Camera controls.
-
-					(function(){
-
-						var header = document.createElement("h3");
-						header.textContent = "Camera controls:";
-
-						var container = document.createElement("div");
-
-						(function(){
-
-							var row = document.createElement("div");
-							row.style.cssText = "margin:10px 10px;height:35px;text-align:center;";
-
-							var label = document.createElement("span");
-							label.textContent = "Vertical offset:";
-							label.style.cssText = "max-width:50%;float:left;font-size:2rem;";
-
-							var verticaloffset = new NumberInput({
-								min: 0, max: 30,
-								placeholder: "(y)",
-								step: 0.1, delay: 50,
-								val: cameraControls.offset.y,
-							}); 
-
-							verticaloffset.changing.add( function( value ){
-								cameraControls.offset.y = value;
-							});
-
-							verticaloffset.changed.add( function( value ){
-								cameraControls.offset.y = value;
-							});
-
-							row.appendChild(label);
-							row.appendChild(verticaloffset);
-							container.appendChild( row );
-
-						})();
-
-						(function(){
-
-							var row = document.createElement("div");
-							row.style.cssText = "margin:10px 10px;height:35px;text-align:center;";
-
-							var label = document.createElement("span");
-							label.textContent = "Camera radius:";
-							label.style.cssText = "max-width:50%;float:left;font-size:2rem;";
-
-							var radiusoffset = new NumberInput({
-								placeholder: "(r)",
-								step: 0.1, delay: 50,
-								val: cameraControls.radius, 
-								min: cameraControls.minRadius, 
-								max: cameraControls.maxRadius, 
-							}); 
-
-							radiusoffset.changing.add( function( value ){
-								cameraControls.radius = value;
-							});
-
-							radiusoffset.changed.add( function( value ){
-								cameraControls.radius = value;
-							});
-
-							window.addEventListener("wheel", function(e){
-								radiusoffset.setValue( cameraControls.radius );
-							});
-
-							row.appendChild(label);
-							row.appendChild(radiusoffset);
-							container.appendChild( row );
-
-						})();
-
-						tab.appendChild( header );
-						tab.appendChild( container );
-
-						function NumberInput( options ){
-						//	options: {min, max, val, step, delay, placeholder, target}
-
-							var interval;
-
-							var row = document.createElement("div");
-							row.style.cssText = "width:49.5%;height:35px;text-align:center;display:inline;float:right;";
-
-							var prev = document.createElement("li");
-							prev.innerHTML = "&#9668;";
-							prev.style.display = "inline";
-							prev.classList.add("btn","btn-primary","get-prev-btn","pull-left");
-
-							var next = document.createElement("li");
-							next.innerHTML = "&#9658;";
-							next.style.display = "inline";
-							next.classList.add("btn","btn-primary","get-next-btn","pull-right");
-
-							var input = document.createElement("input");
-
-							input.type = "text";
-							input.classList.add("form-control","text-center");
-							input.style.cssText = "color:#fff;display:inline;width:40%;"
-							+ "padding:6px;font-size:large;font-weight:bold;background:none;";
-							input.setAttribute("placeholder", options.placeholder );
-
-							row.changed = new Signal();
-							row.changing = new Signal();
-
-							var value = round( options.val, 2 );
-
-							row.reset = function (){
-								value = round( options.val, 2 );
-								input.value = value.toFixed(2);
-								row.changed.dispatch( value );
-							};
-
-							row.getValue = function(){
-								return value;
-							}
-
-							row.setValue = function( num ){
-								value = round( parseFloat( num ), 2 );
-								input.value = value.toFixed(2);
-								row.changed.dispatch( value );
-							}
-
-							input.decrease = function(){
-
-								if ( value < options.min + options.step ) 
-									value = options.min;
-								else
-									value -= options.step;
-
-								input.value = value.toFixed(2);
-								row.changing.dispatch( value );
-
-							};
-
-							input.increase = function(){
-
-								var limit = options.max - options.step;
-
-								if ( value > limit ) 
-									value = options.max;
-								else
-									value += options.step;
-
-								input.value = value.toFixed(2);
-								row.changing.dispatch( value );
-
-							};
-
-							input.update = function(){
-
-								value = round( value, 2 );
-								input.value = value.toFixed(2);
-								row.changed.dispatch( value );
-
-							};
-
-						//	Event handlers.
-
-							input.addEventListener( "change", function(){
-								value = round( parseFloat( this.value ), 2 );
-								input.value = value.toFixed(2);
-								row.changed.dispatch( value );
-							});
-
-							prev.addEventListener("click", descendHandler);
-							next.addEventListener("click", increaseHandler);
-
-							function descendHandler(){
-								clearTimeout( interval );
-								input.decrease();
-								interval = setTimeout( input.update, 250 );
-							}
-
-							function increaseHandler(){
-								clearTimeout( interval );
-								input.increase();
-								interval = setTimeout( input.update, 250 );
-							}
-
-							prev.addEventListener("mousedown", function(){
-								clearTimeout( interval );
-								interval = setTimeout( function(){
-									interval = setInterval( function(){
-										input.decrease();
-									}, options.delay );
-								}, 350);
-							});
-
-							next.addEventListener("mousedown", function(){
-								clearTimeout( interval );
-								interval = setTimeout( function(){
-									interval = setInterval( function(){
-										input.increase();
-									}, options.delay );
-								}, 350);
-							});
-
-							prev.addEventListener("mouseleave", function(e){
-								clearTimeout( interval );
-								if ( e.buttons == 0 ) return;
-								setTimeout( input.update, 250 );
-							});
-
-							next.addEventListener("mouseleave", function(e){
-								clearTimeout( interval );
-								if ( e.buttons == 0 ) return;
-								setTimeout( input.update, 250 );
-							});
-
-							row.appendChild(prev);
-							row.appendChild(input);
-							row.appendChild(next);
-
-							setTimeout( input.update );
-
-							return row;
-
-							function round(number, precision) {
-
-								var shift = function (number, precision, reverseShift) {
-									if (reverseShift) {
-										precision = -precision;
-									}  
-									numArray = ("" + number).split("e");
-									return +(numArray[0] + "e" + (numArray[1] ? (+numArray[1] + precision) : precision));
-								};
-								return shift(Math.round(shift(number, precision, false)), precision, true);
-
-							}
-
-						}
-
-					})();
-
-					TabUI.append( "Control" ); // important!
-
-				}
-
+			});
 
 		</script>
 
