@@ -1522,7 +1522,7 @@
 						( new Function( "object", object.animations.map( function(animation, i){
 								var name = animation.name.replace("Armature|", "").replace(/\s/g, ""); 
 								debugMode && console.log( "\t"+name );
-								return "\t"+name+" = mixer.clipAction( animation, object );";
+								return "\t"+name+" = mixer.clipAction( object.animations["+i+"], object );";
 							}).join("\n")
 						) )( object );
 
