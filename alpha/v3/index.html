@@ -1311,33 +1311,9 @@
 					+ "WxVSuFW," // normal matcap.
 				).split(",")
 
-				matcaps.pop(); // remove last empty item.
+				matcaps.pop(); // removes last empty item. (important!)
 
-				//	cache matcaps and matcap icons (only once).
-
-				/*
-					caches.open("matcaps").then(function( cache ){
-						cache.addAll(
-							matcaps.map( function( id ){
-								return "https://i.imgur.com/"+id+".jpg";
-							})
-						).catch(function(err){
-							console.error(err);
-						});
-					});
-
-					caches.open("thumbnails").then(function( cache ){
-						cache.addAll(
-							matcaps.map( function( id ){
-								return "https://i.imgur.com/"+id+"s.jpg";
-							})
-						).catch(function(err){
-							console.error(err);
-						});
-					});
-				*/
-
-			//	Matcap textures.
+			//	Matcap tab.
 
 				(function(){
 
@@ -1370,7 +1346,7 @@
 						});
 					});
 
-				//
+				//	Matcap tab.
 
 					var header = document.createElement("h3");
 					header.id = "matcap-header";
@@ -1442,12 +1418,302 @@
 
 					debugMode && console.log( mesh );
 
+				//	Outfit Manager.
+
+					(function(){
+
+						localPlayer.outfit = new OutfitManager();
+						localPlayer.outfit.update = function() {
+
+						//  "this" is "localPlayer.outfit".
+							if ( !this.direction ) return;
+
+						//  Update avatar rotation y.
+							var controller = localPlayer.controller;
+							var direction = controller.direction - Math.PI;
+
+						//  Update avatar position.
+							var x = controller.center.x;
+							var y = controller.center.y - controller.radius;
+							var z = controller.center.z;
+
+						//  "this" is the "localPlayer.outfit".
+							this.direction.rotation.y = direction;
+							this.direction.position.set( x, y, z );
+
+						};
+
+					//  Add outfit direction holder to scene.
+						localPlayer.outfit.direction = object;
+						scene.add( localPlayer.outfit.direction );
+
+						(function update(){
+							requestAnimationFrame( update );
+							localPlayer.outfit.update();
+						})();
+
+					})();
+
+				//	localPlayer.turnTo.js
+
+					(function(){
+
+						localPlayer.turnTo    = turnto.bind( localPlayer );
+						localPlayer.turnBack  = turnto.bind( localPlayer,  0 );
+						localPlayer.turnFront = turnto.bind( localPlayer,  Math.PI );
+						localPlayer.turnLeft  = turnto.bind( localPlayer, -Math.PI/2 );
+						localPlayer.turnRight = turnto.bind( localPlayer,  Math.PI/2 );
+
+						localPlayer.turnBack();
+
+						function turnto( rad, immediate ){
+
+							var limit = THREE.Math.degToRad(1);
+							var frontAngle = Math.PI - cameraControls.getFrontAngle();
+							var deltaAngle = getDeltaAngle( this.controller.direction, frontAngle + rad );
+
+							var turn = () => {
+
+								windowAnimationFrameRequestID = requestAnimationFrame( turn );
+
+								if ( isNaN( deltaAngle ) ) {
+									cancelAnimationFrame( windowAnimationFrameRequestID );
+									this.outfit.update(); return;
+								}
+
+								if ( immediate ) {
+									this.controller.direction += deltaAngle;
+									cancelAnimationFrame( windowAnimationFrameRequestID );
+									this.outfit.update(); return;
+								}
+
+								if ( Math.abs( deltaAngle ) < limit ) {
+									this.controller.direction += deltaAngle;
+									cancelAnimationFrame( windowAnimationFrameRequestID );
+									this.outfit.update(); return;
+								}
+
+								this.controller.direction = mod( this.controller.direction += ( deltaAngle *= 0.5 ), 2 * Math.PI );
+							}
+
+							return turn();
+
+							function mod( a, n ) { 
+								return ( a % n + n ) % n;  // important!
+							} 
+
+							function getDeltaAngle( current, target ) {
+								var a = mod( ( current - target ), 2 * Math.PI );
+								var b = mod( ( target - current ), 2 * Math.PI );
+								return a < b ? -a : b;
+							}
+
+						}
+
+					})();
+
+				//	Animations/Poses.
+				
+					(function(){
+
+						mixer = new THREE.AnimationMixer( object );
+
+					//	Dynamic create mixer clip action animations function.
+						( new Function( "object", object.animations.map( function(animation, i){
+								var name = animation.name.replace("Armature|", "").replace(/\s/g, ""); 
+								debugMode && console.log( "\t"+name );
+								return "\t"+name+" = mixer.clipAction( animation, object );";
+							}).join("\n")
+						) )( object );
+
+					//	Start clip actions.
+
+						mixer._actions.forEach(function(action, i){
+							action.play();
+							action.weight = 0; 
+						});
+
+						Jumping.stop();
+						Idling.weight = 1;
+
+					//	Mixer update.
+
+						var clock = new THREE.Clock();
+
+						(function update(){
+							requestAnimationFrame( update );
+							var delta = clock.getDelta();
+							mixer.update( delta );
+						})();
+
+					})();
+
+				//	Animation tab.
+
+					(function(){
+
+						var header = document.createElement("h3");
+						header.id = "animation-header";
+						header.textContent = "Animation";
+
+						var select = document.createElement("select");
+						select.style.cssText = "width:180px;color:#000;" // float:left;
+						+ "border:1px solid;border-radius:4px;padding:2px 4px 4px 4px;"
+						+ "font-size:20px;margin-left:10px;";
+						header.appendChild( select );
+
+						var actions = {};
+
+						mixer._actions.forEach( function(action, i){
+							var name = action._clip.name.replace("Armature|", "").replace(/\s/g, "");
+							actions[ name ] = action;
+							select.appendChild( createOption(name, i) );
+						});
+						
+						debugMode && console.log( actions );
+
+						function createOption(name, i){
+							var option = document.createElement("option");
+							option.text = option.value = name;
+							return option;
+						}
+
+						select.addEventListener( "change", function(){
+
+							mixer._actions.forEach(function(action){
+								action.weight = 0; 
+							});
+
+							actions[ select.value ].weight = 1;
+							console.log( actions[ select.value ] );
+						});
+
+						var tab = TabUI.add( "Animation", "animation-tab" );
+						tab.appendChild( header );
+						TabUI.append( "Animation" ); // important!
+
+					})();
+
+				//	Material droplist.
+
+					(function(){
+
+						var materials = {};
+
+						var select = document.createElement("select");
+						select.style.cssText = "width:180px;float:right;"
+						+ "border:1px solid;border-radius:4px;padding:2px 4px 4px 4px;"
+						+ "color:#000;font-size:20px;margin-right:18px;";
+
+						mesh.material.forEach(function( mtl, i ){
+							var name = mtl.name;
+							var material = new THREE.MeshStandardMaterial({
+								roughness:0, metalness:1, 
+								skinning:true, side:2, name:name,
+							});
+							mesh.material[i] = material;
+							materials[ material.uuid ] = material;
+							select.appendChild( createOption( material ) );
+						});
+
+						debugMode && console.log( mesh.material );
+
+					//	All.
+
+						(function(){
+							var option = createOption.apply(this, materials);
+							option.text = "All";
+							option.selected = true;
+							option.value = Object.keys(materials).join();
+							select.appendChild( option );
+						//	init all as selected materials.
+							debugMode && console.log( Object.values(materials) );
+							materialSelected.dispatch( Object.values(materials) );
+						})();
+
+						function createOption(){
+							var names = [];
+							var uuids = [];
+							for ( var arg in arguments ){
+								var material = arguments[arg];
+								names.push( material.name );
+								uuids.push( material.uuid );
+							}
+							var option = document.createElement("option");
+							option.text = names.join(" & ");
+							option.value = uuids.join();
+							return option;
+						}
+
+					//	Multiple materials.
+
+						select.addEventListener( "change", function(){
+							var uuids = select.value.split(",");
+							var array = uuids.map(function(uuid){
+								return materials[uuid];
+							}).filter(function(material){
+								return material.type == "MeshStandardMaterial";
+							});
+							materialSelected.dispatch( array );
+						});
+
+					//	Skinned mesh materials.
+
+						(function(){
+							var url = "https://i.imgur.com/aCAVXQb.jpg";
+							var loader = new THREE.ImageLoader();
+							loader.setCrossOrigin("anonymous"); // important!
+							loader.load( url, function( image ){
+								var mapping = THREE.SphericalReflectionMapping;		// important!
+								var texture = new THREE.Texture( image, mapping );	// important!
+								texture.sourceFile = image.src;						// important!
+								var material = mesh.material.find( function( item ){
+									return item.name == "BodyMaterial";
+								});
+								material.envMap = texture;
+								material.envMap.needsUpdate = true;
+								material.needsUpdate = true;
+							});
+						})();
+
+						(function(){
+							var url = "https://i.imgur.com/bixnsMm.jpg";
+							var loader = new THREE.ImageLoader();
+							loader.setCrossOrigin("anonymous"); // important!
+							loader.load( url, function( image ){
+								var mapping = THREE.SphericalReflectionMapping;		// important!
+								var texture = new THREE.Texture( image, mapping );	// important!
+								texture.sourceFile = image.src;						// important!
+								mesh.material.forEach( function( material ){
+									if ( material.name == "BodyMaterial" ) return;
+									material.envMap = texture;
+									material.envMap.needsUpdate = true;
+									material.needsUpdate = true;
+								});
+							});
+						})();
 
 
+					//	Append droplist.
+
+						setTimeout(function(){
+							document.getElementById("matcap-header").appendChild(select);
+						});
+
+					//	Open side panel.
+
+						setTimeout(function(){
+							var panel = document.getElementById("side-panel");
+							panel.dispatchEvent( new Event("mouseenter") );
+						});
 
 
+					})();
 
-
+				//	Remove loading bar.
+					setTimeout(function(){
+						document.getElementById("loading-bar").remove();
+					});
 
 				});
 
