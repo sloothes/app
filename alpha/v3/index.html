@@ -501,19 +501,16 @@
 							return data;
 						};
 
-						this.controller.addEventListener("endJumping",   onEndJumping);
-						this.controller.addEventListener("startJumping", onStartJumping);
-
-						function onStartJumping(){
+						this.controller.addEventListener("startJumping", function(){
 
 							mixer._actions.forEach(function(action){
 								action.weight = 0; 
 							});
 
 							Jumping.weight = 1; Jumping.play();
-						};
+						});
 
-						function onEndJumping(){
+						this.controller.addEventListener("endJumping", function(){
 
 							Jumping.stop();
 
@@ -548,7 +545,7 @@
 
 								Idling.weight = 1;
 							}
-						}
+						});
 
 					//  Add controller to world.
 
@@ -1411,6 +1408,7 @@
 					debugMode && console.log( mesh );
 
 				//	Outfit Manager.
+
 					(function(){
 
 						localPlayer.outfit = new OutfitManager();
@@ -1502,6 +1500,63 @@
 						}
 
 					})();
+
+				//	localPlayer controller jumping.
+
+				/*
+					(function(){
+
+						localPlayer.controller.addEventListener("endJumping",   onEndJumping);
+						localPlayer.controller.addEventListener("startJumping", onStartJumping);
+
+						function onStartJumping(){
+
+							mixer._actions.forEach(function(action){
+								action.weight = 0; 
+							});
+
+							Jumping.weight = 1; Jumping.play();
+						};
+
+						function onEndJumping(){
+
+							Jumping.stop();
+
+							mixer._actions.forEach(function(action){
+								action.weight = 0; 
+							});
+
+							if ( localPlayer.controller.isRunning && localPlayer.controller.isWalking ) {
+
+							//	Jumping.stop();
+
+								localPlayer.controller.movementSpeed = 28;
+								localPlayer.controller.dispatchEvent({type:"startRunning"});
+
+								Jogging.weight = 1;
+
+							} else if ( localPlayer.controller.isRunning && !localPlayer.controller.isWalking ) {
+
+							//	Jumping.stop();
+
+								localPlayer.controller.movementSpeed = 45;
+								localPlayer.controller.dispatchEvent({type:"startRunning"});
+
+								Running.weight = 1;
+
+							} else {
+
+							//	Jumping.stop();
+
+								localPlayer.controller.movementSpeed = 0;
+								localPlayer.controller.dispatchEvent({type:"startIdling"});
+
+								Idling.weight = 1;
+							}
+						}
+
+					})();
+				*/
 
 				//	Animations/Poses.
 				
